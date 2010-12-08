@@ -1,10 +1,6 @@
-var Jindow;
-
-(function(document, window){
-	Jindow = function(options)
+(function(document, window, Jin){
+	Jin.window = function(options)
 	{
-		if (!Jin)
-			throw('Jin-library is missing!');
 		var opts = 
 		{
 			title: 'New Window',
@@ -193,4 +189,4 @@ var Jindow;
 	{
 		return document.createElement(type);
 	}
-})(document, window);
+})(document, window, Jin);

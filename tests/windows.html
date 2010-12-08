@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Jindow</title>
+		<link rel="stylesheet" href="../css/jin-window.css" />
+		<script src="../js/jin.js"></script>
+		<script src="../js/jin-window.js"></script>
+		<script>
+Jin.bind(window, 'load', function(){
+	var layer,
+
+	// Create windows
+	wnd = Jin.window({title: 'Testbox'}),
+	welcome = Jin.window({title: 'Welcome', left: 500});
+
+	// Add them to a layer
+	layer = Jin.layer(wnd.dom, welcome.dom);
+	// Append the layer on body
+	Jin.appendChildren(document.body, layer);
+
+	// Bind the windows to gain focus on mousedown
+	Jin.bind(layer, 'mousedown', function(){
+		Jin.removeClass(layer, 'selected');
+		Jin.addClass(this, 'selected');
+		layer.toTop(this);
+		layer.refresh();
+	});
+
+	// Add content to the windows
+	wnd.body.innerHTML = '<input value="Input" /><br /><button>Button</button><br /><input type="checkbox" /><br /><select><option>One option</option><option>Two options</option></select><br />';
+	welcome.body.innerHTML = 'Welcome to Jin.js!<br />';
+
+	// Create buttons for drag & drop demo
+
+	var drag = document.createElement('button'),
+	drop = document.createElement('button');
+	drag.innerHTML = 'Drag me!';
+	drop.innerHTML = 'Drop the button here!';
+	welcome.body.appendChild(drag);
+	wnd.body.appendChild(drop);
+
+	// Bind the drag and drop functions to the buttons
+	Jin.drag(drag, function(e){
+		Jin.addClass(document.body, 'moving');
+		e.setData('testdata', 'You did it! Yay!')
+	});
+	Jin.drop(drop, function(e){
+		var data = e.getData('testdata');
+		if (data)
+			alert(data);
+	});
+});
+	Jin.settings.dragdrop.onfinish = function(){ Jin.removeClass(document.body, 'moving'); };
+		</script>
+	</head>
+	<body>
+	</body>
+</html>

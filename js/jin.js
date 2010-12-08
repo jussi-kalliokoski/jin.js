@@ -1,14 +1,14 @@
 var Jin;
 (function (document, window){
-
-	function adapt(original, modifier)
+	var settings = {};
+	function adapt(original, modifier) // Independent
 	{
 		if (typeof modifier == 'string')
 			return original + new Number(modifier.substr(1));
 		return modifier;
 	}
 
-	function extend(obj)
+	function extend(obj) // Independent
 	{
 		var i, n;
 		for (i=1; i<arguments.length; i++)
@@ -16,14 +16,18 @@ var Jin;
 				obj[n] = arguments[i][n];
 	}
 
-	function appendChildren(parent)
+	function appendChildren(parent) // Independent
 	{
 		var i;
-		for (i=1; i<arguments.length; i++)
-			parent.appendChild(arguments[i]);
+		if (isArray(arguments[1]))
+			for (i=0; i<arguments[1].length; i++)
+				parent.appendChild(arguments[1][i])
+		else
+			for (i=1; i<arguments.length; i++)
+				parent.appendChild(arguments[i]);
 	}
 
-	function hasClass(elem, cl)
+	function hasClass(elem, cl) // Independent
 	{
 		var classes, i, n, hasClass, elems = (isArray(elem)) ? elem : [elem];
 		for (i=0; i < elems.length; i++)
@@ -36,7 +40,7 @@ var Jin;
 		return false;
 	}
 
-	function hasClasses(elem, cls)
+	function hasClasses(elem, cls) // Requires hasClass()
 	{
 		var cl = cls, i;
 		if (typeof cl == 'string')
@@ -47,7 +51,7 @@ var Jin;
 		return true;
 	}
 
-	function addClass(elem, cl)
+	function addClass(elem, cl) // Independent
 	{
 		var classes, i, n, hasClass, elems = (isArray(elem)) ? elem : [elem];
 		for (i=0; i < elems.length; i++)
@@ -69,7 +73,7 @@ var Jin;
 		}
 	}
 
-	function addClasses(elem, cls)
+	function addClasses(elem, cls) // Requires addClass()
 	{
 		var cl = cls, i;
 		if (typeof cl == 'string')
@@ -78,7 +82,7 @@ var Jin;
 			addClass(elem, cl[i]);
 	}
 
-	function removeClass(elem, cl)
+	function removeClass(elem, cl) // Independent
 	{
 		var classes, i, n, hasClass, elems = (elem.length) ? elem : [elem];
 		for (i=0; i < elems.length; i++)
@@ -95,7 +99,7 @@ var Jin;
 		}
 	}
 
-	function removeClasses(elem, cls)
+	function removeClasses(elem, cls) // Requires removeClasses()
 	{
 		var cl = cls, i;
 		if (typeof cl == 'string')
@@ -104,7 +108,24 @@ var Jin;
 			removeClass(elem, cl[i]);
 	}
 
-	function bind(elem, type, func, pass)
+	function toggleClass(elem, cls) // Requires hasClass(), addClass() and removeClass()
+	{
+		if (hasClass(elem, cls))
+			removeClass(elem, cls);
+		else
+			addClass(elem, cls);
+	}
+
+	function toggleClasses(elem, cls) // Requires toggleClass and its dependencies
+	{
+		var cl = cls, i;
+		if (typeof cl == 'string')
+			cl = cl.split(' ');
+		for (i=0; i<cl.length; i++)
+			toggleClass(elem, cl[i]);
+	}
+
+	function bind(elem, type, func, pass) // Independent
 	{
 		var fnc, i;
 		if (isArray(elem))
@@ -127,7 +148,7 @@ var Jin;
 		elem._binds.push({type: type, func: func, fnc: fnc});
 	}
 
-	function unbind(elem, type, func)
+	function unbind(elem, type, func) // Independent
 	{
 		var fnc, i;
 		if (isArray(elem))
@@ -146,7 +167,7 @@ var Jin;
 			
 	}
 
-	function getOffset(elem, parent)
+	function getOffset(elem, parent) // Independent
 	{
 		var pElement = elem, top = 0, left = 0;
 		while (pElement && pElement != parent)
@@ -160,15 +181,15 @@ var Jin;
 		return {x: left, y: top};
 	}
 
-	function isArray(obj)
+	function isArray(obj) // Independent
 	{
 		if (obj.constructor.toString().indexOf('Array') == '-1')
 			return false;
 		return true;
 	}
 
-	// Element grabber
-	var grab;
+	// Element grabber, requires() bind and unbind()
+	var grab, ungrab;
 	(function(){
 		grab = function(elem, options)
 		{
@@ -179,12 +200,18 @@ var Jin;
 				position: {x: 0, y: 0},
 				start: {x: 0, y: 0},
 				affects: document,
-				stopPropagation: true,
+				stopPropagation: false,
 				preventDefault: true,
-				touch: false // Not implemented yet
+				touch: true // Implementation unfinished, and doesn't support multitouch
 			}
 			extend(data, options);
 			bind(elem, 'mousedown', mousedown, data);
+			if (data.touch)
+				bind(elem, 'touchstart', touchstart, data);
+		}
+		ungrab = function(elem)
+		{
+			unbind(elem, 'mousedown', mousedown);
 		}
 		function mousedown(e)
 		{
@@ -230,13 +257,130 @@ var Jin;
 			if (e.data.onfinish)
 				e.data.onfinish(e.data);
 		}
+		function touchstart(e)
+		{
+			e.data.position.x = e.touches[0].pageX;
+			e.data.position.y = e.touches[0].pageY;
+			e.data.start.x = e.touches[0].pageX;
+			e.data.start.y = e.touches[0].pageY;
+			e.data.event = e;
+			if (e.data.onstart && e.data.onstart(e.data))
+				return;
+			if (e.preventDefault && e.data.preventDefault)
+				e.preventDefault();
+			if (e.stopPropagation && e.data.stopPropagation)
+				e.stopPropagation();
+			bind(e.data.affects, 'touchmove', touchmove, e.data);
+			bind(e.data.affects, 'touchend', touchend, e.data);
+		}
+		function touchmove(e)
+		{
+			if (e.preventDefault && e.data.preventDefault)
+				e.preventDefault();
+			if (e.stopPropagation && e.data.stopPropagation)
+				e.stopPropagation();
+			e.data.move.x = e.touches[0].pageX - e.data.position.x;
+			e.data.move.y = e.touches[0].pageY - e.data.position.y;
+			e.data.position.x = e.touches[0].pageX;
+			e.data.position.y = e.touches[0].pageY;
+			e.data.offset.x = e.touches[0].pageX - e.data.start.x;
+			e.data.offset.y = e.touches[0].pageY - e.data.start.y;
+			e.data.event = e;
+			if (e.data.onmove)
+				e.data.onmove(e.data);
+		}
+		function touchend(e)
+		{
+			if (e.preventDefault && e.data.preventDefault)
+				e.preventDefault();
+			if (e.stopPropagation && e.data.stopPropagation)
+				e.stopPropagation();
+			unbind(e.data.affects, 'touchmove', touchmove);
+			unbind(e.data.affects, 'touchend', touchend);
+			e.data.event = e;
+			if (e.data.onfinish)
+				e.data.onfinish(e.data);
+		}
 	})();
 
-	function layer()
+	var drag, drop; // Requires bind, unbind
+	(function(){
+		settings.dragdrop = {};
+		var data = null;
+		drag = function(elem, func)
+		{
+			bind(elem, 'mousedown', startdrag, func);
+			bind(elem, 'touchstart', startdrag, func);
+		}
+
+		drop = function(elem, funcdrop, funcover)
+		{
+			bind(elem, 'mousemove', dragover, funcover);
+			bind(elem, 'touchmove', dragover, funcover);
+			bind(elem, 'mouseup', dragfinish, funcdrop);
+			bind(elem, 'touchend', dragfinish, funcdrop);
+		}
+
+		function startdrag(e)
+		{
+			e.setData = function(type, value){ data = {type: type, value: value}; };
+			e.data.call(this, e);
+			if (data === null)
+				return;
+			bind(document, 'mouseup', docrelease);
+			bind(document, 'touchend', docrelease);
+			bind(document, 'mousemove', move);
+			bind(document, 'touchmove', move);
+			if (e.preventDefault)
+				e.preventDefault();
+		}
+
+		function dragover(e)
+		{
+			
+		}
+
+		function dragfinish(e)
+		{
+			if (data === null)
+				return;
+			e.getData = function(type){ if (data.type == type) return data.value; };
+			e.data.call(this, e);
+		}
+
+		function move(e)
+		{
+			if (e.preventDefault)
+				e.preventDefault();
+			if (e.stopPropagation)
+				e.stopPropagation();
+		}
+
+		function docrelease(e)
+		{
+			if ((data === null) || (e.touches && e.touches.length))
+				return;
+			if (e.preventDefault)
+				e.preventDefault();
+			data = null;
+			unbind(document, 'mouseup', docrelease);
+			unbind(document, 'touchend', docrelease);
+			unbind(document, 'mousemove', move);
+			unbind(document, 'touchmove', move);
+			if (settings.dragdrop.onfinish)
+				settings.dragdrop.onfinish.call(this, e);
+		}
+	})();
+
+	function layer() // Independent
 	{
 		var lr = [], i;
-		for (i=0; i<arguments.length; i++)
-		lr.push(arguments[i]);
+		if (isArray(arguments[0]))
+			for (i=0; i<arguments[0].length; i++)
+				lr.push(arguments[0][i]);
+		else
+			for (i=0; i<arguments.length; i++)
+				lr.push(arguments[i]);
 		lr.refresh = function()
 		{
 			for (var i=0; i<this.length; i++)
@@ -288,6 +432,20 @@ var Jin;
 		// Make something up here.
 	}
 
+	function experimentalCss(elem, property, value) // Independent
+	{
+		var prefixes = ['', '-webkit-', '-moz-', '-o-'];
+		if (!value)
+		{
+			while(prefixes.length && !value)
+				value = elem.style[prefixes.pop() + property];
+			return value;
+		}
+		else
+			while (prefixes.length)
+				elem.style[prefixes.pop() + property] = value;
+	}
+
 	Jin = {
 		bind: bind,
 		unbind: unbind,
@@ -298,12 +456,19 @@ var Jin;
 		removeClass: removeClass,
 		hasClasses: hasClasses,
 		hasClass: hasClass,
+		toggleClass: toggleClass,
+		toggleClasses: toggleClasses,
 		getOffset: getOffset,
 		adapt: adapt,
 		extend: extend,
 		appendChildren: appendChildren,
 		getContentSize: getContentSize,
 		layer: layer,
-		isArray: isArray
+		isArray: isArray,
+		experimentalCss: experimentalCss,
+		drag: drag,
+		drop: drop,
+		settings: settings,
+		version: '0.1 Beta'
 	};
 })(document, window);
