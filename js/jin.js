@@ -116,9 +116,12 @@ var Jin;
 		var fnc = function(e)
 		{
 			e.data = pass;
-			func(e);
+			func.call(elem, e);
 		}
-		elem.addEventListener(type, fnc, false);
+		if (document.addEventListener)
+			elem.addEventListener(type, fnc, false);
+		else
+			elem.attachEvent('on' + type, fnc);
 		if (!elem._binds)
 			elem._binds = [];
 		elem._binds.push({type: type, func: func, fnc: fnc});
@@ -136,7 +139,10 @@ var Jin;
 		if (elem._binds)
 		for (var i=0; i<elem._binds.length; i++)
 			if (elem._binds[i].type == type && elem._binds[i].func == func)
-				elem.removeEventListener(type, elem._binds[i].fnc, false);
+				if (document.removeEventListener)
+					elem.removeEventListener(type, elem._binds[i].fnc, false);
+				else
+					elem.detachEvent('on'+type, elem._binds[i].fnc);
 			
 	}
 
