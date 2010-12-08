@@ -106,6 +106,13 @@ var Jin;
 
 	function bind(elem, type, func, pass)
 	{
+		var fnc, i;
+		if (typeof elem == 'array')
+		{
+			for (i=0; i<elem.length; i++)
+				bind(elem[i], type, func, pass);
+			return;
+		}
 		var fnc = function(e)
 		{
 			e.data = pass;
@@ -119,6 +126,13 @@ var Jin;
 
 	function unbind(elem, type, func)
 	{
+		var fnc, i;
+		if (typeof elem == 'array')
+		{
+			for (i=0; i<elem.length; i++)
+				unbind(elem[i], type, func, pass);
+			return;
+		}
 		if (elem._binds)
 		for (var i=0; i<elem._binds.length; i++)
 			if (elem._binds[i].type == type && elem._binds[i].func == func)

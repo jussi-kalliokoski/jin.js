@@ -7,9 +7,11 @@
 		<script src="../js/jindow.js"></script>
 		<script>
 Jin.bind(window, 'load', function(){
-	var wnd = Jindow();
-	document.body.appendChild(wnd.dom);
+	var wnd = new Jindow({title: 'Testbox'}),
+	welcome = new Jindow({title: 'Welcome', left: 500});
+	Jin.appendChildren(document.body, wnd.dom, welcome.dom);
 	wnd.body.innerHTML = '<input value="Input" /><br /><button>Button</button><br /><input type="checkbox" /><br /><select><option>One option</option><option>Two options</option></select>';
+	welcome.body.innerHTML = 'Welcome to Jin.js!';
 });
 		</script>
 	</head>
