@@ -7,9 +7,12 @@
 		<script src="../js/jindow.js"></script>
 		<script>
 Jin.bind(window, 'load', function(){
-	var wnd = Jindow({title: 'Testbox'}),
+	var layer,
+	wnd = Jindow({title: 'Testbox'}),
 	welcome = new Jindow({title: 'Welcome', left: 500});
+	layer = Jin.layer(wnd.dom, welcome.dom);
 	Jin.appendChildren(document.body, wnd.dom, welcome.dom);
+	Jin.bind(layer, 'click', function(){ layer.toTop(this); layer.refresh(); });
 	wnd.body.innerHTML = '<input value="Input" /><br /><button>Button</button><br /><input type="checkbox" /><br /><select><option>One option</option><option>Two options</option></select>';
 	welcome.body.innerHTML = 'Welcome to Jin.js!';
 	

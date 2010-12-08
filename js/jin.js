@@ -25,7 +25,7 @@ var Jin;
 
 	function hasClass(elem, cl)
 	{
-		var classes, i, n, hasClass, elems = (typeof elem == 'array') ? elem : [elem];
+		var classes, i, n, hasClass, elems = (isArray(elem)) ? elem : [elem];
 		for (i=0; i < elems.length; i++)
 		{
 			classes = elems[i].className.split(' ');
@@ -49,7 +49,7 @@ var Jin;
 
 	function addClass(elem, cl)
 	{
-		var classes, i, n, hasClass, elems = (typeof elem == 'array') ? elem : [elem];
+		var classes, i, n, hasClass, elems = (isArray(elem)) ? elem : [elem];
 		for (i=0; i < elems.length; i++)
 		{
 			hasClass = false;
@@ -107,7 +107,7 @@ var Jin;
 	function bind(elem, type, func, pass)
 	{
 		var fnc, i;
-		if (typeof elem == 'array')
+		if (isArray(elem))
 		{
 			for (i=0; i<elem.length; i++)
 				bind(elem[i], type, func, pass);
@@ -130,7 +130,7 @@ var Jin;
 	function unbind(elem, type, func)
 	{
 		var fnc, i;
-		if (typeof elem == 'array')
+		if (isArray(elem))
 		{
 			for (i=0; i<elem.length; i++)
 				unbind(elem[i], type, func, pass);
@@ -158,6 +158,13 @@ var Jin;
 			pElement = pElement.parentNode;
 		}
 		return {x: left, y: top};
+	}
+
+	function isArray(obj)
+	{
+		if (obj.constructor.toString().indexOf('Array') == '-1')
+			return false;
+		return true;
 	}
 
 	// Element grabber
@@ -225,6 +232,57 @@ var Jin;
 		}
 	})();
 
+	function layer()
+	{
+		var lr = [], i;
+		for (i=0; i<arguments.length; i++)
+		lr.push(arguments[i]);
+		lr.refresh = function()
+		{
+			for (var i=0; i<this.length; i++)
+				this[i].style['z-index'] = i;
+		};
+		lr.indexOf = function(elem)
+		{
+			for (var i=0; i<this.length; i++)
+				if (this[i] === elem)
+					return i;
+			return -1;
+		}
+		lr.first = function()
+		{
+			return this[0];
+		}
+		lr.last = function()
+		{
+			return this[this.length-1];
+		}
+		lr.move = function(elem, to)
+		{
+			if (to >= this.length - 1)
+				return this.toTop(elem);
+			if (to <= 0)
+				return this.toBottom(elem);
+			this.splice(this.indexOf(elem), 1);
+			this.splice(to, 0, elem);
+		}
+		lr.toBottom = function(elem)
+		{
+			this.splice(this.indexOf(elem), 1);
+			this.unshift(elem);
+		}
+		lr.toTop = function(elem)
+		{
+			this.splice(this.indexOf(elem), 1);
+			this.push(elem);
+		}
+		lr.remove = function(elem)
+		{
+			this.splice(this.indexOf(elem), 1);
+		}
+		return lr;
+	};
+
 	function getContentSize(elem)
 	{
 		// Make something up here.
@@ -244,6 +302,8 @@ var Jin;
 		adapt: adapt,
 		extend: extend,
 		appendChildren: appendChildren,
-		getContentSize: getContentSize
+		getContentSize: getContentSize,
+		layer: layer,
+		isArray: isArray
 	};
 })(document, window);
