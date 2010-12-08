@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Jindow</title>
+		<link rel="stylesheet" href="../css/jindow.css" />
+		<script src="../js/jin.js"></script>
+		<script src="../js/jindow.js"></script>
+		<script>
+Jin.bind(window, 'load', function(){
+	var wnd = Jindow();
+	document.body.appendChild(wnd.dom);
+	wnd.body.innerHTML = '<input value="Input" /><br /><button>Button</button><br /><input type="checkbox" /><br /><select><option>One option</option><option>Two options</option></select>';
+});
+		</script>
+	</head>
+	<body>
+	</body>
+</html>

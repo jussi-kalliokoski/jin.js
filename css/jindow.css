@@ -1,0 +1,120 @@
+body
+{
+	background-color: black;
+}
+
+body.moving
+{
+	cursor: move;
+}
+
+body.resizing
+{
+	cursor: se-resize;
+}
+
+div
+{
+	border-radius: inherit;
+}
+
+div.window
+{
+	position: absolute;
+	border-radius: 3px;
+	background-color: rgba(50, 50, 50, 0.8);
+	color: white;
+	overflow: hidden;
+	min-width: 150px;
+	min-height: 25px;
+}
+
+div.window div.titlebar
+{
+	height: auto;
+}
+
+div.window div.titlebar div
+{
+	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, rgba(100, 100, 100, 0.8)), color-stop(1.0, transparent));
+}
+
+div.window div.titlebar div.menu
+{
+	position: absolute;
+	width: auto;
+	top: 0px;
+	left: 0px;
+}
+
+div.window div.titlebar div.controls
+{
+	position: absolute;
+	width: auto;
+	top: 0px;
+	right: 0px;
+}
+
+div.window div.titlebar div.title
+{
+	text-align: center;
+}
+
+div.window div.titlebar div.controls button
+{
+	margin-top: 0px;
+	margin: 0px;
+	border-width: 1px;
+	border-color: darkgreen;
+	background-color: darkgreen;
+	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, rgba(0, 0, 0, 0.8)), color-stop(1.0, transparent));
+	color: white;
+	font-weight: bold;
+}
+
+div.window div.titlebar div.controls button.close
+{
+	border-radius: 0px 3px 0px 0px;
+	border-color: darkred;
+	background-color: darkred;
+}
+
+div.window div.titlebar div.controls button.minimize
+{
+	border-radius: 0px 0px 0px 3px;
+}
+
+div.window div.content input, div.window div.content input[type=check], div.window div.content select, div.window div.content button, div.window div.content textarea
+{
+	border-radius: 2px;
+	border-width: 1px;
+	border-color: rgba(100, 100, 100, 0.8);
+	background-color: rgba(100, 100, 100, 0.8);
+	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, rgba(0, 0, 0, 0.8)), color-stop(1.0, transparent));
+	color: white;
+}
+
+@-webkit-keyframes glow
+{
+	from
+	{
+		background-color: rgba(100, 100, 100, 0.8);
+	}
+	to
+	{
+		background-color: rgba(0, 0, 0, 0.6);
+	}
+}
+
+div.window div.content input:focus, div.window div.content textarea:focus
+{
+	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, rgba(150, 150, 150, 0.8)), color-stop(1.0, transparent));
+}
+
+div.window div.content button:hover, div.window div.content input:focus, div.window div.content textarea:focus
+{
+	-webkit-animation-name: glow;
+	-webkit-animation-duration: 3s;
+	-webkit-animation-iteration-count: 10;
+	-webkit-animation-direction: alternate;
+}
