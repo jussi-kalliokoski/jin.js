@@ -16,12 +16,18 @@ body.resizing
 div
 {
 	border-radius: inherit;
+	-moz-border-radius: inherit;
+	-webkit-border-radius: inherit;
+	-o-border-radius: inherit;
 }
 
 div.window
 {
 	position: absolute;
 	border-radius: 3px;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	-o-border-radius: 3px;
 	background-color: rgba(50, 50, 50, 0.6);
 	color: white;
 	overflow: hidden;
@@ -42,6 +48,7 @@ div.window div.titlebar
 div.window div.titlebar div
 {
 	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, rgba(100, 100, 100, 0.8)), color-stop(1.0, transparent));
+	background-image: -moz-linear-gradient(-90deg, rgba(100, 100, 100, 0.8), transparent);
 }
 
 div.window div.titlebar div.menu
@@ -73,6 +80,7 @@ div.window div.titlebar div.controls button
 	border-color: darkgreen;
 	background-color: darkgreen;
 	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, rgba(0, 0, 0, 0.8)), color-stop(1.0, transparent));
+	background-image: -moz-linear-gradient(-90deg, rgba(0, 0, 0, 0.8), transparent);
 	color: white;
 	font-weight: bold;
 }
@@ -96,6 +104,7 @@ div.window div.content input, div.window div.content input[type=check], div.wind
 	border-color: rgba(100, 100, 100, 0.8);
 	background-color: rgba(100, 100, 100, 0.8);
 	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, rgba(0, 0, 0, 0.8)), color-stop(1.0, transparent));
+	background-image: -moz-linear-gradient(-90deg, rgba(0, 0, 0, 0.8), transparent);
 	color: white;
 }
 
@@ -114,6 +123,7 @@ div.window div.content input, div.window div.content input[type=check], div.wind
 div.window div.content input:focus, div.window div.content textarea:focus
 {
 	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, rgba(150, 150, 150, 0.8)), color-stop(1.0, transparent));
+	background-image: -moz-linear-gradient(-90deg, rgba(150, 150, 150, 0.8), transparent);
 }
 
 div.window div.content button:hover, div.window div.content input:focus, div.window div.content textarea:focus

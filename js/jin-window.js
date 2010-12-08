@@ -116,9 +116,6 @@
 			{
 				if (that.onclose && !that.onclose() && force !== true)
 					return;
-				for (var i=0; i<windows.length; i++)
-					if (windows[i] == that)
-						windows.splice(i--, 1);
 				window.parentNode.removeChild(window);
 				that = null;
 			}

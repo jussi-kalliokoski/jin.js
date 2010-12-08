@@ -427,6 +427,16 @@ var Jin;
 		return lr;
 	};
 
+	function getWindowSize(wnd)
+	{
+		if (!wnd)
+			wnd = window;
+		if (window.document.documentElement)
+			return {width: wnd.document.documentElement['clientWidth'], height: wnd.document.documentElement['clientHeight']};
+		else
+			return {width: elem.document.body['clientWidth'], height: elem.document.body['clientWidth']};
+	}
+
 	function getContentSize(elem)
 	{
 		// Make something up here.
@@ -446,6 +456,61 @@ var Jin;
 				elem.style[prefixes.pop() + property] = value;
 	}
 
+	var commandLine = new function()
+	{
+		var path, getdata, iddata;
+
+		function reload()
+		{
+			if (path == location.href)
+				return;
+			path = location.href;
+			getdata = [];
+			iddata = [];
+			var pathsplit, getsplit, get, id, i, l, val, splitbreak;
+			pathsplit = path.split('?');
+			getsplit = pathsplit[pathsplit.length-1].split('#');
+			if (pathsplit.length > 1)
+			{
+				get = getsplit[0].split('&');
+				for (i=0, l=get.length; i<l; i++)
+				{
+					splitbreak = get[i].split('=');
+					val = (splitbreak.length == 1) ? true : splitbreak[1];
+					getdata.push({name: splitbreak[0], value: val});
+				}
+			}
+			if (getsplit.length > 1)
+			{
+				id = getsplit[1].split('&');
+				for (i=0, l=id.length; i<l; i++)
+				{
+					splitbreak = id[i].split('=');
+					val = (splitbreak.length == 1) ? true : splitbreak[1];
+					iddata.push({name: splitbreak[0], value: val});
+				}
+			}
+		}
+
+		this.id = function(id)
+		{
+			reload();
+			for (var i=0, l=iddata.length; i<l; i++)
+				if (id === iddata[i].name)
+					return iddata[i].value;
+			return false;
+		};
+
+		this.get = function(id)
+		{
+			reload();
+			for (var i=0, l=getdata.length; i<l; i++)
+				if (id === getdata[i].name)
+					return getdata[i].value;
+			return false;
+		}
+	};
+
 	Jin = {
 		bind: bind,
 		unbind: unbind,
@@ -463,11 +528,13 @@ var Jin;
 		extend: extend,
 		appendChildren: appendChildren,
 		getContentSize: getContentSize,
+		getWindowSize: getWindowSize,
 		layer: layer,
 		isArray: isArray,
 		experimentalCss: experimentalCss,
 		drag: drag,
 		drop: drop,
+		commandLine: commandLine,
 		settings: settings,
 		version: '0.1 Beta'
 	};
