@@ -1,8 +1,8 @@
-(function (window){
+(function (window, undefined){
 	var
 		document = window.document,
 		settings = {},
-		NodeList = (document.getElementsByClassName) ? document.getElementsByClassName('').constructor : null;
+		NodeList = (document.getElementsByClassName) ? document.getElementsByClassName('').constructor : undefined;
 	function adapt(original, modifier) // Independent
 	{
 		if (typeof modifier == 'string')
@@ -194,7 +194,7 @@
 	}
 	
 
-	// Element grabber, requires() bind and unbind() and their depencencies
+	// Element grabber, requires bind() and unbind() and their depencencies
 	var grab, ungrab;
 	(function(){
 		grab = function(elem, options)
@@ -309,75 +309,6 @@
 		}
 	})();
 
-	var drag, drop; // Requires bind, unbind
-	(function(){
-		settings.dragdrop = {};
-		var data = null;
-		drag = function(elem, func)
-		{
-			bind(elem, 'mousedown', startdrag, func);
-			bind(elem, 'touchstart', startdrag, func);
-		}
-
-		drop = function(elem, funcdrop, funcover)
-		{
-			bind(elem, 'mousemove', dragover, funcover);
-			bind(elem, 'touchmove', dragover, funcover);
-			bind(elem, 'mouseup', dragfinish, funcdrop);
-			bind(elem, 'touchend', dragfinish, funcdrop);
-		}
-
-		function startdrag(e)
-		{
-			e.setData = function(type, value){ data = {type: type, value: value}; };
-			e.data.call(this, e);
-			if (data === null)
-				return;
-			bind(document, 'mouseup', docrelease);
-			bind(document, 'touchend', docrelease);
-			bind(document, 'mousemove', move);
-			bind(document, 'touchmove', move);
-			if (e.preventDefault)
-				e.preventDefault();
-		}
-
-		function dragover(e)
-		{
-			
-		}
-
-		function dragfinish(e)
-		{
-			if (data === null)
-				return;
-			e.getData = function(type){ if (data.type == type) return data.value; };
-			e.data.call(this, e);
-		}
-
-		function move(e)
-		{
-			if (e.preventDefault)
-				e.preventDefault();
-			if (e.stopPropagation)
-				e.stopPropagation();
-		}
-
-		function docrelease(e)
-		{
-			if ((data === null) || (e.touches && e.touches.length))
-				return;
-			if (e.preventDefault)
-				e.preventDefault();
-			data = null;
-			unbind(document, 'mouseup', docrelease);
-			unbind(document, 'touchend', docrelease);
-			unbind(document, 'mousemove', move);
-			unbind(document, 'touchmove', move);
-			if (settings.dragdrop.onfinish)
-				settings.dragdrop.onfinish.call(this, e);
-		}
-	})();
-
 	function layer() // Requires isArrayish()
 	{
 		var lr = [], i;
@@ -390,7 +321,7 @@
 		lr.refresh = function()
 		{
 			for (var i=0; i<this.length; i++)
-				this[i].style['z-index'] = i;
+				setAlign(this[i], i);
 		};
 		lr.indexOf = function(elem)
 		{
@@ -399,11 +330,11 @@
 					return i;
 			return -1;
 		}
-		lr.first = function()
+		lr.bottom = lr.first = function()
 		{
 			return this[0];
 		}
-		lr.last = function()
+		lr.top = lr.last = function()
 		{
 			return this[this.length-1];
 		}
@@ -431,19 +362,23 @@
 			this.splice(this.indexOf(elem), 1);
 		}
 		return lr;
+
+		function setAlign(elem, pos)
+		{
+			elem.style['z-index'] = pos;
+		}
 	};
 
-	function getWindowSize(wnd)
+	function getWindowSize(wnd) // Independent
 	{
 		if (!wnd)
 			wnd = window;
 		if (window.document.documentElement)
 			return {width: wnd.document.documentElement['clientWidth'], height: wnd.document.documentElement['clientHeight']};
-		else
-			return {width: elem.document.body['clientWidth'], height: elem.document.body['clientWidth']};
+		return {width: elem.document.body['clientWidth'], height: elem.document.body['clientWidth']};
 	}
 
-	function getContentSize(elem)
+	function getContentSize(elem) // Independent
 	{
 		return {width: elem.offsetWidth, height: elem.offsetHeight};
 	}
@@ -552,8 +487,6 @@
 		isArray: isArray,
 		isArrayish: isArrayish,
 		experimentalCss: experimentalCss,
-		drag: drag,
-		drop: drop,
 		commandLine: commandLine,
 		addModule: addModule,
 		settings: settings,

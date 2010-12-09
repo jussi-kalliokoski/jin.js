@@ -1,13 +1,8 @@
-// Copyright 2010 Jussi Kalliokoski. Licensed under MIT License.
-
-(function(document, window, Jin){
+(function(Jin, undefined){ 
 	var swipeObjs = [],
-	bind = Jin.bind,
-	unbind = Jin.unbind,
 	grab = Jin.grab,
 	ungrab = Jin.ungrab,
-	extend = Jin.extend,
-	addModule = Jin.addModule;
+	extend = Jin.extend;
 
 	Jin('unswipe', unswipe);
 	Jin('swipe', swipe);
@@ -47,9 +42,9 @@
 		var swipeObj =
 		{
 			onMotion: function(){},
-			onSwipe: null,
-			onEnd: null,
-			passData: null,
+			onSwipe: undefined,
+			onEnd: undefined,
+			passData: undefined,
 			affects: this,
 			friction: 1.1,
 			interval: 50,
@@ -81,14 +76,14 @@
 			throw 'Invalid arguments: Friction must be over 1.';
 		extend(swipeObj,
 		{
-			previousAngle: null,
-			previousX: null,
-			previousY: null,
+			previousAngle: undefined,
+			previousX: undefined,
+			previousY: undefined,
 			motionX: 0,
 			motionY: 0,
 			area: elem,
 			released: true,
-			timer: null,
+			timer: undefined,
 			motions: [],
 			kill: function()
 			{
@@ -140,15 +135,15 @@
 		var swipeObj =
 		{
 			onMotion: function(){},
-			onSwipe: null,
-			onEnd: null,
-			passData: null,
+			onSwipe: undefined,
+			onEnd: undefined,
+			passData: undefined,
 			affects: this,
 			friction: 1.1,
 			interval: 50,
 			multiple: false,
-			centerX: null,
-			centerY: null
+			centerX: undefined,
+			centerY: undefined
 		};
 		if (typeof arg1 == 'object')
 			extend(swipeObj, arg1);
@@ -180,11 +175,11 @@
 			motionY: 0,
 			area: elem,
 			released: true,
-			timer: null,
+			timer: undefined,
 			motions: [],
-			circulateX: null,
-			circulateY: null,
-			previousAngle: null,
+			circulateX: undefined,
+			circulateY: undefined,
+			previousAngle: undefined,
 			kill: function()
 			{
 				for (var i=0; i<this.motions.length; i++)
@@ -243,4 +238,4 @@
 			data: swipeObj
 		});
 	};
-})(document, window, Jin);
+})(Jin);

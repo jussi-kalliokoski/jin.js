@@ -1,4 +1,4 @@
-(function(document, window, Jin){
+(function(document, Jin, undefined){
 	Jin('window', function(options)
 	{
 		var opts = 
@@ -14,7 +14,7 @@
 			minButton: true,
 			resizable: true,
 			visible: true,
-			onclose: null
+			onclose: undefined
 		}
 		wnd = new function JindowWindow()
 		{
@@ -117,7 +117,7 @@
 				if (that.onclose && !that.onclose() && force !== true)
 					return;
 				window.parentNode.removeChild(window);
-				that = null;
+				that = undefined;
 			}
 
 			function minimize()
@@ -132,12 +132,12 @@
 
 			function move(left, top)
 			{
-				if (left !== null)
+				if (left !== undefined)
 				{
 					that.left = adapt(that.left, left);
 					window.style['left'] = that.left+'px';
 				}
-				if (top !== null)
+				if (top !== undefined)
 				{
 					that.top = adapt(that.top, top);
 					window.style['top'] = that.top+'px';
@@ -146,12 +146,12 @@
 
 			function resize(width, height)
 			{
-				if (width !== null)
+				if (width !== undefined)
 				{
 					that.width = adapt(that.width, width);
 					window.style['width'] = that.width+'px';
 				}
-				if (height != null)
+				if (height != undefined)
 				{
 					that.height = adapt(that.height, height);
 					window.style['height'] = that.height+'px';
@@ -186,4 +186,4 @@
 	{
 		return document.createElement(type);
 	}
-})(document, window, Jin);
+})(document, Jin);
