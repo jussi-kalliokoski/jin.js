@@ -365,7 +365,7 @@
 
 		function setAlign(elem, pos)
 		{
-			elem.style['z-index'] = pos;
+			elem.style.zIndex = pos;
 		}
 	};
 
