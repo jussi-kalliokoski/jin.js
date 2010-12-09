@@ -129,6 +129,8 @@
 
 	function bind(elem, type, func, pass) // Independent
 	{
+		if ((elem === document || elem === window) && type === 'ready')
+			onReady(func, pass);
 		var fnc, i;
 		if (isArrayish(elem))
 		{
@@ -481,6 +483,65 @@
 		}
 	};
 
+	function handleReady() // jQuery-ish :)
+	{
+		if (ready.bound)
+			return;
+		ready.bound = true;
+
+		ready.f = [];
+		ready.p = [];
+
+		if (document.readyState === 'complete')
+			return setTimeout(ready, 1);
+		if (document.addEventListener)
+		{
+			document.addEventListener('DOMContentLoaded', DOMReady, false);
+			window.addEventListener('load', ready, false);
+		}
+		else if (document.attachEvent)
+		{
+			document.attachEvent('onreadystatechange', DOMReady, false);
+			window.attachEvent('onload', ready);
+		}
+	}
+
+	function DOMReady()
+	{
+		if (document.removeEventListener)
+			document.removeEventListener('DOMContentLoaded', DOMReady, false);
+		else if (document.detachEvent)
+		{
+			if (document.readyState !== 'complete')
+				return;
+			document.detachEvent('onreadystatechange', DOMReady);
+		}
+		ready();
+	}
+
+	function ready()
+	{
+		if (ready.triggered)
+			return;
+		ready.triggered = true;
+		var propagate = true,
+		e = {stopPropagation: function(){ propagate = false; }},
+		i;
+		for (i=0; i < ready.f.length && propagate; i++)
+		{
+			e.data = ready.p[i];
+			ready.f[i].call(document, e);
+		}
+	}
+
+	function onReady(func, pd)
+	{
+		if (ready.triggered)
+			return func.call(document, {stopPropagation: function(){}, data: pd});
+		ready.f.push(func);
+		ready.p.push(pd);
+	}
+
 	function addModule(name, func)
 	{
 		Jin[name] = Jin.fn[name] = func;
@@ -488,6 +549,7 @@
 	}
 
 	var fn = Jin.prototype = {
+		onready: onReady,
 		bind: bind,
 		unbind: unbind,
 		grab: grab,
@@ -520,10 +582,12 @@
 	window.Jin = Jin;
 	extend(Jin, fn);
 
+	handleReady();
+
 	function Jin(arg1, arg2)
 	{
 		if (typeof arg1 == 'function')
-			return bind(window, 'load', arg1);
+			return onReady(arg1, arg2);
 		if (typeof arg1 == 'string' && typeof arg2 == 'function')
 			return addModule(arg1, arg2);
 		if (isArrayish(arg1))
