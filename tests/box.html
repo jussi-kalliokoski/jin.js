@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Jin-swipe box demo</title>
+<script src="../js/jin.js"></script>
+<script src="../js/jin-swipe.js"></script>
+<style>
+body
+{
+	background-color: black;
+	overflow: hidden;
+	color: #ffffff;
+}
+div
+{
+	position: absolute;
+	-moz-box-shadow: 10px 10px 5px rgba(0,0,0,0.7);
+	-webkit-box-shadow: 10px 10px 5px rgba(0,0,0,0.7);
+	box-shadow: 10px 10px 5px rgba(0,0,0,0.7);
+	border-radius: 3px;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	background-image: -moz-linear-gradient(left bottom, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.0) 100%);
+	background-image: -webkit-gradient(linear, left top, right bottom, color-stop(0, rgba(0, 0, 0, 0.6)), color-stop(1, rgba(0, 0, 0, 0.0)));
+	background-image: gradient(linear, left top, right bottom, color-stop(0, rgba(0, 0, 0, 0.6)), color-stop(1, rgba(0, 0, 0, 0.0)));
+}
+#turning
+{
+	display: none;
+}
+</style>
+<script type="text/javascript">
+Jin(function(){
+	var i = 100, layer = Jin.layer();
+	while(i--)
+	{
+		(function(){
+			var htmlobj = document.createElement('div');
+			Jin.addClass(htmlobj, 'moving');
+			layer.push(htmlobj);
+			document.body.appendChild(htmlobj);
+			Jin.extend(htmlobj.style, {
+				width: Math.floor(Math.random() * 290 + 10)+'px',
+				height: Math.floor(Math.random() * 290 + 10)+'px',
+				top: Math.floor(Math.random() * 1990 + 10)+'px',
+				left: Math.floor(Math.random() * 1990 + 10)+'px',
+				backgroundColor: 'rgba('+Math.floor(Math.random() * 255)+','+Math.floor(Math.random() * 255)+','+Math.floor(Math.random() * 255)+','+(Math.floor(Math.random() * 7)/10+0.3)+')'
+			});
+			var myAngle = Math.random() * Math.PI * 2, prevAngle;
+			Jin.experimentalCss(htmlobj, 'transform', 'rotate('+(Math.floor(myAngle * 1000)/1000)+'rad)');
+
+			Jin.angularSwipe(htmlobj, function(a){
+					myAngle =  myAngle + a / 5;
+					while(myAngle < 0)
+						myAngle += Math.PI * 2;
+					myAngle = myAngle % (Math.PI * 2);
+					Jin.experimentalCss(this, 'transform', 'rotate('+(Math.floor(myAngle*1000)/1000)+'rad)');
+			}, function(e){
+				var cp = getCenterPoint(this),
+				distance = Math.pow(Math.pow(e.position.x - cp.x, 2) + Math.pow(e.position.y - cp.y, 2), 0.5);
+				if (distance >= cp.radius)
+				{
+					e.data.centerX = cp.x;
+					e.data.centerY = cp.y;
+					return true;
+				}
+			}, {affects: document});
+		})();
+	}
+	for (var i=0; i<layer.length; i++)
+	Jin.swipe(layer[i], function(x, y, pd){
+		Jin.extend(this.style, {
+			left: (parseFloat(this.style['left']) + Math.floor(x))+'px',
+			top: (parseFloat(this.style['top']) + Math.floor(y))+'px'
+		});
+	}, function(e){
+		var cp = getCenterPoint(this),
+		distance = Math.pow(Math.pow(e.position.x-cp.x, 2) + Math.pow(e.position.y-cp.y, 2), 0.5);
+		if (distance < cp.radius)
+			return true;
+	}, {affects: document, friction: 1.05});/*
+	$(document).swipe(function(x, y)
+	{
+		$(document).scrollLeft($(document).scrollLeft()-x);
+		$(document).scrollTop($(document).scrollTop()-y);
+	});*/
+});
+
+function getCenterPoint(elem) // This is not a sensible function, just suits the purpose here.
+{
+	var left = parseFloat(elem.style['left']),
+	top = parseFloat(elem.style['top']),
+	width = parseFloat(elem.style['width']),
+	height = parseFloat(elem.style['height']);
+	return {x: Math.floor(left+width/2), y: Math.floor(top+height/2), radius: Math.min(width, height) / 2.5};
+}
+</script>
+</head>
+<body>
+</body>
+</html>

@@ -1,0 +1,112 @@
+<!DOCTYPE html> 
+<html xml:lang="en" lang="en">
+	<head>
+		<title>Jin-swipe: Ball demo</title>
+		<script src="../js/jin.js"></script>
+		<script src="../js/jin-swipe.js"></script>
+		<!--[if gte IE 9]>
+			<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<![endif]-->
+		<!--[if lt IE 9]>
+			<meta http-equiv="X-UA-Compatible" content="IE=edge;chrome=1" />
+		<![endif]-->
+		<style>
+			canvas
+			{
+				position: absolute;
+				display: block;
+				left: 0px;
+				top: 0px;
+				background-color: black;
+			}
+		</style>
+		<script type="text/javascript">
+(function(){
+
+var canvas, framerate = 25, frame = 0, newBalls = [], enableGradients, frames = 0, fps = 0;
+
+Jin(function(){
+	canvas = document.getElementsByTagName('canvas')[0];
+	resize();
+	Jin.bind(window, 'resize', resize);
+	setInterval(draw, 1000/framerate);
+	Jin.swipe(canvas, 
+		function(x, y, pd)
+		{
+			pd.x += x;
+			pd.y += y;
+			newBalls.push({x: pd.x, y: pd.y, r: Math.abs(x + y) * 2, c: pd.c});
+		},
+		function(e, pd)
+		{
+			pd.x = e.position.x+0;
+			pd.y = e.position.y+0;
+			pd.c = 'rgba('+(100+Math.floor(Math.random()*155))+','+(100+Math.floor(Math.random()*155))+','+(100+Math.floor(Math.random()*155))+',0.9)';
+			return true;
+		},
+		{passData: {x: 0, y: 0}, interval: 1000/framerate, friction: 1.1}
+	);
+	enableGradients = Jin.commandLine.get('enableGradients');
+	if (Jin.commandLine.get('debug'))
+		setInterval(function(){fps = frames; frames = 0;}, 1000);
+});
+
+function resize()
+{
+	var wSize = Jin.getWindowSize();
+	width = canvas.width = wSize.width;
+	height = canvas.height = wSize.height;
+}
+
+function draw()
+{
+	if (!canvas.getContext)
+		return;
+	frame++;
+	frames++;
+	if (frame >= framerate)
+		frame = 0;
+	var ctx = canvas.getContext('2d');
+	ctx.save();
+	ctx.fillStyle = 'rgba(0,0,0,0.1)';
+	ctx.fillRect(0, 0, width, height);
+	try{
+		var pulse = Math.floor(  0.5 + (Math.sin(frame / 4) + 1) * 2.5  ) / 10;
+		pulse = (Math.sin(frame / framerate * Math.PI * 2) + 1) / 2;
+		ctx.fillStyle = 'rgba(255,255,255,'+pulse+')';
+		ctx.font = '20px Arial';
+		ctx.fillText('Welcome to the demo!', 10, 30);
+		ctx.fillText('Try holding the mouse button down and move the mouse on the screen.', 10, 55);
+		if (fps)
+			ctx.fillText('FPS: '+fps, 10, 80);
+	}catch(e){}
+	while(newBalls.length)
+	{
+		var currentBall = newBalls.pop(), grad;
+		if (enableGradients)
+		{
+			grad = ctx.createRadialGradient(currentBall.x, currentBall.y, 0,
+				currentBall.x+currentBall.r/4, currentBall.y+currentBall.r/4, currentBall.r * 2);
+			grad.addColorStop(0, currentBall.c);
+			grad.addColorStop(1, '#FFFFFF');
+			ctx.fillStyle = grad;
+		}
+		else
+			ctx.fillStyle = currentBall.c;
+		ctx.beginPath();
+		ctx.moveTo(currentBall.x + currentBall.r, currentBall.y)
+		ctx.arc(currentBall.x, currentBall.y, currentBall.r * 2, 0, Math.PI * 2, false);
+		ctx.closePath();
+		ctx.fill();
+	}
+	ctx.restore();
+}
+
+})();
+		</script>
+	</head>
+	<body>
+		<canvas width="250" height="250">
+		</canvas>
+	</body>
+</html>
