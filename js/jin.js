@@ -1,6 +1,5 @@
-var Jin;
 (function (document, window){
-	var settings = {};
+	var settings = {}, NodeList = (document.getElementsByClassName) ? document.getElementsByClassName().constructor : null;
 	function adapt(original, modifier) // Independent
 	{
 		if (typeof modifier == 'string')
@@ -19,7 +18,7 @@ var Jin;
 	function appendChildren(parent) // Independent
 	{
 		var i;
-		if (isArray(arguments[1]))
+		if (isArrayish(arguments[1]))
 			for (i=0; i<arguments[1].length; i++)
 				parent.appendChild(arguments[1][i])
 		else
@@ -29,7 +28,7 @@ var Jin;
 
 	function hasClass(elem, cl) // Independent
 	{
-		var classes, i, n, hasClass, elems = (isArray(elem)) ? elem : [elem];
+		var classes, i, n, hasClass, elems = (isArrayish(elem)) ? elem : [elem];
 		for (i=0; i < elems.length; i++)
 		{
 			classes = elems[i].className.split(' ');
@@ -53,7 +52,7 @@ var Jin;
 
 	function addClass(elem, cl) // Independent
 	{
-		var classes, i, n, hasClass, elems = (isArray(elem)) ? elem : [elem];
+		var classes, i, n, hasClass, elems = (isArrayish(elem)) ? elem : [elem];
 		for (i=0; i < elems.length; i++)
 		{
 			hasClass = false;
@@ -128,7 +127,7 @@ var Jin;
 	function bind(elem, type, func, pass) // Independent
 	{
 		var fnc, i;
-		if (isArray(elem))
+		if (isArrayish(elem))
 		{
 			for (i=0; i<elem.length; i++)
 				bind(elem[i], type, func, pass);
@@ -151,7 +150,7 @@ var Jin;
 	function unbind(elem, type, func) // Independent
 	{
 		var fnc, i;
-		if (isArray(elem))
+		if (isArrayish(elem))
 		{
 			for (i=0; i<elem.length; i++)
 				unbind(elem[i], type, func, pass);
@@ -181,14 +180,18 @@ var Jin;
 		return {x: left, y: top};
 	}
 
-	function isArray(obj) // Independent, but fairly stupid, needs to be fixed.
+	function isArray(obj) // Independent, are there faster / more reliable methods out there?
 	{
-		if (obj.constructor.toString().indexOf('Array') == '-1')
-			return false;
-		return true;
+		return !!(obj && obj.constructor === Array);
 	}
 
-	// Element grabber, requires() bind and unbind()
+	function isArrayish(obj) // Independent, same as isArray, but also accepts NodeList
+	{
+		return !!(obj && (obj.constructor === Array || obj.constructor === NodeList));
+	}
+	
+
+	// Element grabber, requires() bind and unbind() and their depencencies
 	var grab, ungrab;
 	(function(){
 		grab = function(elem, options)
@@ -372,10 +375,10 @@ var Jin;
 		}
 	})();
 
-	function layer() // Independent
+	function layer() // Requires isArrayish()
 	{
 		var lr = [], i;
-		if (isArray(arguments[0]))
+		if (isArrayish(arguments[0]))
 			for (i=0; i<arguments[0].length; i++)
 				lr.push(arguments[0][i]);
 		else
@@ -442,9 +445,16 @@ var Jin;
 		// Make something up here.
 	}
 
-	function experimentalCss(elem, property, value) // Independent
+	function experimentalCss(elem, property, value) // Requires isArrayish()
 	{
-		var prefixes = ['', '-webkit-', '-moz-', '-o-'];
+		var prefixes, i;
+		if (isArrayish(elem))
+		{
+			for (i=0; i<elem.length; i++)
+				experimentalCss(elem[i], property, value);
+			return;
+		}
+		prefixes = ['', '-webkit-', '-moz-', '-o-'];
 		if (!value)
 		{
 			while(prefixes.length && !value)
@@ -511,7 +521,13 @@ var Jin;
 		}
 	};
 
-	Jin = {
+	function addModule(name, func)
+	{
+		Jin[name] = Jin.fn[name] = func;
+		//console.log('Added module '+name);
+	}
+
+	var fn = Jin.prototype = {
 		bind: bind,
 		unbind: unbind,
 		grab: grab,
@@ -531,11 +547,31 @@ var Jin;
 		getWindowSize: getWindowSize,
 		layer: layer,
 		isArray: isArray,
+		isArrayish: isArrayish,
 		experimentalCss: experimentalCss,
 		drag: drag,
 		drop: drop,
 		commandLine: commandLine,
+		addModule: addModule,
 		settings: settings,
 		version: '0.1 Beta'
 	};
+
+	fn.fn = fn;
+
+	window.Jin = Jin;
+	extend(Jin, fn);
+
+	function Jin(arg1, arg2)
+	{
+		if (typeof arg1 == 'function')
+			return bind(window, 'load', arg1);
+		if (typeof arg1 == 'string' && typeof arg2 == 'function')
+			return addModule(arg1, arg2);
+		if (isArrayish(arg1))
+			return layer(arg1);
+		if (arguments.length)
+			return layer.apply(this, arguments);
+		return Jin;
+	}
 })(document, window);

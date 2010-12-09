@@ -6,7 +6,12 @@
 	unbind = Jin.unbind,
 	grab = Jin.grab,
 	ungrab = Jin.ungrab,
-	extend = Jin.extend;
+	extend = Jin.extend,
+	addModule = Jin.addModule;
+
+	Jin('unswipe', unswipe);
+	Jin('swipe', swipe);
+	Jin('angularSwipe', swipe);
 
 	function startSwipe(swipeObj)
 	{
@@ -26,7 +31,7 @@
 		return swipe;
 	}
 
-	Jin.unswipe = function(elem)
+	function unswipe(elem)
 	{
 		ungrab(elem);
 		for (var i=0; i<swipeObjs.length; i++)
@@ -37,7 +42,7 @@
 			}
 	}
 
-	Jin.swipe = function(elem, arg1, arg2, arg3, arg4)
+	function swipe(elem, arg1, arg2, arg3, arg4)
 	{
 		var swipeObj =
 		{
@@ -130,7 +135,7 @@
 		});
 	};
 
-	Jin.angularSwipe = function(elem, arg1, arg2, arg3, arg4)
+	function angularSwipe(elem, arg1, arg2, arg3, arg4)
 	{
 		var swipeObj =
 		{

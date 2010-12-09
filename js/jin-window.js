@@ -1,5 +1,5 @@
 (function(document, window, Jin){
-	Jin.window = function(options)
+	Jin('window', function(options)
 	{
 		var opts = 
 		{
@@ -159,7 +159,7 @@
 			}
 		};
 		return wnd;
-	};
+	});
 
 	var
 		bind = Jin.bind,
