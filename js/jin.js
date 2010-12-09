@@ -445,7 +445,7 @@
 
 	function getContentSize(elem)
 	{
-		// Make something up here.
+		return {width: elem.offsetWidth, height: elem.offsetHeight};
 	}
 
 	function experimentalCss(elem, property, value) // Requires isArrayish()
