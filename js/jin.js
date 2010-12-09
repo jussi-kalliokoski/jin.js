@@ -181,7 +181,7 @@ var Jin;
 		return {x: left, y: top};
 	}
 
-	function isArray(obj) // Independent
+	function isArray(obj) // Independent, but fairly stupid, needs to be fixed.
 	{
 		if (obj.constructor.toString().indexOf('Array') == '-1')
 			return false;
