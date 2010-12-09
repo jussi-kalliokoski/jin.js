@@ -11,7 +11,7 @@
 
 	Jin('unswipe', unswipe);
 	Jin('swipe', swipe);
-	Jin('angularSwipe', swipe);
+	Jin('angularSwipe', angularSwipe);
 
 	function startSwipe(swipeObj)
 	{
@@ -101,7 +101,7 @@
 			onstart: function(e)
 			{
 				if (e.data.onSwipe && !e.data.onSwipe.apply(e.data.area, [e, e.data.passData]))
-					return;
+					return true;
 				if (!e.data.multiple && e.data.motions.length)
 					e.data.motions[0].kill();
 				var swipe = startSwipe(e.data);
@@ -196,7 +196,7 @@
 			onstart: function(e)
 			{
 				if (e.data.onSwipe && !e.data.onSwipe.apply(e.data.area, [e, e.data.passData]))
-					return;
+					return true;
 				if (!e.data.multiple && e.data.motions.length)
 					e.data.motions[0].kill();
 				var swipe = startSwipe(e.data);

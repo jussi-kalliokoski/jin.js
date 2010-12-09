@@ -1,5 +1,8 @@
-(function (document, window){
-	var settings = {}, NodeList = (document.getElementsByClassName) ? document.getElementsByClassName().constructor : null;
+(function (window){
+	var
+		document = window.document,
+		settings = {},
+		NodeList = (document.getElementsByClassName) ? document.getElementsByClassName().constructor : null;
 	function adapt(original, modifier) // Independent
 	{
 		if (typeof modifier == 'string')
@@ -574,4 +577,4 @@
 			return layer.apply(this, arguments);
 		return Jin;
 	}
-})(document, window);
+})(window);

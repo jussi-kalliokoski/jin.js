@@ -5,7 +5,6 @@
 		<link rel="stylesheet" href="../css/jin-window.css" />
 		<script src="../js/jin.js"></script>
 		<script src="../js/jin-window.js"></script>
-		<script src="../js/jin-swipe.js"></script>
 		<script>
 Jin(function(){
 	var layer,
@@ -15,7 +14,7 @@ Jin(function(){
 	welcome = Jin.window({title: 'Welcome', left: 500});
 
 	// Add them to a layer
-	layer = Jin.layer(wnd.dom, welcome.dom);
+	layer = Jin(wnd.dom, welcome.dom);
 	// Append the layer on body
 	Jin.appendChildren(document.body, layer);
 
