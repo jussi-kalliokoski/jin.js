@@ -2,7 +2,7 @@
 	var
 		document = window.document,
 		settings = {},
-		NodeList = (document.getElementsByClassName) ? document.getElementsByClassName().constructor : null;
+		NodeList = (document.getElementsByClassName) ? document.getElementsByClassName('').constructor : null;
 	function adapt(original, modifier) // Independent
 	{
 		if (typeof modifier == 'string')

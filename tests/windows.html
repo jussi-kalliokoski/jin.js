@@ -20,23 +20,38 @@ Jin(function(){
 
 	// Bind the windows to gain focus on mousedown
 	Jin.bind(layer, 'mousedown', function(){
-		Jin.removeClass(layer, 'selected');
-		Jin.addClass(this, 'selected');
-		layer.toTop(this);
-		layer.refresh();
+		focus(this);
 	});
+	Jin.bind(layer, 'touchstart', function(){
+		focus(this);
+	});
+
+	function focus(elem)
+	{
+		Jin.removeClass(layer, 'selected');
+		Jin.addClass(elem, 'selected');
+		layer.toTop(elem);
+		layer.refresh();
+	}
+
+	// Focus on welcome window
+	focus(welcome.dom);
 
 	// Add content to the windows
 	wnd.body.innerHTML = '<input value="Input" /><br /><button>Button</button><br /><input type="checkbox" /><br /><select><option>One option</option><option>Two options</option></select><br />';
 	welcome.body.innerHTML = 'Welcome to Jin.js!<br />';
 
-	// Create buttons for drag & drop demo
+	// Create buttons for drag & drop demo and for opening other demos
 
 	var drag = document.createElement('button'),
-	drop = document.createElement('button');
+	drop = document.createElement('button'),
+	btnBox = document.createElement('button'),
+	btnBall = document.createElement('button');
 	drag.innerHTML = 'Drag me!';
 	drop.innerHTML = 'Drop the button here!';
-	welcome.body.appendChild(drag);
+	btnBox.innerHTML = 'Open Box demo';
+	btnBall.innerHTML = 'Open Ball demo';
+	Jin.appendChildren(welcome.body, drag, btnBox, btnBall);
 	wnd.body.appendChild(drop);
 
 	// Bind the drag and drop functions to the buttons
@@ -49,6 +64,29 @@ Jin(function(){
 		if (data)
 			alert(data);
 	});
+
+	// Bind the demo buttons to open their respective windows
+	Jin.bind(btnBox, 'click', function(){
+		createIFrameWindow('Box demo', 'box.html');
+	});
+	Jin.bind(btnBall, 'click', function(){
+		createIFrameWindow('Ball demo', 'ball.html');
+	});
+
+	function createIFrameWindow(title, url)
+	{
+		var wnd = Jin.window({title: title, left: 200, top: 100, width: 700, height: 560});
+		wnd.body.innerHTML = '<iframe src="'+url+'" style="display: block;width: 90%; height: 500px; border-width: 0px; margin-left: auto; margin-right: auto; margin-top: 20px;"></iframe>';
+		document.body.appendChild(wnd.dom);
+		layer.push(wnd.dom);
+		focus(wnd.dom);
+		Jin.bind(wnd.dom, 'mousedown', function(){
+			focus(this);
+		});
+		Jin.bind(wnd.dom, 'touchstart', function(){
+			focus(this);
+		});
+	}
 });
 	Jin.settings.dragdrop.onfinish = function(){ Jin.removeClass(document.body, 'moving'); };
 		</script>

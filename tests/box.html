@@ -78,12 +78,12 @@ Jin(function(){
 		distance = Math.pow(Math.pow(e.position.x-cp.x, 2) + Math.pow(e.position.y-cp.y, 2), 0.5);
 		if (distance < cp.radius)
 			return true;
-	}, {affects: document, friction: 1.05});/*
-	$(document).swipe(function(x, y)
+	}, {affects: document, friction: 1.05});
+	Jin.swipe(document, function(x, y)
 	{
-		$(document).scrollLeft($(document).scrollLeft()-x);
-		$(document).scrollTop($(document).scrollTop()-y);
-	});*/
+		window.scrollLeft -= x;
+		window.scrollTop -= y;
+	});
 });
 
 function getCenterPoint(elem) // This is not a sensible function, just suits the purpose here.
