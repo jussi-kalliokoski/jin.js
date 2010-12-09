@@ -361,6 +361,28 @@
 		{
 			this.splice(this.indexOf(elem), 1);
 		}
+		lr.alignByDistance = function(fromelem, lefttoright, reorder)
+		{
+			var point = this.indexOf(fromelem), dist = Math.max(point, this.length - point - 1) + 1, maxDist = dist;
+			while (--dist)
+			{
+				if (lefttoright)
+				{
+					if (point - dist >= 0)
+						setAlign(this[point - dist], (maxDist - dist) * 2 - 1);
+					if (point - dist < this.length)
+						setAlign(this[point + dist], (maxDist - dist) * 2);
+				}
+				else
+				{
+					if (point - dist < this.length)
+						setAlign(this[point + dist], (maxDist - dist) * 2 - 1);
+					if (point - dist >= 0)
+						setAlign(this[point - dist], (maxDist - dist) * 2);
+				}
+			}
+			setAlign(fromelem, maxDist * 2);
+		}
 		return lr;
 
 		function setAlign(elem, pos)
