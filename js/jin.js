@@ -4,14 +4,16 @@
 		settings = {},
 		modules = {},
 		NodeList = (document.getElementsByClassName) ? document.getElementsByClassName('').constructor : undefined;
-	function adapt(original, modifier) // Independent
+	/* !CONDITIONAL if(f.adapt) */
+	function adapt(original, modifier)
 	{
 		if (typeof modifier == 'string')
 			return original + new Number(modifier.substr(1));
 		return modifier;
 	}
 
-	function extend(obj) // Independent
+	/* !CONDITIONAL if(f.extend) */
+	function extend(obj)
 	{
 		var i, n;
 		for (i=1; i<arguments.length; i++)
@@ -19,7 +21,8 @@
 				obj[n] = arguments[i][n];
 	}
 
-	function appendChildren(parent) // Independent
+	/* !CONDITIONAL if(f.appendChildren) */
+	function appendChildren(parent)
 	{
 		var i;
 		if (isArrayish(arguments[1]))
@@ -30,7 +33,8 @@
 				parent.appendChild(arguments[i]);
 	}
 
-	function hasClass(elem, cl) // Independent
+	/* !CONDITIONAL if(f.hasClass) */
+	function hasClass(elem, cl)
 	{
 		var classes, i, n, hasClass, elems = (isArrayish(elem)) ? elem : [elem];
 		for (i=0; i < elems.length; i++)
@@ -43,7 +47,8 @@
 		return false;
 	}
 
-	function hasClasses(elem, cls) // Requires hasClass()
+	/* !CONDITIONAL if(f.hasClass && f.hasClasses) */
+	function hasClasses(elem, cls)
 	{
 		var cl = cls, i;
 		if (typeof cl == 'string')
@@ -54,7 +59,8 @@
 		return true;
 	}
 
-	function addClass(elem, cl) // Independent
+	/* !CONDITIONAL if(f.addClass) */
+	function addClass(elem, cl)
 	{
 		var classes, i, n, hasClass, elems = (isArrayish(elem)) ? elem : [elem];
 		for (i=0; i < elems.length; i++)
@@ -76,6 +82,7 @@
 		}
 	}
 
+	/* !CONDITIONAL if(f.addClass && f.addClasses) */
 	function addClasses(elem, cls) // Requires addClass()
 	{
 		var cl = cls, i;
@@ -85,7 +92,8 @@
 			addClass(elem, cl[i]);
 	}
 
-	function removeClass(elem, cl) // Independent
+	/* !CONDITIONAL if(f.removeClass) */
+	function removeClass(elem, cl)
 	{
 		var classes, i, n, hasClass, elems = (elem.length) ? elem : [elem];
 		for (i=0; i < elems.length; i++)
@@ -102,6 +110,7 @@
 		}
 	}
 
+	/* !CONDITIONAL if(f.removeClass && f.removeClasses) */
 	function removeClasses(elem, cls) // Requires removeClasses()
 	{
 		var cl = cls, i;
@@ -111,6 +120,7 @@
 			removeClass(elem, cl[i]);
 	}
 
+	/* !CONDITIONAL if(f.toggleClass && f.removeClass && f.addClass && f.hasClass) */
 	function toggleClass(elem, cls) // Requires hasClass(), addClass() and removeClass()
 	{
 		if (hasClass(elem, cls))
@@ -119,6 +129,7 @@
 			addClass(elem, cls);
 	}
 
+	/* !CONDITIONAL if(f.toggleClass && f.removeClass && f.addClass && f.hasClass && f.toggleClasses) */
 	function toggleClasses(elem, cls) // Requires toggleClass and its dependencies
 	{
 		var cl = cls, i;
@@ -128,7 +139,8 @@
 			toggleClass(elem, cl[i]);
 	}
 
-	function bind(elem, type, func, pass) // Independent
+	/* !CONDITIONAL if(f.bind) */
+	function bind(elem, type, func, pass)
 	{
 		if ((elem === document || elem === window) && type === 'ready')
 			onReady(func, pass);
@@ -153,7 +165,7 @@
 		elem._binds.push({type: type, func: func, fnc: fnc});
 	}
 
-	function unbind(elem, type, func) // Independent
+	function unbind(elem, type, func)
 	{
 		var fnc, i;
 		if (isArrayish(elem))
@@ -172,6 +184,7 @@
 			
 	}
 
+	/* !CONDITIONAL if(f.getOffset) */
 	function getOffset(elem, parent) // Independent
 	{
 		var pElement = elem, top = 0, left = 0;
@@ -186,18 +199,22 @@
 		return {x: left, y: top};
 	}
 
-	function isArray(obj) // Independent, are there faster / more reliable methods out there?
+	/* !CONDITIONAL if(f.isArray) */
+	function isArray(obj) // Are there faster / more reliable methods out there?
 	{
 		return !!(obj && obj.constructor === Array);
 	}
 
-	function isArrayish(obj) // Independent, same as isArray, but also accepts NodeList
+	/* !CONDITIONAL if(f.isArrayish) */
+	function isArrayish(obj) // Same as isArray, but also accepts NodeList
 	{
 		return !!(obj && (obj.constructor === Array || obj.constructor === NodeList));
 	}
-	
 
-	// Element grabber, requires bind() and unbind() and their depencencies
+
+	/* !CONDITIONAL if(f.grab) */
+
+	// Element grabber
 	var grab, ungrab;
 	(function(){
 		grab = function(elem, options)
@@ -312,7 +329,8 @@
 		}
 	})();
 
-	function layer() // Requires isArrayish()
+	/* !CONDITIONAL if(f.layer && f.isArrayish) */
+	function layer()
 	{
 		var lr = [], i;
 		if (isArrayish(arguments[0]))
@@ -394,7 +412,8 @@
 		}
 	};
 
-	function getWindowSize(wnd) // Independent
+	/* !CONDITIONAL if(f.getWindowSize) */
+	function getWindowSize(wnd)
 	{
 		if (!wnd)
 			wnd = window;
@@ -403,12 +422,14 @@
 		return {width: elem.document.body['clientWidth'], height: elem.document.body['clientWidth']};
 	}
 
-	function getElementSize(elem) // Independent
+	/* !CONDITIONAL if(f.getElementSize) */
+	function getElementSize(elem)
 	{
 		return {width: elem.offsetWidth, height: elem.offsetHeight};
 	}
 
-	function experimentalCss(elem, property, value) // Requires isArrayish()
+	/* !CONDITIONAL if(f.experimentalCss && f.isArrayish) */
+	function experimentalCss(elem, property, value)
 	{
 		var prefixes, i;
 		if (isArrayish(elem))
@@ -429,6 +450,7 @@
 				elem.style[prefixes.pop() + property] = value;
 	}
 
+	/* !CONDITIONAL if(f.commandLine) */
 	var commandLine = new function()
 	{
 		var path, getdata, iddata;
@@ -484,6 +506,7 @@
 		}
 	};
 
+	/* !CONDITIONAL if(f.onReady) */
 	function handleReady() // jQuery-ish :)
 	{
 		if (ready.bound)
@@ -543,37 +566,40 @@
 		ready.p.push(pd);
 	}
 
+	/* !CONDITIONAL if(f.addModule) */
 	function addModule(name, func)
 	{
 		Jin[name] = Jin.fn[name] = func;
 		//console.log('Added module '+name);
 	}
+	/* !CONDITIONAL */
 
 	var fn = Jin.prototype = {
-		onready: onReady,
-		bind: bind,
+		/* !CONDITIONAL if(f.onReady) */onReady: onReady,
+		/* !CONDITIONAL if(f.bind) */bind: bind,
 		unbind: unbind,
-		grab: grab,
-		addClasses: addClasses,
-		addClass: addClass,
-		removeClasses: removeClasses,
-		removeClass: removeClass,
-		hasClasses: hasClasses,
-		hasClass: hasClass,
-		toggleClass: toggleClass,
-		toggleClasses: toggleClasses,
-		getOffset: getOffset,
-		adapt: adapt,
-		extend: extend,
-		appendChildren: appendChildren,
-		getElementSize: getElementSize,
-		getWindowSize: getWindowSize,
-		layer: layer,
-		isArray: isArray,
-		isArrayish: isArrayish,
-		experimentalCss: experimentalCss,
-		commandLine: commandLine,
-		addModule: addModule,
+		/* !CONDITIONAL if(f.grab) */grab: grab,
+		/* !CONDITIONAL if(f.addClasses) */addClasses: addClasses,
+		/* !CONDITIONAL if(f.addClass) */addClass: addClass,
+		/* !CONDITIONAL if(f.removeClasses) */removeClasses: removeClasses,
+		/* !CONDITIONAL if(f.removeClass) */removeClass: removeClass,
+		/* !CONDITIONAL if(f.hasClasses) */hasClasses: hasClasses,
+		/* !CONDITIONAL if(f.hasClass) */hasClass: hasClass,
+		/* !CONDITIONAL if(f.toggleClass) */toggleClass: toggleClass,
+		/* !CONDITIONAL if(f.toggleClasses) */toggleClasses: toggleClasses,
+		/* !CONDITIONAL if(f.getOffset) */getOffset: getOffset,
+		/* !CONDITIONAL if(f.adapt) */adapt: adapt,
+		/* !CONDITIONAL if(f.extend) */extend: extend,
+		/* !CONDITIONAL if(f.appendChildren) */appendChildren: appendChildren,
+		/* !CONDITIONAL if(f.getElementSize) */getElementSize: getElementSize,
+		/* !CONDITIONAL if(f.getWindowSize) */getWindowSize: getWindowSize,
+		/* !CONDITIONAL if(f.layer) */layer: layer,
+		/* !CONDITIONAL if(f.isArray) */isArray: isArray,
+		/* !CONDITIONAL if(f.isArrayish) */isArrayish: isArrayish,
+		/* !CONDITIONAL if(f.experimentalCss) */experimentalCss: experimentalCss,
+		/* !CONDITIONAL if(f.commandLine) */commandLine: commandLine,
+		/* !CONDITIONAL if(f.addModule) */addModule: addModule,
+		/* !CONDITIONAL */
 		settings: settings,
 		version: '0.1 Beta'
 	};
@@ -583,18 +609,25 @@
 	window.Jin = Jin;
 	extend(Jin, fn);
 
+	/* !CONDITIONAL if(f.onReady) */
 	handleReady();
+	/* !CONDITIONAL */
 
 	function Jin(arg1, arg2)
 	{
+
+		/* !CONDITIONAL if(f.onReady) */
 		if (typeof arg1 == 'function')
 			return onReady(arg1, arg2);
+		/* !CONDITIONAL if(f.addModule) */
 		if (typeof arg1 == 'string' && typeof arg2 == 'function')
 			return addModule(arg1, arg2);
+		/* !CONDITIONAL if(f.layer) */
 		if (isArrayish(arg1))
 			return layer(arg1);
 		if (arguments.length)
 			return layer.apply(this, arguments);
+		/* !CONDITIONAL */
 		return Jin;
 	}
 })(window);
