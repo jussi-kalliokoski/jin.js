@@ -2,6 +2,7 @@
 	var
 		document = window.document,
 		settings = {},
+		modules = {},
 		NodeList = (document.getElementsByClassName) ? document.getElementsByClassName('').constructor : undefined;
 	function adapt(original, modifier) // Independent
 	{
@@ -402,7 +403,7 @@
 		return {width: elem.document.body['clientWidth'], height: elem.document.body['clientWidth']};
 	}
 
-	function getContentSize(elem) // Independent
+	function getElementSize(elem) // Independent
 	{
 		return {width: elem.offsetWidth, height: elem.offsetHeight};
 	}
@@ -565,7 +566,7 @@
 		adapt: adapt,
 		extend: extend,
 		appendChildren: appendChildren,
-		getContentSize: getContentSize,
+		getElementSize: getElementSize,
 		getWindowSize: getWindowSize,
 		layer: layer,
 		isArray: isArray,
