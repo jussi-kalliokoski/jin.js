@@ -3,8 +3,26 @@
 		document = window.document,
 		settings = {},
 		modules = {},
+		fn = {},
 		NodeList = (document.getElementsByClassName) ? document.getElementsByClassName('').constructor : undefined;
+
+
+	function addModule(name, func)
+	{
+		Jin[name] = Jin.fn[name] = func;
+		func.name = name;
+		//console.log('Added module '+name);
+	}
+
+	fn.settings = settings;
+	fn.version = '0.1 Beta';
+	fn.fn = fn;
+	window.Jin = Jin;
+	extend(Jin, fn);
+	addModule('addModule', addModule);
+
 	/* !CONDITIONAL if(f.adapt) */
+	addModule('adapt', adapt);
 	function adapt(original, modifier)
 	{
 		if (typeof modifier == 'string')
@@ -13,6 +31,7 @@
 	}
 
 	/* !CONDITIONAL if(f.extend) */
+	addModule('extend', extend);
 	function extend(obj)
 	{
 		var i, n;
@@ -22,6 +41,7 @@
 	}
 
 	/* !CONDITIONAL if(f.appendChildren) */
+	addModule('appendChildren', appendChildren);
 	function appendChildren(parent)
 	{
 		var i;
@@ -34,6 +54,7 @@
 	}
 
 	/* !CONDITIONAL if(f.hasClass) */
+	addModule('hasClass', hasClass);
 	function hasClass(elem, cl)
 	{
 		var classes, i, n, hasClass, elems = (isArrayish(elem)) ? elem : [elem];
@@ -48,6 +69,7 @@
 	}
 
 	/* !CONDITIONAL if(f.hasClass && f.hasClasses) */
+	addModule('hasClasses', hasClasses);
 	function hasClasses(elem, cls)
 	{
 		var cl = cls, i;
@@ -60,6 +82,7 @@
 	}
 
 	/* !CONDITIONAL if(f.addClass) */
+	addModule('addClass', addClass);
 	function addClass(elem, cl)
 	{
 		var classes, i, n, hasClass, elems = (isArrayish(elem)) ? elem : [elem];
@@ -83,6 +106,7 @@
 	}
 
 	/* !CONDITIONAL if(f.addClass && f.addClasses) */
+	addModule('addClasses', addClasses);
 	function addClasses(elem, cls) // Requires addClass()
 	{
 		var cl = cls, i;
@@ -93,6 +117,7 @@
 	}
 
 	/* !CONDITIONAL if(f.removeClass) */
+	addModule('removeClass', removeClass);
 	function removeClass(elem, cl)
 	{
 		var classes, i, n, hasClass, elems = (elem.length) ? elem : [elem];
@@ -111,6 +136,7 @@
 	}
 
 	/* !CONDITIONAL if(f.removeClass && f.removeClasses) */
+	addModule('removeClasses', removeClasses);
 	function removeClasses(elem, cls) // Requires removeClasses()
 	{
 		var cl = cls, i;
@@ -121,6 +147,7 @@
 	}
 
 	/* !CONDITIONAL if(f.toggleClass && f.removeClass && f.addClass && f.hasClass) */
+	addModule('toggleClass', toggleClass);
 	function toggleClass(elem, cls) // Requires hasClass(), addClass() and removeClass()
 	{
 		if (hasClass(elem, cls))
@@ -130,6 +157,7 @@
 	}
 
 	/* !CONDITIONAL if(f.toggleClass && f.removeClass && f.addClass && f.hasClass && f.toggleClasses) */
+	addModule('toggleClasses', toggleClasses);
 	function toggleClasses(elem, cls) // Requires toggleClass and its dependencies
 	{
 		var cl = cls, i;
@@ -140,10 +168,10 @@
 	}
 
 	/* !CONDITIONAL if(f.bind) */
+	addModule('bind', bind);
+	bind.custom = [];
 	function bind(elem, type, func, pass)
 	{
-		if ((elem === document || elem === window) && type === 'ready')
-			onReady(func, pass);
 		var fnc, i;
 		if (isArrayish(elem))
 		{
@@ -151,6 +179,9 @@
 				bind(elem[i], type, func, pass);
 			return;
 		}
+		for (i=0; i<bind.custom.length; i++)
+			if (bind.custom[i].type === type)
+				return bind.custom[i].bind(elem, type, func, pass);
 		var fnc = function(e)
 		{
 			e.data = pass;
@@ -164,7 +195,7 @@
 			elem._binds = [];
 		elem._binds.push({type: type, func: func, fnc: fnc});
 	}
-
+	addModule('unbind', unbind);
 	function unbind(elem, type, func)
 	{
 		var fnc, i;
@@ -174,6 +205,9 @@
 				unbind(elem[i], type, func, pass);
 			return;
 		}
+		for (i=0; i<bind.custom.length; i++)
+			if (bind.custom[i].type === type)
+				return bind.custom[i].unbind(elem, type, func);
 		if (elem._binds)
 		for (var i=0; i<elem._binds.length; i++)
 			if (elem._binds[i].type == type && elem._binds[i].func == func)
@@ -181,10 +215,34 @@
 					elem.removeEventListener(type, elem._binds[i].fnc, false);
 				else
 					elem.detachEvent('on'+type, elem._binds[i].fnc);
-			
+	}
+	addModule('trigger', trigger);
+	function trigger(elem, type)
+	{
+		var i, event, propagate = true;
+		if (isArrayish(elem))
+		{
+			for (i=0; i<elem.length; i++)
+				trigger(elem[i], type);
+			return;
+		}
+		for (i=0; i<bind.custom.length; i++)
+			if (bind.custom[i].type === type)
+		event = {
+			preventDefault: function(){ this.isDefaultPrevented = true; },
+			isDefaultPrevented: true,
+			stopPropagation: function(){ propagate = false; }
+		};
+		if (elem._binds)
+			for (var i=0; i<elem._binds.length; i++)
+				if (elem._binds[i].type == type && propagate)
+					elem._binds[i].fnc.call(elem, event);
+		if (elem['on'+type] && propagate)
+			elem['on'+type].call(elem, event);
 	}
 
 	/* !CONDITIONAL if(f.getOffset) */
+	addModule('getOffset', getOffset);
 	function getOffset(elem, parent) // Independent
 	{
 		var pElement = elem, top = 0, left = 0;
@@ -200,12 +258,14 @@
 	}
 
 	/* !CONDITIONAL if(f.isArray) */
+	addModule('isArray', isArray);
 	function isArray(obj) // Are there faster / more reliable methods out there?
 	{
 		return !!(obj && obj.constructor === Array);
 	}
 
 	/* !CONDITIONAL if(f.isArrayish) */
+	addModule('isArrayish', isArrayish);
 	function isArrayish(obj) // Same as isArray, but also accepts NodeList
 	{
 		return !!(obj && (obj.constructor === Array || obj.constructor === NodeList));
@@ -215,9 +275,10 @@
 	/* !CONDITIONAL if(f.grab) */
 
 	// Element grabber
-	var grab, ungrab;
 	(function(){
-		grab = function(elem, options)
+		addModule('grab', grab);
+		addModule('ungrab', ungrab);
+		function grab(elem, options)
 		{
 			var data =
 			{
@@ -235,7 +296,7 @@
 			if (data.touch)
 				bind(elem, 'touchstart', touchstart, data);
 		}
-		ungrab = function(elem)
+		function ungrab(elem)
 		{
 			unbind(elem, 'mousedown', mousedown);
 		}
@@ -330,6 +391,7 @@
 	})();
 
 	/* !CONDITIONAL if(f.layer && f.isArrayish) */
+	addModule('layer', layer);
 	function layer()
 	{
 		var lr = [], i;
@@ -413,6 +475,7 @@
 	};
 
 	/* !CONDITIONAL if(f.getWindowSize) */
+	addModule('getWindowSize', getWindowSize);
 	function getWindowSize(wnd)
 	{
 		if (!wnd)
@@ -423,12 +486,14 @@
 	}
 
 	/* !CONDITIONAL if(f.getElementSize) */
+	addModule('getElementSize', getElementSize);
 	function getElementSize(elem)
 	{
 		return {width: elem.offsetWidth, height: elem.offsetHeight};
 	}
 
 	/* !CONDITIONAL if(f.experimentalCss && f.isArrayish) */
+	addModule('experimentalCss', experimentalCss);
 	function experimentalCss(elem, property, value)
 	{
 		var prefixes, i;
@@ -505,8 +570,23 @@
 			return false;
 		}
 	};
+	fn.commandLine = Jin.commandLine = commandLine;
 
 	/* !CONDITIONAL if(f.onReady) */
+	addModule('onReady', onReady);
+	handleReady();
+	bind.custom.push({
+		type: 'ready',
+		bind: function(elem, type, func, pass){
+			if (elem === document || elem === window)
+				return onReady(func, pass);
+		},
+		unbind: function(){}, // Is this really necessary?
+		trigger: function(){
+			if (elem === document || elem === window)
+				return ready();
+		}
+	});
 	function handleReady() // jQuery-ish :)
 	{
 		if (ready.bound)
@@ -566,51 +646,6 @@
 		ready.p.push(pd);
 	}
 
-	/* !CONDITIONAL if(f.addModule) */
-	function addModule(name, func)
-	{
-		Jin[name] = Jin.fn[name] = func;
-		//console.log('Added module '+name);
-	}
-	/* !CONDITIONAL */
-
-	var fn = Jin.prototype = {
-		/* !CONDITIONAL if(f.onReady) */onReady: onReady,
-		/* !CONDITIONAL if(f.bind) */bind: bind,
-		unbind: unbind,
-		/* !CONDITIONAL if(f.grab) */grab: grab,
-		/* !CONDITIONAL if(f.addClasses) */addClasses: addClasses,
-		/* !CONDITIONAL if(f.addClass) */addClass: addClass,
-		/* !CONDITIONAL if(f.removeClasses) */removeClasses: removeClasses,
-		/* !CONDITIONAL if(f.removeClass) */removeClass: removeClass,
-		/* !CONDITIONAL if(f.hasClasses) */hasClasses: hasClasses,
-		/* !CONDITIONAL if(f.hasClass) */hasClass: hasClass,
-		/* !CONDITIONAL if(f.toggleClass) */toggleClass: toggleClass,
-		/* !CONDITIONAL if(f.toggleClasses) */toggleClasses: toggleClasses,
-		/* !CONDITIONAL if(f.getOffset) */getOffset: getOffset,
-		/* !CONDITIONAL if(f.adapt) */adapt: adapt,
-		/* !CONDITIONAL if(f.extend) */extend: extend,
-		/* !CONDITIONAL if(f.appendChildren) */appendChildren: appendChildren,
-		/* !CONDITIONAL if(f.getElementSize) */getElementSize: getElementSize,
-		/* !CONDITIONAL if(f.getWindowSize) */getWindowSize: getWindowSize,
-		/* !CONDITIONAL if(f.layer) */layer: layer,
-		/* !CONDITIONAL if(f.isArray) */isArray: isArray,
-		/* !CONDITIONAL if(f.isArrayish) */isArrayish: isArrayish,
-		/* !CONDITIONAL if(f.experimentalCss) */experimentalCss: experimentalCss,
-		/* !CONDITIONAL if(f.commandLine) */commandLine: commandLine,
-		/* !CONDITIONAL if(f.addModule) */addModule: addModule,
-		/* !CONDITIONAL */
-		settings: settings,
-		version: '0.1 Beta'
-	};
-
-	fn.fn = fn;
-
-	window.Jin = Jin;
-	extend(Jin, fn);
-
-	/* !CONDITIONAL if(f.onReady) */
-	handleReady();
 	/* !CONDITIONAL */
 
 	function Jin(arg1, arg2)
