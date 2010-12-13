@@ -390,7 +390,7 @@
 		}
 	})();
 
-	/* !CONDITIONAL if(f.layer && f.isArrayish) */
+	/* !CONDITIONAL if(f.layer && f.isArrayish && f.extend) */
 	addModule('layer', layer);
 	function layer()
 	{
@@ -401,71 +401,73 @@
 		else
 			for (i=0; i<arguments.length; i++)
 				lr.push(arguments[i]);
-		lr.refresh = function()
-		{
-			for (var i=0; i<this.length; i++)
-				setAlign(this[i], i);
-		};
-		lr.indexOf = function(elem)
-		{
-			for (var i=0; i<this.length; i++)
-				if (this[i] === elem)
-					return i;
-			return -1;
-		}
-		lr.bottom = lr.first = function()
-		{
-			return this[0];
-		}
-		lr.top = lr.last = function()
-		{
-			return this[this.length-1];
-		}
-		lr.move = function(elem, to)
-		{
-			if (to >= this.length - 1)
-				return this.toTop(elem);
-			if (to <= 0)
-				return this.toBottom(elem);
-			this.splice(this.indexOf(elem), 1);
-			this.splice(to, 0, elem);
-		}
-		lr.toBottom = function(elem)
-		{
-			this.splice(this.indexOf(elem), 1);
-			this.unshift(elem);
-		}
-		lr.toTop = function(elem)
-		{
-			this.splice(this.indexOf(elem), 1);
-			this.push(elem);
-		}
-		lr.remove = function(elem)
-		{
-			this.splice(this.indexOf(elem), 1);
-		}
-		lr.alignByDistance = function(fromelem, lefttoright, reorder)
-		{
-			var point = this.indexOf(fromelem), dist = Math.max(point, this.length - point - 1) + 1, maxDist = dist;
-			while (--dist)
+		extend(lr, {
+			refresh: function()
 			{
-				if (lefttoright)
+				for (var i=0; i<this.length; i++)
+					setAlign(this[i], i);
+			},
+			indexOf: function(elem)
+			{
+				for (var i=0; i<this.length; i++)
+					if (this[i] === elem)
+						return i;
+				return -1;
+			},
+			first: function()
+			{
+				return layer(this[0]);
+			},
+			last: function()
+			{
+				return layer(this[this.length-1]);
+			},
+			move: function(elem, to)
+			{
+				if (to >= this.length - 1)
+					return this.toTop(elem);
+				if (to <= 0)
+					return this.toBottom(elem);
+				this.splice(this.indexOf(elem), 1);
+				this.splice(to, 0, elem);
+			},
+			toBottom: function(elem)
+			{
+				this.splice(this.indexOf(elem), 1);
+				this.unshift(elem);
+			},
+			toTop: function(elem)
+			{
+				this.splice(this.indexOf(elem), 1);
+				this.push(elem);
+			},
+			remove: function(elem)
+			{
+				this.splice(this.indexOf(elem), 1);
+			},
+			alignByDistance: function(fromelem, lefttoright, reorder)
+			{
+				var point = this.indexOf(fromelem), dist = Math.max(point, this.length - point - 1) + 1, maxDist = dist;
+				while (--dist)
 				{
-					if (point - dist >= 0)
-						setAlign(this[point - dist], (maxDist - dist) * 2 - 1);
-					if (point - dist < this.length)
-						setAlign(this[point + dist], (maxDist - dist) * 2);
+					if (lefttoright)
+					{
+						if (point - dist >= 0)
+							setAlign(this[point - dist], (maxDist - dist) * 2 - 1);
+						if (point - dist < this.length)
+							setAlign(this[point + dist], (maxDist - dist) * 2);
+					}
+					else
+					{
+						if (point - dist < this.length)
+							setAlign(this[point + dist], (maxDist - dist) * 2 - 1);
+						if (point - dist >= 0)
+							setAlign(this[point - dist], (maxDist - dist) * 2);
+					}
 				}
-				else
-				{
-					if (point - dist < this.length)
-						setAlign(this[point + dist], (maxDist - dist) * 2 - 1);
-					if (point - dist >= 0)
-						setAlign(this[point - dist], (maxDist - dist) * 2);
-				}
+				setAlign(fromelem, maxDist * 2);
 			}
-			setAlign(fromelem, maxDist * 2);
-		}
+		}, layer.prototype);
 		return lr;
 
 		function setAlign(elem, pos)
