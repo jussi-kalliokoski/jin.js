@@ -11,7 +11,7 @@
 	{
 		Jin[name] = Jin.fn[name] = func;
 		func.name = name;
-		//console.log('Added module '+name);
+		/* !CONDITIONAL if(f.debug) */console.log('Added module '+name);/* !CONDITIONAL */
 	}
 
 	fn.settings = settings;
@@ -390,8 +390,13 @@
 		}
 	})();
 
-	/* !CONDITIONAL if(f.layer && f.isArrayish && f.extend) */
+	/* !CONDITIONAL if(f.layer && f.isArrayish && f.extend) { */
 	addModule('layer', layer);
+	/* !CONDITIONAL if(f.bind) */
+	layer.prototype.bind = function(){ return this.each(function(a, b, c){ return bind(this, a, b, c); }); };
+	/* !CONDITIONAL if(f.experimentalCss) */
+	layer.prototype.experimentalCss = function(){ return this.each(function(a, b){ return experimentalCss(this, a, b); }); };
+	/* !CONDITIONAL */
 	function layer()
 	{
 		var lr = [], i;
@@ -421,6 +426,10 @@
 			last: function()
 			{
 				return layer(this[this.length-1]);
+			},
+			item: function(i)
+			{
+				return layer(this[i]);
 			},
 			move: function(elem, to)
 			{
@@ -466,6 +475,12 @@
 					}
 				}
 				setAlign(fromelem, maxDist * 2);
+			},
+			each: function(func)
+			{
+				for (var i=0; i<this.length; i++)
+					func.call(this[i], i);
+				return this;
 			}
 		}, layer.prototype);
 		return lr;
@@ -476,7 +491,7 @@
 		}
 	};
 
-	/* !CONDITIONAL if(f.getWindowSize) */
+	/* !CONDITIONAL } if(f.getWindowSize) */
 	addModule('getWindowSize', getWindowSize);
 	function getWindowSize(wnd)
 	{
