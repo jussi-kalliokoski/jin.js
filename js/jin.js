@@ -403,12 +403,26 @@
 	layer.prototype.ungrab = function(a){ return this.each(function(){ return ungrab(this, a); }); };
 	/* !CONDITIONAL if(f.getOffset) */
 	layer.prototype.getOffset = function(i){ if (!i) i=0; return getOffset(this[i]); };
-	/* !CONDITIONAL if(f.getElementSize) */
-	layer.prototype.size = function(i){ if (!i) i=0; return getElementSize(this[i]); };
+	/* !CONDITIONAL if(f.getSize) */
+	layer.prototype.getSize = function(i){ if (!i) i=0; return getSize(this[i]); };
 	/* !CONDITIONAL if(f.hasClass) */
 	layer.prototype.hasClass = function(a){ var b = false; this.each(function(){ if (hasClass(this, a)) b = true; }; return b; };
 	/* !CONDITIONAL if(f.hasClasses) */
 	layer.prototype.hasClasses = function(a){ var b = false; this.each(function(){ if (hasClasses(this, a)) b = true; }; return b; };
+	/* !CONDITIONAL if(f.addClass) */
+	layer.prototype.addClass = function(a){ return this.each(function(){ return addClass(this, a); }); };
+	/* !CONDITIONAL if(f.addClasses) */
+	layer.prototype.addClasses = function(a){ return this.each(function(){ return addClasses(this, a); }); };
+	/* !CONDITIONAL if(f.removeClass) */
+	layer.prototype.removeClass = function(a){ return this.each(function(){ return removeClass(this, a); }); };
+	/* !CONDITIONAL if(f.removeClasses) */
+	layer.prototype.removeClasses = function(a){ return this.each(function(){ return removeClasses(this, a); }); };
+	/* !CONDITIONAL if(f.toggleClass) */
+	layer.prototype.toggleClass = function(a){ return this.each(function(){ return toggleClass(this, a); }); };
+	/* !CONDITIONAL if(f.toggleClasses) */
+	layer.prototype.toggleClasses = function(a){ return this.each(function(){ return toggleClasses(this, a); }); };
+	/* !CONDITIONAL if(f.onReady) */
+	layer.prototype.ready = function(a, b){ return onReady(a, b); }; // For jQuery migrators
 	/* !CONDITIONAL */
 	function layer()
 	{
@@ -515,9 +529,9 @@
 		return {width: elem.document.body['clientWidth'], height: elem.document.body['clientWidth']};
 	}
 
-	/* !CONDITIONAL if(f.getElementSize) */
-	addModule('getElementSize', getElementSize);
-	function getElementSize(elem)
+	/* !CONDITIONAL if(f.getSize) */
+	addModule('getSize', getSize);
+	function getSize(elem)
 	{
 		return {width: elem.offsetWidth, height: elem.offsetHeight};
 	}
