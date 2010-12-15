@@ -406,9 +406,9 @@
 	/* !CONDITIONAL if(f.getSize) */
 	layer.prototype.getSize = function(i){ if (!i) i=0; return getSize(this[i]); };
 	/* !CONDITIONAL if(f.hasClass) */
-	layer.prototype.hasClass = function(a){ var b = false; this.each(function(){ if (hasClass(this, a)) b = true; }; return b; };
+	layer.prototype.hasClass = function(a){ var b = false; this.each(function(){ if (hasClass(this, a)) b = true; }); return b; };
 	/* !CONDITIONAL if(f.hasClasses) */
-	layer.prototype.hasClasses = function(a){ var b = false; this.each(function(){ if (hasClasses(this, a)) b = true; }; return b; };
+	layer.prototype.hasClasses = function(a){ var b = false; this.each(function(){ if (hasClasses(this, a)) b = true; }); return b; };
 	/* !CONDITIONAL if(f.addClass) */
 	layer.prototype.addClass = function(a){ return this.each(function(){ return addClass(this, a); }); };
 	/* !CONDITIONAL if(f.addClasses) */
