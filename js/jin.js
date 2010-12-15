@@ -393,9 +393,22 @@
 	/* !CONDITIONAL if(f.layer && f.isArrayish && f.extend) { */
 	addModule('layer', layer);
 	/* !CONDITIONAL if(f.bind) */
-	layer.prototype.bind = function(){ return this.each(function(a, b, c){ return bind(this, a, b, c); }); };
+	layer.prototype.bind = function(a, b, c){ return this.each(function(){ return bind(this, a, b, c); }); };
+	layer.prototype.unbind = function(a, b){ return this.each(function(){ return unbind(this, a, b); }); };
+	layer.prototype.trigger = function(a){ return this.each(function(){ return trigger(this, a); }); };
 	/* !CONDITIONAL if(f.experimentalCss) */
-	layer.prototype.experimentalCss = function(){ return this.each(function(a, b){ return experimentalCss(this, a, b); }); };
+	layer.prototype.experimentalCss = function(a, b){ return this.each(function(){ return experimentalCss(this, a, b); }); };
+	/* !CONDITIONAL if(f.grab) */
+	layer.prototype.grab = function(a, b){ return this.each(function(){ return grab(this, a, b); }); };
+	layer.prototype.ungrab = function(a){ return this.each(function(){ return ungrab(this, a); }); };
+	/* !CONDITIONAL if(f.getOffset) */
+	layer.prototype.getOffset = function(i){ if (!i) i=0; return getOffset(this[i]); };
+	/* !CONDITIONAL if(f.getElementSize) */
+	layer.prototype.size = function(i){ if (!i) i=0; return getElementSize(this[i]); };
+	/* !CONDITIONAL if(f.hasClass) */
+	layer.prototype.hasClass = function(a){ var b = false; this.each(function(){ if (hasClass(this, a)) b = true; }; return b; };
+	/* !CONDITIONAL if(f.hasClasses) */
+	layer.prototype.hasClasses = function(a){ var b = false; this.each(function(){ if (hasClasses(this, a)) b = true; }; return b; };
 	/* !CONDITIONAL */
 	function layer()
 	{
