@@ -48,6 +48,10 @@
 			btnMinimize.title = 'Minimize';
 
 			bind(btnClose, 'click', close);
+			bind(titlebox, 'contextmenu', function(e){
+				if (e.preventDefault)
+					e.preventDefault();
+			});
 			grab(titlebox, {
 				onstart: function(e){ addClass(document.body, 'moving'); },
 				onmove: function(e){ move('='+e.move.x, '='+e.move.y); },

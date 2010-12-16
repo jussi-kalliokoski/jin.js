@@ -169,7 +169,6 @@
 
 	/* !CONDITIONAL if(f.bind) */
 	addModule('bind', bind);
-	bind.custom = [];
 	function bind(elem, type, func, pass)
 	{
 		var fnc, i;
@@ -179,12 +178,13 @@
 				bind(elem[i], type, func, pass);
 			return;
 		}
-		for (i=0; i<bind.custom.length; i++)
-			if (bind.custom[i].type === type)
-				return bind.custom[i].bind(elem, type, func, pass);
+		if (bind[type])
+			return bind[type].bind(elem, type, func, pass);
 		var fnc = function(e)
 		{
 			e.data = pass;
+			if (!e.stopPropagation) // Fixes a nasty IE anti-standard.
+				e.stopPropagation = function(){ this.cancelBubble = true; };
 			func.call(elem, e);
 		}
 		if (document.addEventListener)
@@ -205,9 +205,8 @@
 				unbind(elem[i], type, func, pass);
 			return;
 		}
-		for (i=0; i<bind.custom.length; i++)
-			if (bind.custom[i].type === type)
-				return bind.custom[i].unbind(elem, type, func);
+		if (bind[type])
+			return bind[type].unbind(elem, type, func);
 		if (elem._binds)
 		for (var i=0; i<elem._binds.length; i++)
 			if (elem._binds[i].type == type && elem._binds[i].func == func)
@@ -226,8 +225,8 @@
 				trigger(elem[i], type);
 			return;
 		}
-		for (i=0; i<bind.custom.length; i++)
-			if (bind.custom[i].type === type)
+		if (bind[type])
+			return bind[type].trigger(elem, type);
 		event = {
 			preventDefault: function(){ this.isDefaultPrevented = true; },
 			isDefaultPrevented: true,
@@ -619,8 +618,8 @@
 	/* !CONDITIONAL if(f.onReady) */
 	addModule('onReady', onReady);
 	handleReady();
-	bind.custom.push({
-		type: 'ready',
+	bind.ready =
+	{
 		bind: function(elem, type, func, pass){
 			if (elem === document || elem === window)
 				return onReady(func, pass);
@@ -630,7 +629,7 @@
 			if (elem === document || elem === window)
 				return ready();
 		}
-	});
+	};
 	function handleReady() // jQuery-ish :)
 	{
 		if (ready.bound)
