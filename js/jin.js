@@ -25,7 +25,7 @@
 	addModule('adapt', adapt);
 	function adapt(original, modifier)
 	{
-		if (typeof modifier == 'string')
+		if (modifier.constructor === String)
 			return original + new Number(modifier.substr(1));
 		return modifier;
 	}
@@ -73,7 +73,7 @@
 	function hasClasses(elem, cls)
 	{
 		var cl = cls, i;
-		if (typeof cl == 'string')
+		if (cl.constructor === String)
 			cl = cl.split(' ');
 		for (i=0; i<cl.length; i++)
 			if (!hasClasses)
@@ -110,7 +110,7 @@
 	function addClasses(elem, cls) // Requires addClass()
 	{
 		var cl = cls, i;
-		if (typeof cl == 'string')
+		if (cl.constructor === String)
 			cl = cl.split(' ');
 		for (i=0; i<cl.length; i++)
 			addClass(elem, cl[i]);
@@ -140,7 +140,7 @@
 	function removeClasses(elem, cls) // Requires removeClasses()
 	{
 		var cl = cls, i;
-		if (typeof cl == 'string')
+		if (cl.constructor === String)
 			cl = cl.split(' ');
 		for (i=0; i<cl.length; i++)
 			removeClass(elem, cl[i]);
@@ -161,7 +161,7 @@
 	function toggleClasses(elem, cls) // Requires toggleClass and its dependencies
 	{
 		var cl = cls, i;
-		if (typeof cl == 'string')
+		if (cl.constructor === String)
 			cl = cl.split(' ');
 		for (i=0; i<cl.length; i++)
 			toggleClass(elem, cl[i]);
@@ -695,10 +695,10 @@
 	{
 
 		/* !CONDITIONAL if(f.onReady) */
-		if (typeof arg1 == 'function')
+		if (arg1.constructor === Function)
 			return onReady(arg1, arg2);
 		/* !CONDITIONAL if(f.addModule) */
-		if (typeof arg1 == 'string' && typeof arg2 == 'function')
+		if (arg1.constructor === String && arg2.constructor === Function)
 			return addModule(arg1, arg2);
 		/* !CONDITIONAL if(f.layer) */
 		if (isArrayish(arg1))
