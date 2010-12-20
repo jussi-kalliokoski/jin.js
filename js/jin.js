@@ -11,7 +11,7 @@
 	{
 		Jin[name] = Jin.fn[name] = func;
 		func.name = name;
-		/* !CONDITIONAL if(f.debug) */console.log('Added module '+name);/* !CONDITIONAL */
+		//console.log('Added module '+name); // For debug
 	}
 
 	fn.settings = settings;
@@ -21,7 +21,6 @@
 	extend(Jin, fn);
 	addModule('addModule', addModule);
 
-	/* !CONDITIONAL if(f.adapt) */
 	addModule('adapt', adapt);
 	function adapt(original, modifier)
 	{
@@ -30,7 +29,6 @@
 		return modifier;
 	}
 
-	/* !CONDITIONAL if(f.extend) */
 	addModule('extend', extend);
 	function extend(obj)
 	{
@@ -40,7 +38,6 @@
 				obj[n] = arguments[i][n];
 	}
 
-	/* !CONDITIONAL if(f.appendChildren) */
 	addModule('appendChildren', appendChildren);
 	function appendChildren(parent)
 	{
@@ -53,7 +50,6 @@
 				parent.appendChild(arguments[i]);
 	}
 
-	/* !CONDITIONAL if(f.hasClass) */
 	addModule('hasClass', hasClass);
 	function hasClass(elem, cl)
 	{
@@ -68,7 +64,6 @@
 		return false;
 	}
 
-	/* !CONDITIONAL if(f.hasClass && f.hasClasses) */
 	addModule('hasClasses', hasClasses);
 	function hasClasses(elem, cls)
 	{
@@ -81,7 +76,6 @@
 		return true;
 	}
 
-	/* !CONDITIONAL if(f.addClass) */
 	addModule('addClass', addClass);
 	function addClass(elem, cl)
 	{
@@ -105,7 +99,6 @@
 		}
 	}
 
-	/* !CONDITIONAL if(f.addClass && f.addClasses) */
 	addModule('addClasses', addClasses);
 	function addClasses(elem, cls) // Requires addClass()
 	{
@@ -116,7 +109,6 @@
 			addClass(elem, cl[i]);
 	}
 
-	/* !CONDITIONAL if(f.removeClass) */
 	addModule('removeClass', removeClass);
 	function removeClass(elem, cl)
 	{
@@ -135,7 +127,6 @@
 		}
 	}
 
-	/* !CONDITIONAL if(f.removeClass && f.removeClasses) */
 	addModule('removeClasses', removeClasses);
 	function removeClasses(elem, cls) // Requires removeClasses()
 	{
@@ -146,7 +137,6 @@
 			removeClass(elem, cl[i]);
 	}
 
-	/* !CONDITIONAL if(f.toggleClass && f.removeClass && f.addClass && f.hasClass) */
 	addModule('toggleClass', toggleClass);
 	function toggleClass(elem, cls) // Requires hasClass(), addClass() and removeClass()
 	{
@@ -156,7 +146,6 @@
 			addClass(elem, cls);
 	}
 
-	/* !CONDITIONAL if(f.toggleClass && f.removeClass && f.addClass && f.hasClass && f.toggleClasses) */
 	addModule('toggleClasses', toggleClasses);
 	function toggleClasses(elem, cls) // Requires toggleClass and its dependencies
 	{
@@ -167,7 +156,6 @@
 			toggleClass(elem, cl[i]);
 	}
 
-	/* !CONDITIONAL if(f.bind) */
 	addModule('bind', bind);
 	function bind(elem, type, func, pass)
 	{
@@ -241,7 +229,6 @@
 			elem['on'+type].call(elem, event);
 	}
 
-	/* !CONDITIONAL if(f.getOffset) */
 	addModule('getOffset', getOffset);
 	function getOffset(elem, parent) // Independent
 	{
@@ -257,22 +244,17 @@
 		return {x: left, y: top};
 	}
 
-	/* !CONDITIONAL if(f.isArray) */
 	addModule('isArray', isArray);
 	function isArray(obj) // Are there faster / more reliable methods out there?
 	{
 		return !!(obj && obj.constructor === Array);
 	}
 
-	/* !CONDITIONAL if(f.isArrayish) */
 	addModule('isArrayish', isArrayish);
 	function isArrayish(obj) // Same as isArray, but also accepts NodeList
 	{
 		return !!(obj && (obj.constructor === Array || obj.constructor === NodeList));
 	}
-
-
-	/* !CONDITIONAL if(f.grab) */
 
 	// Element grabber
 	(function(){
@@ -390,40 +372,53 @@
 		}
 	})();
 
-	/* !CONDITIONAL if(f.layer && f.isArrayish && f.extend) { */
+	addModule('getElementsByClassName', getElementsByClassName);
+	function getElementsByClassName(elem, cl)
+	{
+		return elem.getElementsByClassName(cl);
+	}
+	addModule('getElementsByTagName', getElementsByTagName);
+	function getElementsByTagName(elem, tg)
+	{
+		return elem.getElementsByTagName(tg);
+	}
+
 	addModule('layer', layer);
-	/* !CONDITIONAL if(f.bind) */
+	layer.prototype.byClass = function(cl) {
+		var lr = new layer();
+		this.each(function(){
+			if (hasClass(this, cl))
+				lr.push(this);
+			lr.concat(getElementsByClassName(this, cl));
+		});
+		return lr;
+	};
+	layer.prototype.byTag = function(tg) {
+		var lr = new layer();
+		this.each(function(){
+			if (this.tagName === tg)
+				lr.push(this);
+			lr.concat(getElementsByTagName(this, tg));
+		});
+		return lr;
+	};
 	layer.prototype.bind = function(a, b, c){ return this.each(function(){ return bind(this, a, b, c); }); };
 	layer.prototype.unbind = function(a, b){ return this.each(function(){ return unbind(this, a, b); }); };
 	layer.prototype.trigger = function(a){ return this.each(function(){ return trigger(this, a); }); };
-	/* !CONDITIONAL if(f.experimentalCss) */
 	layer.prototype.experimentalCss = function(a, b){ return this.each(function(){ return experimentalCss(this, a, b); }); };
-	/* !CONDITIONAL if(f.grab) */
 	layer.prototype.grab = function(a, b){ return this.each(function(){ return grab(this, a, b); }); };
 	layer.prototype.ungrab = function(a){ return this.each(function(){ return ungrab(this, a); }); };
-	/* !CONDITIONAL if(f.getOffset) */
 	layer.prototype.getOffset = function(i){ if (!i) i=0; return getOffset(this[i]); };
-	/* !CONDITIONAL if(f.getSize) */
 	layer.prototype.getSize = function(i){ if (!i) i=0; return getSize(this[i]); };
-	/* !CONDITIONAL if(f.hasClass) */
 	layer.prototype.hasClass = function(a){ var b = false; this.each(function(){ if (hasClass(this, a)) b = true; }); return b; };
-	/* !CONDITIONAL if(f.hasClasses) */
 	layer.prototype.hasClasses = function(a){ var b = false; this.each(function(){ if (hasClasses(this, a)) b = true; }); return b; };
-	/* !CONDITIONAL if(f.addClass) */
 	layer.prototype.addClass = function(a){ return this.each(function(){ return addClass(this, a); }); };
-	/* !CONDITIONAL if(f.addClasses) */
 	layer.prototype.addClasses = function(a){ return this.each(function(){ return addClasses(this, a); }); };
-	/* !CONDITIONAL if(f.removeClass) */
 	layer.prototype.removeClass = function(a){ return this.each(function(){ return removeClass(this, a); }); };
-	/* !CONDITIONAL if(f.removeClasses) */
 	layer.prototype.removeClasses = function(a){ return this.each(function(){ return removeClasses(this, a); }); };
-	/* !CONDITIONAL if(f.toggleClass) */
 	layer.prototype.toggleClass = function(a){ return this.each(function(){ return toggleClass(this, a); }); };
-	/* !CONDITIONAL if(f.toggleClasses) */
 	layer.prototype.toggleClasses = function(a){ return this.each(function(){ return toggleClasses(this, a); }); };
-	/* !CONDITIONAL if(f.onReady) */
 	layer.prototype.ready = function(a, b){ return onReady(a, b); }; // For jQuery migrators
-	/* !CONDITIONAL */
 	function layer()
 	{
 		var lr = [], i;
@@ -529,6 +524,7 @@
 				return this;
 			}
 		}, layer.prototype);
+		//lr.constructor = layer; // We can't do this, it will break JavaScript. :(
 		return lr;
 
 		function setAlign(elem, pos)
@@ -537,7 +533,6 @@
 		}
 	};
 
-	/* !CONDITIONAL } if(f.getWindowSize) */
 	addModule('getWindowSize', getWindowSize);
 	function getWindowSize(wnd)
 	{
@@ -548,14 +543,12 @@
 		return {width: elem.document.body['clientWidth'], height: elem.document.body['clientWidth']};
 	}
 
-	/* !CONDITIONAL if(f.getSize) */
 	addModule('getSize', getSize);
 	function getSize(elem)
 	{
 		return {width: elem.offsetWidth, height: elem.offsetHeight};
 	}
 
-	/* !CONDITIONAL if(f.experimentalCss && f.isArrayish) */
 	addModule('experimentalCss', experimentalCss);
 	function experimentalCss(elem, property, value)
 	{
@@ -578,7 +571,6 @@
 				elem.style[prefixes.pop() + property] = value;
 	}
 
-	/* !CONDITIONAL if(f.commandLine) */
 	var commandLine = new function()
 	{
 		var path, getdata, iddata;
@@ -635,7 +627,6 @@
 	};
 	fn.commandLine = Jin.commandLine = commandLine;
 
-	/* !CONDITIONAL if(f.onReady) */
 	addModule('onReady', onReady);
 	handleReady();
 	bind.ready =
@@ -709,23 +700,16 @@
 		ready.p.push(pd);
 	}
 
-	/* !CONDITIONAL */
-
 	function Jin(arg1, arg2)
 	{
-
-		/* !CONDITIONAL if(f.onReady) */
 		if (arg1.constructor === Function)
 			return onReady(arg1, arg2);
-		/* !CONDITIONAL if(f.addModule) */
 		if (arg1.constructor === String && arg2.constructor === Function)
 			return addModule(arg1, arg2);
-		/* !CONDITIONAL if(f.layer) */
 		if (isArrayish(arg1))
 			return layer(arg1);
 		if (arguments.length)
 			return layer.apply(this, arguments);
-		/* !CONDITIONAL */
 		return Jin;
 	}
 })(window);
