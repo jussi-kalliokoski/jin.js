@@ -4,7 +4,7 @@
 		settings = {},
 		modules = {},
 		fn = {},
-		NodeList = (document.getElementsByClassName) ? document.getElementsByClassName('').constructor : undefined;
+		NodeList = NodeList || ((document.getElementsByClassName) ? document.getElementsByClassName('').constructor : undefined);
 
 
 	function addModule(name, func)
