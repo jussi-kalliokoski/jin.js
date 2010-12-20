@@ -178,6 +178,7 @@
 				bind(elem[i], type, func, pass);
 			return;
 		}
+		var elem = (elem === document && typeof elem['on'+type] === typeof undefined) ? elem.documentElement : elem;
 		if (bind[type])
 			return bind[type].bind(elem, type, func, pass);
 		var fnc = function(e)
@@ -432,6 +433,7 @@
 		else
 			for (i=0; i<arguments.length; i++)
 				lr.push(arguments[i]);
+		lr._concat = lr.concat;
 		extend(lr, {
 			refresh: function()
 			{
@@ -506,6 +508,24 @@
 			{
 				for (var i=0; i<this.length; i++)
 					func.call(this[i], i);
+				return this;
+			},
+			undouble: function()
+			{
+				for (var i=0, d; i<this.length; i++)
+				{
+					d = this.indexOf(this[i]);
+					if (d !== i)
+						this.splice(i--, 1);
+				}
+				return this;
+			},
+			concat: function()
+			{
+				var a, b;
+				for (a=0; a<arguments.length; a++)
+					for (b=0; b<arguments[a].length; b++)
+						this.push(arguments[a][b]);
 				return this;
 			}
 		}, layer.prototype);
