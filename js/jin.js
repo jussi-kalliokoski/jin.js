@@ -183,10 +183,9 @@
 			elem.addEventListener(type, fnc, false);
 		else
 			elem.attachEvent('on' + type, fnc);
-		if (!elem._binds)
-			elem._binds = [];
-		elem._binds.push({type: type, func: func, fnc: fnc});
+		bind._binds.push({elem: elem, type: type, func: func, fnc: fnc});
 	}
+	bind._binds = [];
 	addModule('unbind', unbind);
 	function unbind(elem, type, func)
 	{
@@ -199,13 +198,19 @@
 		}
 		if (bind[type])
 			return bind[type].unbind(elem, type, func);
-		if (elem._binds)
-		for (var i=0; i<elem._binds.length; i++)
-			if (elem._binds[i].type == type && elem._binds[i].func == func)
-				if (document.removeEventListener)
-					elem.removeEventListener(type, elem._binds[i].fnc, false);
+		console.log(bind._binds.length);
+		for (i=0; i<bind._binds.length; i++)
+		{
+			if (bind._binds[i].elem == elem && bind._binds[i].type == type && bind._binds[i].func == func)
+			{
+				
+				if (document.addEventListener)
+					elem.removeEventListener(type, bind._binds[i].fnc, false);
 				else
-					elem.detachEvent('on'+type, elem._binds[i].fnc);
+					elem.detachEvent('on'+type, bind._binds[i].fnc);
+				bind._binds.splice(i--, 1);
+			}
+		}
 	}
 	addModule('trigger', trigger);
 	function trigger(elem, type)
