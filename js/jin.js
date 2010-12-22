@@ -235,16 +235,16 @@
 	addModule('getOffset', getOffset);
 	function getOffset(elem, parent) // Independent
 	{
-		var pElement = elem, top = 0, left = 0;
-		while (pElement && pElement != parent)
+		var top = 0, left = 0;
+		do
 		{
-			left += pElement.offsetLeft;
-			top += pElement.offsetTop;
-			left -= pElement.scrollLeft;
-			top -= pElement.scrollTop;
-			pElement = pElement.parentNode;
-		}
-		return {x: left, y: top};
+			left += elem.offsetLeft || 0;
+			top += elem.offsetTop || 0;
+			left -= elem.scrollLeft || 0;
+			top -= elem.scrollTop || 0;
+			elem = elem.offsetParent
+		} while (elem != parent);
+		return {left: left, top: top};
 	}
 
 	addModule('isArray', isArray);
@@ -405,12 +405,17 @@
 		});
 		return lr;
 	};
+	layer.prototype.appendChildren = function(){
+		for (i=0; i<arguments.length; i++)
+				appendChildren(this[0], arguments[i]);
+		return this;
+	};
 	layer.prototype.bind = function(a, b, c){ return this.each(function(){ return bind(this, a, b, c); }); };
 	layer.prototype.unbind = function(a, b){ return this.each(function(){ return unbind(this, a, b); }); };
 	layer.prototype.trigger = function(a){ return this.each(function(){ return trigger(this, a); }); };
 	layer.prototype.experimentalCss = function(a, b){ return this.each(function(){ return experimentalCss(this, a, b); }); };
-	layer.prototype.grab = function(a, b){ return this.each(function(){ return grab(this, a, b); }); };
-	layer.prototype.ungrab = function(a){ return this.each(function(){ return ungrab(this, a); }); };
+	layer.prototype.grab = function(a, b){ return this.each(function(){ return Jin.grab(this, a, b); }); };
+	layer.prototype.ungrab = function(a){ return this.each(function(){ return Jin.ungrab(this, a); }); };
 	layer.prototype.getOffset = function(i){ if (!i) i=0; return getOffset(this[i]); };
 	layer.prototype.getSize = function(i){ if (!i) i=0; return getSize(this[i]); };
 	layer.prototype.hasClass = function(a){ var b = false; this.each(function(){ if (hasClass(this, a)) b = true; }); return b; };

@@ -133,3 +133,39 @@ div.window div.content button:hover, div.window div.content input:focus, div.win
 	-webkit-animation-iteration-count: 10;
 	-webkit-animation-direction: alternate;
 }
+
+div.vslider
+{
+	display: inline-block;
+}
+
+div.vslider label
+{
+	display: block;
+	text-align: center;
+}
+
+div.vslider div.control
+{
+	border-radius: 5px;
+	height: 4px;
+	border: 1px inset gray;
+	margin-top: 5px;
+	-webkit-box-shadow: 0px 0px 10px rgba(0,0,0,0.7) inset;
+}
+
+div.vslider div.control div.pointer
+{
+	background-color: rgba(50, 50, 200, 0.6);
+	width: 10px;
+	height: 15px;
+	margin-top: -6px;
+	border: 1px outset gray;
+	-webkit-box-shadow: 0px 0px 10px rgba(0,0,0,0.7) inset;
+	-webkit-transition: background-color 1s ease-in-out;
+}
+
+div.vslider div.control div.pointer:hover
+{
+	background-color: rgba(75, 75, 225, 0.8);
+}

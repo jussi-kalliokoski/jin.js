@@ -1,5 +1,5 @@
 (function(document, Jin, undefined){
-	Jin('window', function(options)
+	function jinWindow(options)
 	{
 		var opts = 
 		{
@@ -14,7 +14,7 @@
 			minButton: true,
 			resizable: true,
 			visible: true,
-			onclose: undefined
+			onclose: undefined,
 		}
 		wnd = new function JindowWindow()
 		{
@@ -163,7 +163,87 @@
 			}
 		};
 		return wnd;
-	});
+	}
+	function vslider(options)
+	{
+		if (this.constructor !== vslider) // Prevents from being called as a function with unexpected results.
+			return new vslider(options);
+
+		var	dom = createElem('div'),
+			label = createElem('label'),
+			control = createElem('div'),
+			pointer = createElem('div'),
+			value,
+			that = this;
+		extend(this, {
+			name: 'Vertical Slider',
+			title: 'Parameter',
+			id: 'vs'+Math.floor(Math.random()),
+			width: 300,
+			height: 20,
+			minValue: 0,
+			defValue: 0.5,
+			maxValue: 1,
+			step: 0.01,
+			valueArray: undefined
+		}, options, {
+			dom: dom,
+			label: label,
+			control: control,
+			pointer: pointer
+		});
+
+		value = this.defValue;
+		
+		Jin(dom).appendChildren(label, control).addClass('vslider');
+		Jin(control).appendChildren(pointer).addClass('control');
+		label.for = this.id;
+		label.innerHTML = this.title;
+		Jin(pointer).addClass('pointer')
+		.grab({
+			onstart: function(e){ addClass(dom, 'moving'); },
+			onmove: function(e){ var off = Jin.getOffset(dom); setValue((e.position.x - off.left) / that.width); },
+			onfinish: function(e){ removeClass(dom, 'moving'); }
+		});
+
+		this.__defineGetter__('value', function(){ return value; });
+		this.__defineSetter__('value', function(val){ value = Math.round(val / that.step) * that.step; refresh(); });
+		this.refresh = refresh;
+		this.setValue = setValue;
+		this.getValue = getValue;
+
+		refresh();
+
+		function refresh()
+		{
+			dom.style.width = that.width+'px';
+			dom.style.height = that.height+'px';
+			pointer.style.marginLeft = (getValue() * that.width - pointer.offsetWidth / 2)+'px';
+		}
+		function setValue(val)
+		{
+			if (val > 1)
+				val = 1;
+			if (val < 0)
+				val = 0;
+			var s = that.maxValue - that.minValue, sv = s * val;
+			value = that.minValue + Math.round(sv / that.step) * that.step;
+			refresh();
+		}
+		function getValue()
+		{
+			return (value - that.minValue) / (that.maxValue - that.minValue);
+		}
+	}
+	function hslider(){}
+	function knob(){}
+	function switch2(){}
+
+	Jin('window', jinWindow);
+	Jin('vslider', vslider);
+	Jin('hslider', hslider);
+	Jin('knob', knob);
+	Jin('switch', switch2);
 
 	var
 		bind = Jin.bind,

@@ -2,9 +2,9 @@
 <html>
 	<head>
 		<title>Jindow</title>
-		<link rel="stylesheet" href="../css/jin-window.css" />
+		<link rel="stylesheet" href="../css/jin-ui.css" />
 		<script src="../js/jin.js"></script>
-		<script src="../js/jin-window.js"></script>
+		<script src="../js/jin-ui.js"></script>
 		<script src="../js/jin-dragdrop.js"></script>
 		<script>
 Jin(function(){
@@ -47,13 +47,14 @@ Jin(function(){
 	var drag = document.createElement('button'),
 	drop = document.createElement('button'),
 	btnBox = document.createElement('button'),
-	btnBall = document.createElement('button');
+	btnBall = document.createElement('button'),
+	slide = Jin.vslider();
 	drag.innerHTML = 'Drag me!';
 	drop.innerHTML = 'Drop the button here!';
 	btnBox.innerHTML = 'Open Box demo';
 	btnBall.innerHTML = 'Open Ball demo';
 	Jin.appendChildren(welcome.body, drag, btnBox, btnBall);
-	wnd.body.appendChild(drop);
+	Jin(wnd.body).appendChildren(drop, slide.dom);
 
 	// Bind the drag and drop functions to the buttons
 	Jin.drag(drag, function(e){
