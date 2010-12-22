@@ -173,32 +173,36 @@
 			label = createElem('label'),
 			control = createElem('div'),
 			pointer = createElem('div'),
+			caption = createElem('div'),
 			value,
 			that = this;
 		extend(this, {
 			name: 'Vertical Slider',
 			title: 'Parameter',
-			id: 'vs'+Math.floor(Math.random()),
+			id: 'vs'+Math.floor(Math.random()*999999), // Hmm, this just kinda hopes the same doesn't come twice... Reliable!
 			width: 300,
 			height: 20,
 			minValue: 0,
 			defValue: 0.5,
 			maxValue: 1,
 			step: 0.01,
-			valueArray: undefined
+			valueArray: undefined,
+			prefix: '',
+			suffix: ''
 		}, options, {
 			dom: dom,
 			label: label,
 			control: control,
-			pointer: pointer
+			pointer: pointer,
+			caption: caption
 		});
 
 		value = this.defValue;
 		
-		Jin(dom).appendChildren(label, control).addClass('vslider');
+		Jin(dom).appendChildren(label, control, caption).addClass('vslider');
 		Jin(control).appendChildren(pointer).addClass('control');
 		label.for = this.id;
-		label.innerHTML = this.title;
+		addClass(caption, 'caption');
 		Jin(pointer).addClass('pointer')
 		.grab({
 			onstart: function(e){ addClass(dom, 'moving'); },
@@ -207,7 +211,7 @@
 		});
 
 		this.__defineGetter__('value', function(){ return value; });
-		this.__defineSetter__('value', function(val){ value = Math.round(val / that.step) * that.step; refresh(); });
+		this.__defineSetter__('value', function(val){ var oldval = value; value = Math.round(val / that.step) * that.step; if (that.onchange && value !== oldval) that.onchange(); refresh(); });
 		this.refresh = refresh;
 		this.setValue = setValue;
 		this.getValue = getValue;
@@ -219,6 +223,11 @@
 			dom.style.width = that.width+'px';
 			dom.style.height = that.height+'px';
 			pointer.style.marginLeft = (getValue() * that.width - pointer.offsetWidth / 2)+'px';
+			label.innerHTML = that.title;
+			if (that.valueArray)
+				caption.innerHTML = that.valueArray[value];
+			else
+				caption.innerHTML = that.prefix + value + that.suffix;
 		}
 		function setValue(val)
 		{
@@ -226,8 +235,10 @@
 				val = 1;
 			if (val < 0)
 				val = 0;
-			var s = that.maxValue - that.minValue, sv = s * val;
+			var s = that.maxValue - that.minValue, sv = s * val, oldval = value;
 			value = that.minValue + Math.round(sv / that.step) * that.step;
+			if (that.onchange && value !== oldval)
+				that.onchange();
 			refresh();
 		}
 		function getValue()
@@ -235,9 +246,9 @@
 			return (value - that.minValue) / (that.maxValue - that.minValue);
 		}
 	}
-	function hslider(){}
-	function knob(){}
-	function switch2(){}
+	function hslider(){throw('Sorry, this doesn\'t work that well yet.')}
+	function knob(){throw('Sorry, this doesn\'t work that well yet.')}
+	function switch2(){throw('Sorry, this doesn\'t work that well yet.')}
 
 	Jin('window', jinWindow);
 	Jin('vslider', vslider);

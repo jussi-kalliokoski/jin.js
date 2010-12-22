@@ -139,7 +139,7 @@ div.vslider
 	display: inline-block;
 }
 
-div.vslider label
+div.vslider label, div.vslider div.caption
 {
 	display: block;
 	text-align: center;
@@ -152,6 +152,7 @@ div.vslider div.control
 	border: 1px inset gray;
 	margin-top: 5px;
 	-webkit-box-shadow: 0px 0px 10px rgba(0,0,0,0.7) inset;
+	margin-bottom: 5px;
 }
 
 div.vslider div.control div.pointer
