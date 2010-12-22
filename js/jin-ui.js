@@ -201,7 +201,7 @@
 		
 		Jin(dom).appendChildren(label, control, caption).addClass('vslider');
 		Jin(control).appendChildren(pointer).addClass('control');
-		label.for = this.id;
+		label['for'] = this.id;
 		addClass(caption, 'caption');
 		Jin(pointer).addClass('pointer')
 		.grab({
