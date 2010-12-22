@@ -151,7 +151,14 @@ div.vslider div.control
 	height: 4px;
 	border: 1px inset gray;
 	margin-top: 5px;
+	box-shadow: 0px 0px 10px rgba(0,0,0,0.7) inset;
 	-webkit-box-shadow: 0px 0px 10px rgba(0,0,0,0.7) inset;
+	-moz-box-shadow: 0px 0px 10px rgba(0,0,0,0.7) inset;
+	-o-box-shadow: 0px 0px 10px rgba(0,0,0,0.7) inset;
+	transition: background-color 1s ease-in-out;
+	-webkit-transition: background-color 1s ease-in-out;
+	-moz-transition: background-color 1s ease-in-out;
+	-o-transition: background-color 1s ease-in-out;
 	margin-bottom: 5px;
 }
 
@@ -162,8 +169,14 @@ div.vslider div.control div.pointer
 	height: 15px;
 	margin-top: -6px;
 	border: 1px outset gray;
+	box-shadow: 0px 0px 10px rgba(0,0,0,0.7) inset;
 	-webkit-box-shadow: 0px 0px 10px rgba(0,0,0,0.7) inset;
+	-moz-box-shadow: 0px 0px 10px rgba(0,0,0,0.7) inset;
+	-o-box-shadow: 0px 0px 10px rgba(0,0,0,0.7) inset;
+	transition: background-color 1s ease-in-out;
 	-webkit-transition: background-color 1s ease-in-out;
+	-moz-transition: background-color 1s ease-in-out;
+	-o-transition: background-color 1s ease-in-out;
 }
 
 div.vslider div.control div.pointer:hover

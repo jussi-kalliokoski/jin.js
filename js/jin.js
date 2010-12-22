@@ -198,9 +198,7 @@
 		}
 		if (bind[type])
 			return bind[type].unbind(elem, type, func);
-		console.log(bind._binds.length);
 		for (i=0; i<bind._binds.length; i++)
-		{
 			if (bind._binds[i].elem == elem && bind._binds[i].type == type && bind._binds[i].func == func)
 			{
 				
@@ -210,7 +208,6 @@
 					elem.detachEvent('on'+type, bind._binds[i].fnc);
 				bind._binds.splice(i--, 1);
 			}
-		}
 	}
 	addModule('trigger', trigger);
 	function trigger(elem, type)
@@ -229,10 +226,9 @@
 			isDefaultPrevented: true,
 			stopPropagation: function(){ propagate = false; }
 		};
-		if (elem._binds)
-			for (var i=0; i<elem._binds.length; i++)
-				if (elem._binds[i].type == type && propagate)
-					elem._binds[i].fnc.call(elem, event);
+		for (i=0; i<bind._binds.length; i++)
+			if (bind._binds[i].elem == elem && bind._binds[i].type == type && propagate)
+				bind._binds[i].fnc.call(elem, event);
 		if (elem['on'+type] && propagate)
 			elem['on'+type].call(elem, event);
 	}
@@ -276,7 +272,7 @@
 				offset: {x: 0, y: 0},
 				position: {x: 0, y: 0},
 				start: {x: 0, y: 0},
-				affects: document,
+				affects: document.documentElement,
 				stopPropagation: false,
 				preventDefault: true,
 				touch: true // Implementation unfinished, and doesn't support multitouch
