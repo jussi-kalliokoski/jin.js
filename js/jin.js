@@ -241,8 +241,6 @@
 		{
 			left += elem.offsetLeft || 0;
 			top += elem.offsetTop || 0;
-			left -= elem.scrollLeft || 0;
-			top -= elem.scrollTop || 0;
 			elem = elem.offsetParent
 		} while (elem != parent);
 		return {left: left, top: top};
