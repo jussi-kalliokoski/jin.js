@@ -48,13 +48,14 @@ Jin(function(){
 	drop = document.createElement('button'),
 	btnBox = document.createElement('button'),
 	btnBall = document.createElement('button'),
-	slide = Jin.vslider();
+	slide = Jin.vslider(),
+	knob = Jin.knob();
 	drag.innerHTML = 'Drag me!';
 	drop.innerHTML = 'Drop the button here!';
 	btnBox.innerHTML = 'Open Box demo';
 	btnBall.innerHTML = 'Open Ball demo';
 	Jin.appendChildren(welcome.body, drag, btnBox, btnBall);
-	Jin(wnd.body).appendChildren(drop, slide.dom);
+	Jin(wnd.body).appendChildren(drop, slide.dom, knob.dom);
 
 	// Bind the drag and drop functions to the buttons
 	Jin.drag(drag, function(e){

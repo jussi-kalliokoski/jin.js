@@ -203,7 +203,8 @@
 		Jin(control).appendChildren(pointer).addClass('control');
 		label['for'] = this.id;
 		addClass(caption, 'caption');
-		Jin(pointer).addClass('pointer')
+		Jin.addClass(pointer, 'pointer')
+		Jin(pointer, control)
 		.grab({
 			onstart: function(e){ addClass(dom, 'moving'); },
 			onmove: function(e){ var off = Jin.getOffset(dom); setValue((e.position.x - off.left) / that.width); },
@@ -247,7 +248,106 @@
 		}
 	}
 	function hslider(){throw('Sorry, this doesn\'t work that well yet.')}
-	function knob(){throw('Sorry, this doesn\'t work that well yet.')}
+	function knob(options)
+	{
+		if (this.constructor !== knob) // Prevents from being called as a function with unexpected results.
+			return new knob(options);
+
+		var	dom = createElem('div'),
+			label = createElem('label'),
+			control = createElem('div'),
+			pointer = createElem('div'),
+			caption = createElem('div'),
+			value,
+			that = this;
+		extend(this, {
+			name: 'Knob',
+			title: 'Parameter',
+			id: 'vs'+Math.floor(Math.random()*999999), // Hmm, this just kinda hopes the same doesn't come twice... Reliable!
+			width: 300,
+			height: 20,
+			minValue: 0,
+			defValue: 0.5,
+			maxValue: 1,
+			step: 0.01,
+			valueArray: undefined,
+			prefix: '',
+			suffix: '',
+			startAngle: Math.PI,
+			endAngle: 0
+		}, options, {
+			dom: dom,
+			label: label,
+			control: control,
+			pointer: pointer,
+			caption: caption
+		});
+
+		value = this.defValue;
+		
+		Jin(dom).appendChildren(label, control, caption).addClass('knob');
+		Jin(control).appendChildren(pointer).addClass('control');
+		label['for'] = this.id;
+		addClass(caption, 'caption');
+		Jin(pointer).addClass('pointer')
+		.grab({
+			onstart: function(e){
+				var off = Jin.getOffset(pointer);
+				addClass(dom, 'moving');
+				e.startAngle = Math.atan2(off.top + pointer.offsetHeight / 2 - e.position.y, off.left + pointer.offsetWidth / 2 - e.position.x) + Math.PI;
+				e.startValue = value;
+			},
+			onmove: function(e)
+			{
+				var off = Jin.getOffset(pointer),
+				angle = Math.atan2(off.top + pointer.offsetHeight / 2 - e.position.y, off.left + pointer.offsetWidth / 2 - e.position.x) + Math.PI,
+				anglediff = -e.startAngle;
+				angle += Math.PI;
+				while (angle < 0)
+					angle += Math.PI * 2;
+				angle = angle % (Math.PI * 2);
+				anglediff += angle;
+				setValue(e.startValue + anglediff / Math.PI / 2);
+			},
+			onfinish: function(e){ removeClass(dom, 'moving'); }
+		});
+
+		this.__defineGetter__('value', function(){ return value; });
+		this.__defineSetter__('value', function(val){ var oldval = value; value = Math.round(val / that.step) * that.step; if (that.onchange && value !== oldval) that.onchange(); refresh(); });
+		this.refresh = refresh;
+		this.setValue = setValue;
+		this.getValue = getValue;
+
+		refresh();
+
+		function refresh()
+		{
+			dom.style.width = that.width+'px';
+			dom.style.height = that.height+'px';
+			Jin.experimentalCss(pointer, 'transform', 'rotate(' + (value * Math.PI * 2) + 'rad)');
+			label.innerHTML = that.title;
+			if (that.valueArray)
+				caption.innerHTML = that.valueArray[value];
+			else
+				caption.innerHTML = that.prefix + value + that.suffix;
+		}
+		function setValue(val)
+		{
+			if (val > 1)
+				val = 1;
+			if (val < 0)
+				val = 0;
+			var s = that.maxValue - that.minValue, sv = s * val, oldval = value;
+			value = that.minValue + Math.round(sv / that.step) * that.step;
+			if (that.onchange && value !== oldval)
+				that.onchange();
+			refresh();
+		}
+		function getValue()
+		{
+			return (value - that.minValue) / (that.maxValue - that.minValue);
+		}
+	}
 	function switch2(){throw('Sorry, this doesn\'t work that well yet.')}
 
 	Jin('window', jinWindow);

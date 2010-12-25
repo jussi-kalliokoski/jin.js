@@ -33,6 +33,10 @@ div.window
 	overflow: hidden;
 	min-width: 150px;
 	min-height: 25px;
+	box-shadow: 0px 0px 10px rgba(0,0,0,0.7) inset;
+	-webkit-box-shadow: 0px 0px 10px rgba(0,0,0,0.7) inset;
+	-moz-box-shadow: 0px 0px 10px rgba(0,0,0,0.7) inset;
+	-o-box-shadow: 0px 0px 10px rgba(0,0,0,0.7) inset;
 }
 
 div.window.selected
@@ -83,6 +87,10 @@ div.window div.titlebar div.controls button
 	background-image: -moz-linear-gradient(-90deg, rgba(0, 0, 0, 0.8), transparent);
 	color: white;
 	font-weight: bold;
+	box-shadow: 0px 0px 10px rgba(0,0,0,0.7) inset;
+	-webkit-box-shadow: 0px 0px 10px rgba(0,0,0,0.7) inset;
+	-moz-box-shadow: 0px 0px 10px rgba(0,0,0,0.7) inset;
+	-o-box-shadow: 0px 0px 10px rgba(0,0,0,0.7) inset;
 }
 
 div.window div.titlebar div.controls button.close
@@ -106,6 +114,10 @@ div.window div.content input, div.window div.content input[type=check], div.wind
 	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, rgba(0, 0, 0, 0.8)), color-stop(1.0, transparent));
 	background-image: -moz-linear-gradient(-90deg, rgba(0, 0, 0, 0.8), transparent);
 	color: white;
+	box-shadow: 0px 0px 10px rgba(0,0,0,0.7) inset;
+	-webkit-box-shadow: 0px 0px 10px rgba(0,0,0,0.7) inset;
+	-moz-box-shadow: 0px 0px 10px rgba(0,0,0,0.7) inset;
+	-o-box-shadow: 0px 0px 10px rgba(0,0,0,0.7) inset;
 }
 
 @-webkit-keyframes glow
@@ -134,18 +146,18 @@ div.window div.content button:hover, div.window div.content input:focus, div.win
 	-webkit-animation-direction: alternate;
 }
 
-div.vslider
+div.vslider, div.knob
 {
 	display: inline-block;
 }
 
-div.vslider label, div.vslider div.caption
+div.vslider label, div.vslider div.caption, div.knob label, div.knob div.caption
 {
 	display: block;
 	text-align: center;
 }
 
-div.vslider div.control
+div.vslider div.control, div.knob div.control
 {
 	border-radius: 5px;
 	height: 4px;
@@ -162,7 +174,7 @@ div.vslider div.control
 	margin-bottom: 5px;
 }
 
-div.vslider div.control div.pointer
+div.vslider div.control div.pointer, div.knob div.control div.pointer
 {
 	background-color: rgba(50, 50, 200, 0.6);
 	width: 10px;
@@ -179,7 +191,7 @@ div.vslider div.control div.pointer
 	-o-transition: background-color 1s ease-in-out;
 }
 
-div.vslider div.control div.pointer:hover
+div.vslider div.control div.pointer:hover, div.knob div.control div.pointer:hover
 {
 	background-color: rgba(75, 75, 225, 0.8);
 }
