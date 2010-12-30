@@ -255,7 +255,7 @@
 	addModule('isArrayish', isArrayish);
 	function isArrayish(obj) // Same as isArray, but also accepts NodeList
 	{
-		return !!(obj && (obj.constructor === Array || obj.constructor === NodeList));
+		return !!(obj && (obj.constructor === Array || obj.constructor === NodeList || obj.constructor === layer));
 	}
 
 	// Element grabber
@@ -531,8 +531,10 @@
 				return this;
 			}
 		}, layer.prototype);
-		//lr.constructor = layer; // We can't do this, it will break JavaScript. :(
-		return lr;
+		function Layer(){}
+		Layer.prototype = lr;
+		Layer.prototype.constructor = layer;
+		return new Layer();
 
 		function setAlign(elem, pos)
 		{
