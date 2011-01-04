@@ -200,7 +200,12 @@
 		value = this.defValue;
 		
 		Jin(dom).appendChildren(label, control, caption).addClass('vslider');
-		Jin(control).appendChildren(pointer).addClass('control');
+		Jin(control).appendChildren(pointer).addClass('control')
+		.grab({
+			onstart: function(e){ addClass(dom, 'moving'); },
+			onmove: function(e){ var off = Jin.getOffset(dom); setValue((e.position.x - off.left) / that.width); },
+			onfinish: function(e){ removeClass(dom, 'moving'); }
+		});
 		label['for'] = this.id;
 		addClass(caption, 'caption');
 		Jin.addClass(pointer, 'pointer')
@@ -211,8 +216,20 @@
 			onfinish: function(e){ removeClass(dom, 'moving'); }
 		});
 
+		this.value = function(val) {
+			if (val === undefined)
+				return value;
+			var oldval = value;
+			value = Math.round(val / that.step) * that.step;
+			if (that.onchange && value !== oldval)
+				that.onchange();
+			refresh();
+		};
+		/* // These won't work for IE...
 		this.__defineGetter__('value', function(){ return value; });
 		this.__defineSetter__('value', function(val){ var oldval = value; value = Math.round(val / that.step) * that.step; if (that.onchange && value !== oldval) that.onchange(); refresh(); });
+		*/
+
 		this.refresh = refresh;
 		this.setValue = setValue;
 		this.getValue = getValue;
@@ -259,7 +276,8 @@
 			pointer = createElem('div'),
 			caption = createElem('div'),
 			value,
-			that = this;
+			that = this,
+			PI = Math.PI;
 		extend(this, {
 			name: 'Knob',
 			title: 'Parameter',
@@ -273,8 +291,8 @@
 			valueArray: undefined,
 			prefix: '',
 			suffix: '',
-			startAngle: Math.PI,
-			endAngle: 0
+			startAngle: PI,
+			angleSpan: PI
 		}, options, {
 			dom: dom,
 			label: label,
@@ -286,34 +304,46 @@
 		value = this.defValue;
 		
 		Jin(dom).appendChildren(label, control, caption).addClass('knob');
-		Jin(control).appendChildren(pointer).addClass('control');
-		label['for'] = this.id;
-		addClass(caption, 'caption');
-		Jin(pointer).addClass('pointer')
+		Jin(control).appendChildren(pointer).addClass('control')
 		.grab({
 			onstart: function(e){
 				var off = Jin.getOffset(pointer);
 				addClass(dom, 'moving');
-				e.startAngle = Math.atan2(off.top + pointer.offsetHeight / 2 - e.position.y, off.left + pointer.offsetWidth / 2 - e.position.x) + Math.PI;
+				e.startAngle = Math.atan2(off.top + control.offsetHeight / 2 - e.position.y, off.left + control.offsetWidth / 2 - e.position.x) + PI;
 				e.startValue = value;
 			},
 			onmove: function(e)
 			{
-				var off = Jin.getOffset(pointer),
-				angle = Math.atan2(off.top + pointer.offsetHeight / 2 - e.position.y, off.left + pointer.offsetWidth / 2 - e.position.x) + Math.PI,
-				anglediff = -e.startAngle;
-				angle += Math.PI;
+				var off = Jin.getOffset(control),
+				angle = Math.atan2(off.top + control.offsetHeight / 2 - e.position.y, off.left + control.offsetWidth / 2 - e.position.x) + PI,
+				anglediff = -e.startAngle,
+				startAngle = that.startAngle;/*
 				while (angle < 0)
-					angle += Math.PI * 2;
-				angle = angle % (Math.PI * 2);
-				anglediff += angle;
-				setValue(e.startValue + anglediff / Math.PI / 2);
+					angle += PI * 2;
+				angle = angle % (PI * 2);
+				document.title = angle;
+				anglediff += angle;*/
+				setValue(angle / PI / 2);
 			},
 			onfinish: function(e){ removeClass(dom, 'moving'); }
 		});
+		label['for'] = this.id;
+		addClass(caption, 'caption');
+		Jin(pointer).addClass('pointer');
 
+		this.value = function(val) {
+			if (val === undefined)
+				return value;
+			var oldval = value;
+			value = Math.round(val / that.step) * that.step;
+			if (that.onchange && value !== oldval)
+				that.onchange();
+			refresh();
+		};
+		/* // These won't work for IE...
 		this.__defineGetter__('value', function(){ return value; });
 		this.__defineSetter__('value', function(val){ var oldval = value; value = Math.round(val / that.step) * that.step; if (that.onchange && value !== oldval) that.onchange(); refresh(); });
+		*/
 		this.refresh = refresh;
 		this.setValue = setValue;
 		this.getValue = getValue;
@@ -322,9 +352,14 @@
 
 		function refresh()
 		{
+			var angle = -value * Math.PI * 2 - Math.PI * 1.5,
+			width = control.offsetWidth,
+			height = control.offsetHeight;
 			dom.style.width = that.width+'px';
 			dom.style.height = that.height+'px';
-			Jin.experimentalCss(pointer, 'transform', 'rotate(' + (value * Math.PI * 2) + 'rad)');
+			pointer.style.marginLeft = (Math.sin(angle) * width / 2 + width / 2 - pointer.offsetWidth / 2) + 'px';
+			pointer.style.marginTop = (Math.cos(angle) * height / 2 + height / 2 - pointer.offsetHeight / 2) + 'px';
+			//Jin.experimentalCss(pointer, 'transform', 'rotate(' + (value * Math.PI * 2) + 'rad)');
 			label.innerHTML = that.title;
 			if (that.valueArray)
 				caption.innerHTML = that.valueArray[value];

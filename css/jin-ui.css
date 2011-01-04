@@ -149,6 +149,7 @@ div.window div.content button:hover, div.window div.content input:focus, div.win
 div.vslider, div.knob
 {
 	display: inline-block;
+	margin-top: 10px;
 }
 
 div.vslider label, div.vslider div.caption, div.knob label, div.knob div.caption
@@ -157,7 +158,12 @@ div.vslider label, div.vslider div.caption, div.knob label, div.knob div.caption
 	text-align: center;
 }
 
-div.vslider div.control, div.knob div.control
+div.vslider, div.knob
+{
+	margin-bottom: 10px;
+}
+
+div.vslider div.control
 {
 	border-radius: 5px;
 	height: 4px;
@@ -174,7 +180,18 @@ div.vslider div.control, div.knob div.control
 	margin-bottom: 5px;
 }
 
-div.vslider div.control div.pointer, div.knob div.control div.pointer
+div.knob div.control
+{
+	background-color: rgba(20, 20, 20, 0.6);
+	width: 50px;
+	height: 50px;
+	border-radius: 25px;
+	border: 1px inset gray;
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+
+div.vslider div.control div.pointer
 {
 	background-color: rgba(50, 50, 200, 0.6);
 	width: 10px;
@@ -185,6 +202,20 @@ div.vslider div.control div.pointer, div.knob div.control div.pointer
 	-webkit-box-shadow: 0px 0px 10px rgba(0,0,0,0.7) inset;
 	-moz-box-shadow: 0px 0px 10px rgba(0,0,0,0.7) inset;
 	-o-box-shadow: 0px 0px 10px rgba(0,0,0,0.7) inset;
+	transition: background-color 1s ease-in-out;
+	-webkit-transition: background-color 1s ease-in-out;
+	-moz-transition: background-color 1s ease-in-out;
+	-o-transition: background-color 1s ease-in-out;
+}
+
+div.knob div.control div.pointer
+{
+	background-color: rgba(50, 50, 200, 0.6);
+	width: 10px;
+	height: 10px;
+	border-radius: 5px;
+	margin-top: -6px;
+	border: 1px outset gray;
 	transition: background-color 1s ease-in-out;
 	-webkit-transition: background-color 1s ease-in-out;
 	-moz-transition: background-color 1s ease-in-out;
