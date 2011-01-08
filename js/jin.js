@@ -281,6 +281,12 @@
 	}
 
 	function layer(){
+		function Layer(){}
+		function setAlign(elem, pos)
+		{
+			elem.style.zIndex = pos;
+		}
+
 		var lr = [], i;
 		if (isArrayish(arguments[0])){
 			for (i=0; i<arguments[0].length; i++){
@@ -378,13 +384,7 @@
 		Layer.prototype = lr;
 		Layer.prototype.constructor = layer;
 		return new Layer();
-
-		function Layer(){}
-		function setAlign(elem, pos)
-		{
-			elem.style.zIndex = pos;
-		}
-	};
+	}
 
 	function onReady(func, pd){
 		if (ready.triggered){
@@ -494,7 +494,7 @@
 			return bind[type].unbind(elem, type, func);
 		}
 		for (i=0; i<bind._binds.length; i++){
-			if (bind._binds[i].elem === elem && bind._binds[i].type === type && bind._binds[i].func == func){
+			if (bind._binds[i].elem === elem && bind._binds[i].type === type && bind._binds[i].func === func){
 				if (document.addEventListener){
 					elem.removeEventListener(type, bind._binds[i].fnc, false);
 				} else {
