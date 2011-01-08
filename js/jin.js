@@ -54,28 +54,32 @@
 	var commandLine = new function(){
 		var path, getdata, iddata;
 
-		this.id = function(id)
-		{
+		this.id = function(id){
 			reload();
 			for (var i=0, l=iddata.length; i<l; i++)
-				if (id === iddata[i].name)
+			{
+				if (id === iddata[i].name){
 					return iddata[i].value;
+				}
+			}
 			return false;
 		};
 
-		this.get = function(id)
-		{
+		this.get = function(id){
 			reload();
-			for (var i=0, l=getdata.length; i<l; i++)
-				if (id === getdata[i].name)
+			for (var i=0, l=getdata.length; i<l; i++){
+				if (id === getdata[i].name){
 					return getdata[i].value;
+				}
+			}
 			return false;
 		};
 
 		function reload()
 		{
-			if (path == location.href)
+			if (path == location.href){
 				return;
+			}
 			path = location.href;
 			getdata = [];
 			iddata = [];
@@ -108,8 +112,9 @@
 
 	bind.ready = {
 		bind: function(elem, type, func, pass){
-			if (elem === document || elem === window)
+			if (elem === document || elem === window){
 				return onReady(func, pass);
+			}
 		},
 		unbind: function(){}, // Is this really necessary?
 		trigger: function(){
@@ -133,15 +138,17 @@
 	layer.prototype.byTag = function(tg) {
 		var lr = new layer();
 		this.each(function(){
-			if (this.tagName === tg)
+			if (this.tagName === tg){
 				lr.push(this);
+			}
 			lr.concat(getElementsByTagName(this, tg));
 		});
 		return lr;
 	};
 	layer.prototype.appendChildren = function(){
-		for (i=0; i<arguments.length; i++)
+		for (i=0; i<arguments.length; i++){
 				appendChildren(this[0], arguments[i]);
+		}
 		return this;
 	};
 	layer.prototype.bind = function(a, b, c){ return this.each(function(){ return bind(this, a, b, c); }); };
@@ -163,8 +170,9 @@
 	layer.prototype.ready = function(a, b){ return onReady(a, b); }; // For jQuery migrators
 
 	function adapt(original, modifier){
-		if (modifier.constructor === String)
+		if (modifier.constructor === String){
 			return original + new Number(modifier.substr(1));
+		}
 		return modifier;
 	}
 
@@ -173,28 +181,33 @@
 		for (i=0; i < elems.length; i++)
 		{
 			hasClass = false;
-			if (elems[i].className.length == 0)
+			if (elems[i].className.length == 0){
 				classes = [];
-			else
+			} else {
 				classes = elems[i].className.split(' ');
-			for (n=0; n < classes.length; n++)
+			}
+			for (n=0; n < classes.length; n++){
 				if (classes[n] == cl)
 				{
 					hasClass = true;
 					break;
 				}
-			if (!hasClass)
+			}
+			if (!hasClass){
 				classes.push(cl);
+			}
 			elems[i].className = classes.join(' ');
 		}
 	}
 
 	function addClasses(elem, cls){ // Requires addClass()
 		var cl = cls, i;
-		if (cl.constructor === String)
+		if (cl.constructor === String){
 			cl = cl.split(' ');
-		for (i=0; i<cl.length; i++)
+		}
+		for (i=0; i<cl.length; i++){
 			addClass(elem, cl[i]);
+		}
 	}
 
 	function addModule(name, func){
@@ -205,46 +218,51 @@
 
 	function appendChildren(parent){
 		var i;
-		if (isArrayish(arguments[1]))
-			for (i=0; i<arguments[1].length; i++)
+		if (isArrayish(arguments[1])){
+			for (i=0; i<arguments[1].length; i++){
 				parent.appendChild(arguments[1][i])
-		else
-			for (i=1; i<arguments.length; i++)
+			}
+		} else {
+			for (i=1; i<arguments.length; i++){
 				parent.appendChild(arguments[i]);
+			}
+		}
 	}
 
 	function bind(elem, type, func, pass){
 		var fnc, i;
-		if (isArrayish(elem))
-		{
-			for (i=0; i<elem.length; i++)
+		if (isArrayish(elem)){
+			for (i=0; i<elem.length; i++){
 				bind(elem[i], type, func, pass);
+			}
 			return;
 		}
 		var elem = (elem === document && typeof elem['on'+type] === typeof undefined) ? elem.documentElement : elem;
-		if (bind[type])
+		if (bind[type]){
 			return bind[type].bind(elem, type, func, pass);
-		var fnc = function(e)
-		{
-			if (!e) // Fix some ie bugs...
+		}
+		var fnc = function(e){
+			if (!e){ // Fix some ie bugs...
 				e = window.event;
-			if (!e.stopPropagation)
+			}
+			if (!e.stopPropagation){
 				e.stopPropagation = function(){ this.cancelBubble = true; };
+			}
 			e.data = pass;
 			func.call(elem, e);
 		}
-		if (document.addEventListener)
+		if (document.addEventListener){
 			elem.addEventListener(type, fnc, false);
-		else
+		} else {
 			elem.attachEvent('on' + type, fnc);
+		}
 		bind._binds.push({elem: elem, type: type, func: func, fnc: fnc});
 	}
 
 	function DOMReady(){
-		if (document.removeEventListener)
+		if (document.removeEventListener){
 			document.removeEventListener('DOMContentLoaded', DOMReady, false);
-		else if (document.detachEvent)
-		{
+		} else if (document.detachEvent) {
 			if (document.readyState !== 'complete')
 				return;
 			document.detachEvent('onreadystatechange', DOMReady);
@@ -254,29 +272,32 @@
 
 	function extend(obj){
 		var i, n;
-		for (i=1; i<arguments.length; i++)
-			for (n in arguments[i])
+		for (i=1; i<arguments.length; i++){
+			for (n in arguments[i]){
 				obj[n] = arguments[i][n];
+			}
+		}
 	}
 
 	function experimentalCss(elem, property, value){
 		var prefixes, i;
-		if (isArrayish(elem))
-		{
-			for (i=0; i<elem.length; i++)
+		if (isArrayish(elem)){
+			for (i=0; i<elem.length; i++){
 				experimentalCss(elem[i], property, value);
+			}
 			return;
 		}
 		prefixes = ['', '-webkit-', '-moz-', '-o-'];
-		if (!value)
-		{
-			while(prefixes.length && !value)
+		if (!value){
+			while(prefixes.length && !value){
 				value = elem.style[prefixes.pop() + property];
+			}
 			return value;
-		}
-		else
-			while (prefixes.length)
+		} else {
+			while (prefixes.length){
 				elem.style[prefixes.pop() + property] = value;
+			}
+		}
 	}
 
 	function getElementsByClassName(elem, cl){
@@ -289,8 +310,7 @@
 
 	function getOffset(elem, parent){ // Independent
 		var top = 0, left = 0;
-		do
-		{
+		do{
 			left += elem.offsetLeft || 0;
 			top += elem.offsetTop || 0;
 			elem = elem.offsetParent
@@ -303,30 +323,31 @@
 	}
 
 	function getWindowSize(wnd){
-		if (!wnd)
+		if (!wnd){
 			wnd = window;
-		if (window.document.documentElement)
+		}
+		if (window.document.documentElement){
 			return {width: wnd.document.documentElement['clientWidth'], height: wnd.document.documentElement['clientHeight']};
+		}
 		return {width: elem.document.body['clientWidth'], height: elem.document.body['clientWidth']};
 	}
 
 	function handleReady(){ // jQuery-ish :)
-		if (ready.bound)
+		if (ready.bound){
 			return;
+		}
 		ready.bound = true;
 
 		ready.f = [];
 		ready.p = [];
 
-		if (document.readyState === 'complete')
+		if (document.readyState === 'complete'){
 			return setTimeout(ready, 1);
-		if (document.addEventListener)
-		{
+		}
+		if (document.addEventListener){
 			document.addEventListener('DOMContentLoaded', DOMReady, false);
 			window.addEventListener('load', ready, false);
-		}
-		else if (document.attachEvent)
-		{
+		} else if (document.attachEvent) {
 			document.attachEvent('onreadystatechange', DOMReady, false);
 			window.attachEvent('onload', ready);
 		}
@@ -334,23 +355,27 @@
 
 	function hasClass(elem, cl){
 		var classes, i, n, hasClass, elems = (isArrayish(elem)) ? elem : [elem];
-		for (i=0; i < elems.length; i++)
-		{
+		for (i=0; i < elems.length; i++){
 			classes = elems[i].className.split(' ');
-			for (n=0; n < classes.length; n++)
-				if (classes[n] == cl)
+			for (n=0; n < classes.length; n++){
+				if (classes[n] == cl){
 					return true;
+				}
+			}
 		}
 		return false;
 	}
 
 	function hasClasses(elem, cls){
 		var cl = cls, i;
-		if (cl.constructor === String)
+		if (cl.constructor === String){
 			cl = cl.split(' ');
-		for (i=0; i<cl.length; i++)
-			if (!hasClasses)
+		}
+		for (i=0; i<cl.length; i++){
+			if (!hasClasses){
 				return false;
+			}
+		}
 		return true;
 	}
 
@@ -364,113 +389,102 @@
 
 	function layer(){
 		var lr = [], i;
-		if (isArrayish(arguments[0]))
-			for (i=0; i<arguments[0].length; i++)
+		if (isArrayish(arguments[0])){
+			for (i=0; i<arguments[0].length; i++){
 				lr.push(arguments[0][i]);
-		else
-			for (i=0; i<arguments.length; i++)
+			}
+		} else {
+			for (i=0; i<arguments.length; i++){
 				lr.push(arguments[i]);
+			}
+		}
 		lr._concat = lr.concat;
 		extend(lr, {
-			refresh: function()
-			{
-				for (var i=0; i<this.length; i++)
+			refresh: function(){
+				for (var i=0; i<this.length; i++){
 					setAlign(this[i], i);
-			},
-			indexOf: function(elem)
-			{
-				for (var i=0; i<this.length; i++)
-					if (this[i] === elem)
+				}
+			}, indexOf: function(elem){
+				for (var i=0; i<this.length; i++){
+					if (this[i] === elem){
 						return i;
+					}
+				}
 				return -1;
-			},
-			first: function()
-			{
+			}, first: function(){
 				return layer(this[0]);
-			},
-			last: function()
-			{
+			}, last: function(){
 				return layer(this[this.length-1]);
-			},
-			item: function(i)
-			{
+			}, item: function(i){
 				return layer(this[i]);
-			},
-			move: function(elem, to)
-			{
-				if (to >= this.length - 1)
+			}, move: function(elem, to){
+				if (to >= this.length - 1){
 					return this.toTop(elem);
-				if (to <= 0)
+				}
+				if (to <= 0){
 					return this.toBottom(elem);
+				}
 				this.splice(this.indexOf(elem), 1);
 				this.splice(to, 0, elem);
-			},
-			toBottom: function(elem)
-			{
+			}, toBottom: function(elem){
 				this.splice(this.indexOf(elem), 1);
 				this.unshift(elem);
-			},
-			toTop: function(elem)
-			{
+			}, toTop: function(elem){
 				this.splice(this.indexOf(elem), 1);
 				this.push(elem);
-			},
-			remove: function(elem)
-			{
+			}, remove: function(elem){
 				this.splice(this.indexOf(elem), 1);
-			},
-			alignByDistance: function(fromelem, lefttoright, reorder)
-			{
+			}, alignByDistance: function(fromelem, lefttoright, reorder){
 				var point = this.indexOf(fromelem), dist = Math.max(point, this.length - point - 1) + 1, maxDist = dist;
 				while (--dist)
 				{
 					if (lefttoright)
 					{
-						if (point - dist >= 0)
+						if (point - dist >= 0){
 							setAlign(this[point - dist], (maxDist - dist) * 2 - 1);
-						if (point - dist < this.length)
+						}
+						if (point - dist < this.length){
 							setAlign(this[point + dist], (maxDist - dist) * 2);
-					}
-					else
-					{
-						if (point - dist < this.length)
+						}
+					} else {
+						if (point - dist < this.length){
 							setAlign(this[point + dist], (maxDist - dist) * 2 - 1);
-						if (point - dist >= 0)
+						}
+						if (point - dist >= 0){
 							setAlign(this[point - dist], (maxDist - dist) * 2);
+						}
 					}
 				}
 				setAlign(fromelem, maxDist * 2);
-			},
-			each: function(func)
-			{
-				for (var i=0; i<this.length; i++)
+			}, each: function(func){
+				for (var i=0; i<this.length; i++){
 					func.call(this[i], i);
+				}
 				return this;
-			},
-			undouble: function()
-			{
+			}, undouble: function(){
 				for (var i=0, d; i<this.length; i++)
 				{
 					d = this.indexOf(this[i]);
-					if (d !== i)
+					if (d !== i){
 						this.splice(i--, 1);
+					}
 				}
 				return this;
-			},
-			concat: function()
-			{
+			}, concat: function(){
 				var a, b;
-				for (a=0; a<arguments.length; a++)
-					for (b=0; b<arguments[a].length; b++)
+				for (a=0; a<arguments.length; a++){
+					for (b=0; b<arguments[a].length; b++){
 						this.push(arguments[a][b]);
+					}
+				}
 				return this;
 			}
 		}, layer.prototype);
-		function Layer(){}
 		Layer.prototype = lr;
 		Layer.prototype.constructor = layer;
 		return new Layer();
 
+		function Layer(){}
 		function setAlign(elem, pos)
 		{
 			elem.style.zIndex = pos;
@@ -478,21 +492,22 @@
 	};
 
 	function onReady(func, pd){
-		if (ready.triggered)
+		if (ready.triggered){
 			return func.call(document, {stopPropagation: function(){}, data: pd});
+		}
 		ready.f.push(func);
 		ready.p.push(pd);
 	}
 
 	function ready(){
-		if (ready.triggered)
+		if (ready.triggered){
 			return;
+		}
 		ready.triggered = true;
 		var propagate = true,
 		e = {stopPropagation: function(){ propagate = false; }},
 		i;
-		for (i=0; i < ready.f.length && propagate; i++)
-		{
+		for (i=0; i < ready.f.length && propagate; i++){
 			e.data = ready.p[i];
 			ready.f[i].call(document, e);
 		}
@@ -500,84 +515,98 @@
 
 	function removeClass(elem, cl){
 		var classes, i, n, hasClass, elems = (elem.length) ? elem : [elem];
-		for (i=0; i < elems.length; i++)
-		{
+		for (i=0; i < elems.length; i++){
 			hasClass = false;
-			if (elems[i].className.length == 0)
+			if (elems[i].className.length == 0){
 				classes = [];
-			else
+			} else {
 				classes = elems[i].className.split(' ');
-			for (n=0; n < classes.length; n++)
-				if (classes[n] == cl)
+			}
+			for (n=0; n < classes.length; n++){
+				if (classes[n] == cl){
 					classes.splice(n--, 1);
+				}
+			}
 			elems[i].className = classes.join(' ');
 		}
 	}
 
 	function removeClasses(elem, cls){ // Requires removeClasses()
 		var cl = cls, i;
-		if (cl.constructor === String)
+		if (cl.constructor === String){
 			cl = cl.split(' ');
-		for (i=0; i<cl.length; i++)
+		}
+		for (i=0; i<cl.length; i++){
 			removeClass(elem, cl[i]);
+		}
 	}
 
 	function toggleClass(elem, cls){ // Requires hasClass(), addClass() and removeClass()
-		if (hasClass(elem, cls))
+		if (hasClass(elem, cls)){
 			removeClass(elem, cls);
-		else
+		} else {
 			addClass(elem, cls);
+		}
 	}
 
 	function toggleClasses(elem, cls){ // Requires toggleClass and its dependencies
 		var cl = cls, i;
-		if (cl.constructor === String)
+		if (cl.constructor === String){
 			cl = cl.split(' ');
-		for (i=0; i<cl.length; i++)
+		}
+		for (i=0; i<cl.length; i++){
 			toggleClass(elem, cl[i]);
+		}
 	}
 
 	function trigger(elem, type){
 		var i, event, propagate = true;
 		if (isArrayish(elem))
 		{
-			for (i=0; i<elem.length; i++)
+			for (i=0; i<elem.length; i++){
 				trigger(elem[i], type);
+			}
 			return;
 		}
-		if (bind[type])
+		if (bind[type]){
 			return bind[type].trigger(elem, type);
+		}
 		event = {
 			preventDefault: function(){ this.isDefaultPrevented = true; },
 			isDefaultPrevented: true,
 			stopPropagation: function(){ propagate = false; }
 		};
-		for (i=0; i<bind._binds.length; i++)
-			if (bind._binds[i].elem == elem && bind._binds[i].type == type && propagate)
+		for (i=0; i<bind._binds.length; i++){
+			if (bind._binds[i].elem == elem && bind._binds[i].type == type && propagate){
 				bind._binds[i].fnc.call(elem, event);
-		if (elem['on'+type] && propagate)
+			}
+		}
+		if (elem['on'+type] && propagate){
 			elem['on'+type].call(elem, event);
+		}
 	}
 
 	function unbind(elem, type, func){
 		var fnc, i;
 		if (isArrayish(elem))
 		{
-			for (i=0; i<elem.length; i++)
+			for (i=0; i<elem.length; i++){
 				unbind(elem[i], type, func, pass);
+			}
 			return;
 		}
-		if (bind[type])
+		if (bind[type]){
 			return bind[type].unbind(elem, type, func);
-		for (i=0; i<bind._binds.length; i++)
-			if (bind._binds[i].elem == elem && bind._binds[i].type == type && bind._binds[i].func == func)
-			{
-			
-				if (document.addEventListener)
+		}
+		for (i=0; i<bind._binds.length; i++){
+			if (bind._binds[i].elem == elem && bind._binds[i].type == type && bind._binds[i].func == func){
+				if (document.addEventListener){
 					elem.removeEventListener(type, bind._binds[i].fnc, false);
-				else
+				} else {
 					elem.detachEvent('on'+type, bind._binds[i].fnc);
+				}
 				bind._binds.splice(i--, 1);
 			}
+		}
 	}
 })(this);
