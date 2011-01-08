@@ -1,177 +1,8 @@
-(function (window, undefined){
-
-	function Jin(arg1, arg2){
-		if (arg1.constructor === Function)
-			return onReady(arg1, arg2);
-		if (arg1.constructor === String && arg2.constructor === Function)
-			return addModule(arg1, arg2);
-		if (isArrayish(arg1))
-			return layer(arg1);
-		if (arguments.length)
-			return layer.apply(this, arguments);
-		return Jin;
-	}
-
-	var
-		document = window.document,
-		settings = {},
-		modules = {},
-		fn = {},
-		NodeList = NodeList || ((document.getElementsByClassName) ? document.getElementsByClassName('').constructor : undefined);
-
-	fn.settings = settings;
-	fn.version = '0.1 Beta';
-	fn.fn = fn;
-	window.Jin = Jin;
-	bind._binds = [];
-
-	addModule('adapt', adapt);
-	addModule('addClass', addClass);
-	addModule('addClasses', addClasses);
-	addModule('addModule', addModule);
-	addModule('appendChildren', appendChildren);
-	addModule('bind', bind);
-	addModule('extend', extend);
-	addModule('experimentalCss', experimentalCss);
-	addModule('getElementsByTagName', getElementsByTagName);
-	addModule('getElementsByClassName', getElementsByClassName);
-	addModule('getOffset', getOffset);
-	addModule('getSize', getSize);
-	addModule('getWindowSize', getWindowSize);
-	addModule('hasClass', hasClass);
-	addModule('hasClasses', hasClasses);
-	addModule('isArray', isArray);
-	addModule('isArrayish', isArrayish);
-	addModule('layer', layer);
-	addModule('onReady', onReady);
-	addModule('removeClass', removeClass);
-	addModule('removeClasses', removeClasses);
-	addModule('toggleClass', toggleClass);
-	addModule('toggleClasses', toggleClasses);
-	addModule('trigger', trigger);
-	addModule('unbind', unbind);
-
-	var commandLine = new function(){
-		var path, getdata, iddata;
-
-		this.id = function(id){
-			reload();
-			for (var i=0, l=iddata.length; i<l; i++)
-			{
-				if (id === iddata[i].name){
-					return iddata[i].value;
-				}
-			}
-			return false;
-		};
-
-		this.get = function(id){
-			reload();
-			for (var i=0, l=getdata.length; i<l; i++){
-				if (id === getdata[i].name){
-					return getdata[i].value;
-				}
-			}
-			return false;
-		};
-
-		function reload()
-		{
-			if (path == location.href){
-				return;
-			}
-			path = location.href;
-			getdata = [];
-			iddata = [];
-			var pathsplit, getsplit, get, id, i, l, val, splitbreak;
-			pathsplit = path.split('?');
-			getsplit = pathsplit[pathsplit.length-1].split('#');
-			if (pathsplit.length > 1)
-			{
-				get = getsplit[0].split('&');
-				for (i=0, l=get.length; i<l; i++)
-				{
-					splitbreak = get[i].split('=');
-					val = (splitbreak.length == 1) ? true : splitbreak[1];
-					getdata.push({name: splitbreak[0], value: val});
-				}
-			}
-			if (getsplit.length > 1)
-			{
-				id = getsplit[1].split('&');
-				for (i=0, l=id.length; i<l; i++)
-				{
-					splitbreak = id[i].split('=');
-					val = (splitbreak.length == 1) ? true : splitbreak[1];
-					iddata.push({name: splitbreak[0], value: val});
-				}
-			}
-		}
-	};
-	fn.commandLine = commandLine;
-
-	bind.ready = {
-		bind: function(elem, type, func, pass){
-			if (elem === document || elem === window){
-				return onReady(func, pass);
-			}
-		},
-		unbind: function(){}, // Is this really necessary?
-		trigger: function(){
-			if (elem === document || elem === window)
-				return ready();
-		}
-	};
-	handleReady();
-
-	extend(Jin, fn);
-
-	layer.prototype.byClass = function(cl) {
-		var lr = new layer();
-		this.each(function(){
-			if (hasClass(this, cl))
-				lr.push(this);
-			lr.concat(getElementsByClassName(this, cl));
-		});
-		return lr;
-	};
-	layer.prototype.byTag = function(tg) {
-		var lr = new layer();
-		this.each(function(){
-			if (this.tagName === tg){
-				lr.push(this);
-			}
-			lr.concat(getElementsByTagName(this, tg));
-		});
-		return lr;
-	};
-	layer.prototype.appendChildren = function(){
-		for (i=0; i<arguments.length; i++){
-				appendChildren(this[0], arguments[i]);
-		}
-		return this;
-	};
-	layer.prototype.bind = function(a, b, c){ return this.each(function(){ return bind(this, a, b, c); }); };
-	layer.prototype.unbind = function(a, b){ return this.each(function(){ return unbind(this, a, b); }); };
-	layer.prototype.trigger = function(a){ return this.each(function(){ return trigger(this, a); }); };
-	layer.prototype.experimentalCss = function(a, b){ return this.each(function(){ return experimentalCss(this, a, b); }); };
-	layer.prototype.grab = function(a, b){ return this.each(function(){ return Jin.grab(this, a, b); }); };
-	layer.prototype.ungrab = function(a){ return this.each(function(){ return Jin.ungrab(this, a); }); };
-	layer.prototype.getOffset = function(i){ if (!i) i=0; return getOffset(this[i]); };
-	layer.prototype.getSize = function(i){ if (!i) i=0; return getSize(this[i]); };
-	layer.prototype.hasClass = function(a){ var b = false; this.each(function(){ if (hasClass(this, a)) b = true; }); return b; };
-	layer.prototype.hasClasses = function(a){ var b = false; this.each(function(){ if (hasClasses(this, a)) b = true; }); return b; };
-	layer.prototype.addClass = function(a){ return this.each(function(){ return addClass(this, a); }); };
-	layer.prototype.addClasses = function(a){ return this.each(function(){ return addClasses(this, a); }); };
-	layer.prototype.removeClass = function(a){ return this.each(function(){ return removeClass(this, a); }); };
-	layer.prototype.removeClasses = function(a){ return this.each(function(){ return removeClasses(this, a); }); };
-	layer.prototype.toggleClass = function(a){ return this.each(function(){ return toggleClass(this, a); }); };
-	layer.prototype.toggleClasses = function(a){ return this.each(function(){ return toggleClasses(this, a); }); };
-	layer.prototype.ready = function(a, b){ return onReady(a, b); }; // For jQuery migrators
+(function (window, Undefined){
 
 	function adapt(original, modifier){
 		if (modifier.constructor === String){
-			return original + new Number(modifier.substr(1));
+			return original + Number(modifier.substr(1));
 		}
 		return modifier;
 	}
@@ -181,13 +12,13 @@
 		for (i=0; i < elems.length; i++)
 		{
 			hasClass = false;
-			if (elems[i].className.length == 0){
+			if (!elems[i].className.length){
 				classes = [];
 			} else {
 				classes = elems[i].className.split(' ');
 			}
 			for (n=0; n < classes.length; n++){
-				if (classes[n] == cl)
+				if (classes[n] === cl)
 				{
 					hasClass = true;
 					break;
@@ -220,7 +51,7 @@
 		var i;
 		if (isArrayish(arguments[1])){
 			for (i=0; i<arguments[1].length; i++){
-				parent.appendChild(arguments[1][i])
+				parent.appendChild(arguments[1][i]);
 			}
 		} else {
 			for (i=1; i<arguments.length; i++){
@@ -237,11 +68,11 @@
 			}
 			return;
 		}
-		var elem = (elem === document && typeof elem['on'+type] === typeof undefined) ? elem.documentElement : elem;
+		elem = (elem === document && typeof elem['on'+type] === typeof Undefined) ? elem.documentElement : elem;
 		if (bind[type]){
 			return bind[type].bind(elem, type, func, pass);
 		}
-		var fnc = function(e){
+		fnc = function(e){
 			if (!e){ // Fix some ie bugs...
 				e = window.event;
 			}
@@ -250,7 +81,7 @@
 			}
 			e.data = pass;
 			func.call(elem, e);
-		}
+		};
 		if (document.addEventListener){
 			elem.addEventListener(type, fnc, false);
 		} else {
@@ -259,12 +90,73 @@
 		bind._binds.push({elem: elem, type: type, func: func, fnc: fnc});
 	}
 
+	function commandLine(){
+		var path, getdata, iddata;
+
+		this.id = function(id){
+			var i, l;
+			reload();
+			for (i=0, l=iddata.length; i<l; i++)
+			{
+				if (id === iddata[i].name){
+					return iddata[i].value;
+				}
+			}
+			return false;
+		};
+
+		this.get = function(id){
+			var i, l;
+			reload();
+			for (i=0, l=getdata.length; i<l; i++){
+				if (id === getdata[i].name){
+					return getdata[i].value;
+				}
+			}
+			return false;
+		};
+
+		function reload()
+		{
+			if (path === location.href){
+				return;
+			}
+			var pathsplit, getsplit, get, id, i, l, val, splitbreak;
+			path = location.href;
+			getdata = [];
+			iddata = [];
+			pathsplit = path.split('?');
+			getsplit = pathsplit[pathsplit.length-1].split('#');
+			if (pathsplit.length > 1)
+			{
+				get = getsplit[0].split('&');
+				for (i=0, l=get.length; i<l; i++)
+				{
+					splitbreak = get[i].split('=');
+					val = (splitbreak.length === 1) ? true : splitbreak[1];
+					getdata.push({name: splitbreak[0], value: val});
+				}
+			}
+			if (getsplit.length > 1)
+			{
+				id = getsplit[1].split('&');
+				for (i=0, l=id.length; i<l; i++)
+				{
+					splitbreak = id[i].split('=');
+					val = (splitbreak.length === 1) ? true : splitbreak[1];
+					iddata.push({name: splitbreak[0], value: val});
+				}
+			}
+		}
+	}
+
 	function DOMReady(){
 		if (document.removeEventListener){
 			document.removeEventListener('DOMContentLoaded', DOMReady, false);
 		} else if (document.detachEvent) {
-			if (document.readyState !== 'complete')
+			if (document.readyState !== 'complete'){
 				return;
+			}
 			document.detachEvent('onreadystatechange', DOMReady);
 		}
 		ready();
@@ -313,8 +205,8 @@
 		do{
 			left += elem.offsetLeft || 0;
 			top += elem.offsetTop || 0;
-			elem = elem.offsetParent
-		} while (elem != parent);
+			elem = elem.offsetParent;
+		} while (elem !== parent);
 		return {left: left, top: top};
 	}
 
@@ -327,9 +219,9 @@
 			wnd = window;
 		}
 		if (window.document.documentElement){
-			return {width: wnd.document.documentElement['clientWidth'], height: wnd.document.documentElement['clientHeight']};
+			return {width: wnd.document.documentElement.clientWidth, height: wnd.document.documentElement.clientHeight};
 		}
-		return {width: elem.document.body['clientWidth'], height: elem.document.body['clientWidth']};
+		return {width: elem.document.body.clientWidth, height: elem.document.body.clientHeight};
 	}
 
 	function handleReady(){ // jQuery-ish :)
@@ -354,11 +246,12 @@
 	}
 
 	function hasClass(elem, cl){
-		var classes, i, n, hasClass, elems = (isArrayish(elem)) ? elem : [elem];
+		var classes, i, n;
+		elems = (isArrayish(elem)) ? elem : [elem];
 		for (i=0; i < elems.length; i++){
 			classes = elems[i].className.split(' ');
 			for (n=0; n < classes.length; n++){
-				if (classes[n] == cl){
+				if (classes[n] === cl){
 					return true;
 				}
 			}
@@ -401,11 +294,11 @@
 		lr._concat = lr.concat;
 		extend(lr, {
 			refresh: function(){
-				for (var i=0; i<this.length; i++){
+				for (i=0; i<this.length; i++){
 					setAlign(this[i], i);
 				}
 			}, indexOf: function(elem){
-				for (var i=0; i<this.length; i++){
+				for (i=0; i<this.length; i++){
 					if (this[i] === elem){
 						return i;
 					}
@@ -457,12 +350,14 @@
 				}
 				setAlign(fromelem, maxDist * 2);
 			}, each: function(func){
-				for (var i=0; i<this.length; i++){
+				var i;
+				for (i=0; i<this.length; i++){
 					func.call(this[i], i);
 				}
 				return this;
 			}, undouble: function(){
-				for (var i=0, d; i<this.length; i++)
+				var i, d;
+				for (i=0; i<this.length; i++)
 				{
 					d = this.indexOf(this[i]);
 					if (d !== i){
@@ -517,13 +412,13 @@
 		var classes, i, n, hasClass, elems = (elem.length) ? elem : [elem];
 		for (i=0; i < elems.length; i++){
 			hasClass = false;
-			if (elems[i].className.length == 0){
+			if (!elems[i].className.length){
 				classes = [];
 			} else {
 				classes = elems[i].className.split(' ');
 			}
 			for (n=0; n < classes.length; n++){
-				if (classes[n] == cl){
+				if (classes[n] === cl){
 					classes.splice(n--, 1);
 				}
 			}
@@ -577,7 +472,7 @@
 			stopPropagation: function(){ propagate = false; }
 		};
 		for (i=0; i<bind._binds.length; i++){
-			if (bind._binds[i].elem == elem && bind._binds[i].type == type && propagate){
+			if (bind._binds[i].elem === elem && bind._binds[i].type === type && propagate){
 				bind._binds[i].fnc.call(elem, event);
 			}
 		}
@@ -599,7 +494,7 @@
 			return bind[type].unbind(elem, type, func);
 		}
 		for (i=0; i<bind._binds.length; i++){
-			if (bind._binds[i].elem == elem && bind._binds[i].type == type && bind._binds[i].func == func){
+			if (bind._binds[i].elem === elem && bind._binds[i].type === type && bind._binds[i].func == func){
 				if (document.addEventListener){
 					elem.removeEventListener(type, bind._binds[i].fnc, false);
 				} else {
@@ -609,4 +504,198 @@
 			}
 		}
 	}
+
+	function Jin(arg1, arg2){
+		if (arg1.constructor === Function){
+			return onReady(arg1, arg2);
+		}
+		if (arg1.constructor === String && arg2.constructor === Function){
+			return addModule(arg1, arg2);
+		}
+		if (isArrayish(arg1)){
+			return layer(arg1);
+		}
+		if (arguments.length){
+			return layer.apply(this, arguments);
+		}
+		return Jin;
+	}
+
+	var
+		document = window.document,
+		settings = {},
+		modules = {},
+		fn = {},
+		NodeList = NodeList || ((document.getElementsByClassName) ? document.getElementsByClassName('').constructor : Undefined);
+
+	fn.settings = settings;
+	fn.version = '0.1 Beta';
+	fn.fn = fn;
+	window.Jin = Jin;
+	bind._binds = [];
+
+	addModule('adapt', adapt);
+	addModule('addClass', addClass);
+	addModule('addClasses', addClasses);
+	addModule('addModule', addModule);
+	addModule('appendChildren', appendChildren);
+	addModule('bind', bind);
+	addModule('extend', extend);
+	addModule('experimentalCss', experimentalCss);
+	addModule('getElementsByTagName', getElementsByTagName);
+	addModule('getElementsByClassName', getElementsByClassName);
+	addModule('getOffset', getOffset);
+	addModule('getSize', getSize);
+	addModule('getWindowSize', getWindowSize);
+	addModule('hasClass', hasClass);
+	addModule('hasClasses', hasClasses);
+	addModule('isArray', isArray);
+	addModule('isArrayish', isArrayish);
+	addModule('layer', layer);
+	addModule('onReady', onReady);
+	addModule('removeClass', removeClass);
+	addModule('removeClasses', removeClasses);
+	addModule('toggleClass', toggleClass);
+	addModule('toggleClasses', toggleClasses);
+	addModule('trigger', trigger);
+	addModule('unbind', unbind);
+
+	fn.commandLine = new commandLine();
+
+	bind.ready = {
+		bind: function(elem, type, func, pass){
+			if (elem === document || elem === window){
+				return onReady(func, pass);
+			}
+		},
+		unbind: function(){}, // Is this really necessary?
+		trigger: function(){
+			if (elem === document || elem === window){
+				return ready();
+			}
+		}
+	};
+	handleReady();
+
+	extend(Jin, fn);
+
+	layer.prototype.byClass = function(cl) {
+		var lr = new layer();
+		this.each(function(){
+			if (hasClass(this, cl)){
+				lr.push(this);
+			}
+			lr.concat(getElementsByClassName(this, cl));
+		});
+		return lr;
+	};
+	layer.prototype.byTag = function(tg) {
+		var lr = new layer();
+		this.each(function(){
+			if (this.tagName === tg){
+				lr.push(this);
+			}
+			lr.concat(getElementsByTagName(this, tg));
+		});
+		return lr;
+	};
+	layer.prototype.appendChildren = function(){
+		for (i=0; i<arguments.length; i++){
+				appendChildren(this[0], arguments[i]);
+		}
+		return this;
+	};
+	layer.prototype.bind = function(a, b, c){
+		return this.each(function(){
+			return bind(this, a, b, c);
+		});
+	};
+	layer.prototype.unbind = function(a, b){
+		return this.each(function(){
+			return unbind(this, a, b);
+		});
+	};
+	layer.prototype.trigger = function(a){
+		return this.each(function(){
+			return trigger(this, a);
+		});
+	};
+	layer.prototype.experimentalCss = function(a, b){
+		return this.each(function(){
+			return experimentalCss(this, a, b);
+		});
+	};
+	layer.prototype.grab = function(a, b){
+		return this.each(function(){
+			return Jin.grab(this, a, b);
+		});
+	};
+	layer.prototype.ungrab = function(a){
+		return this.each(function(){
+			return Jin.ungrab(this, a);
+		});
+	};
+	layer.prototype.getOffset = function(i){
+		if (!i){
+			i=0;
+		}
+		return getOffset(this[i]);
+	};
+	layer.prototype.getSize = function(i){
+		if (!i){
+			i=0;
+		}
+		return getSize(this[i]);
+	};
+	layer.prototype.hasClass = function(a){
+		var b = false;
+		this.each(function(){
+			if (hasClass(this, a)){
+				b = true;
+			}
+		});
+		return b;
+	};
+	layer.prototype.hasClasses = function(a){
+		var b = false;
+		this.each(function(){
+			if (hasClasses(this, a)){
+				b = true;
+			}
+		});
+		return b;
+	};
+	layer.prototype.addClass = function(a){
+		return this.each(function(){
+			return addClass(this, a);
+		});
+	};
+	layer.prototype.addClasses = function(a){
+		return this.each(function(){
+			return addClasses(this, a);
+		});
+	};
+	layer.prototype.removeClass = function(a){
+		return this.each(function(){
+			return removeClass(this, a);
+		});
+	};
+	layer.prototype.removeClasses = function(a){
+		return this.each(function(){
+			return removeClasses(this, a);
+		});
+	};
+	layer.prototype.toggleClass = function(a){
+		return this.each(function(){
+			return toggleClass(this, a);
+		});
+	};
+	layer.prototype.toggleClasses = function(a){
+		return this.each(function(){
+			return toggleClasses(this, a);
+		});
+	};
+	layer.prototype.ready = function(a, b){ // For jQuery migrators
+		return onReady(a, b);
+	};
 })(this);
