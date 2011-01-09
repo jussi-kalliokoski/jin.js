@@ -179,6 +179,7 @@
 				obj[n] = arguments[i][n];
 			}
 		}
+		return obj;
 	}
 
 	function experimentalCss(elem, property, value){
