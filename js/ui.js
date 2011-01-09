@@ -19,6 +19,59 @@
 			btnMinimize	= create('button')
 		;
 
+		function refresh(){
+			var style		= wnd.style,
+			captions		= that.buttonCaptions;
+			titlebox.innerHTML	= that.title;
+			style.display		= (that.visible && that.state !== 4) ? 'block' : 'none';
+			style.left		= that.left + 'px';
+			style.top		= that.top + 'px';
+			style.width		= that.width + 'px';
+			style.height		= that.height + 'px';
+
+			btnClose.style.display	= that.closeButton ? 'inline' : 'none';
+			btnMinimize.style.display = that.minButton ? 'inline' : 'none';
+			btnMaxRes.style.display = that.resizable ? 'inline' : 'none';
+
+			btnClose.innerHTML	= captions[0];
+			btnMaxRes.innerHTML	= that.state !== 3 ? captions[1] : captions[2];
+			btnMinimize.innerHTML	= captions[3];
+		}
+
+		function close(force){
+		}
+
+		function minimize(){ // Add content here
+		}
+
+
+		function maximize(){ // Add content here
+		}
+
+
+		function move(left, top){
+			if (left !== undefined){
+				that.left = adapt(that.left, left);
+				wnd.style.left = that.left + 'px';
+			}
+			if (top !== undefined){
+				that.top = adapt(that.top, top);
+				wnd.style.top = that.top + 'px';
+			}
+		}
+
+
+		function resize(width, height){
+			if (width !== undefined){
+				that.width = adapt(that.width, width);
+				wnd.style.width = that.width + 'px';
+			}
+			if (height !== undefined){
+				that.height = adapt(that.height, height);
+				wnd.style.height = that.height + 'px';
+			}
+		}
+
 		appendChildren(wnd,		titlebar, contentbox			);
 		appendChildren(titlebar,	titlebox, menubox, controlbox		);
 		appendChildren(controlbox,	btnMinimize, btnMaxRes, btnMaxClose	);
@@ -51,8 +104,40 @@
 			}, onmove: function(e){
 				move('=' + e.move.x, '=' + e.move.y);
 			}, onfinish: function(e){
-				
+				if (typeof that.onmovefinish === 'function'){
+					that.onmovefinish.call(this, e);
+				}
 			}
+		});
+
+		grab(wnd, {
+			onstart: function(e){
+				var rightSide = (e.position.x > that.left + that.width - 5),
+					bottomSide = (e.position.y > that.top + that.height - 5);
+				if (!rightSide || !bottomSide)
+					return true;
+				if (typeof that.onresizestart === 'function'){
+					that.onresizestart.call(this, e);
+				}
+			}, onmove: function(e){
+				resize('=', e.move.x, '=', e.move.y);
+			}, onfinish: function(e){
+				if (typeof that.onresizefinish === 'function'){
+					that.onresizefinish.call(this, e);
+				}
+			}
+		});
+
+		refresh();
+
+		this.dom	= wnd;
+		this.body	= contentbox;
+		this.refresh	= refresh;
+		this.close	= close;
+		this.minimize	= minimize;
+		this.maximize	= maximize;
+		this.move	= move;
+		this.resize	= resize;
 	}
 
 	function UISlider(options){
