@@ -150,6 +150,16 @@
 		}
 	}
 
+	function create(type, id){
+		if (!type){
+			type = 'div'; // The probabilities are...
+		}
+		var elem = document.createElement(type);
+		if (id)
+			elem.id = id;
+		return elem;
+	}
+
 	function DOMReady(){
 		if (document.removeEventListener){
 			document.removeEventListener('DOMContentLoaded', DOMReady, false);
@@ -540,6 +550,7 @@
 	addModule('addModule', addModule);
 	addModule('appendChildren', appendChildren);
 	addModule('bind', bind);
+	addModule('create', create);
 	addModule('extend', extend);
 	addModule('experimentalCss', experimentalCss);
 	addModule('getElementsByTagName', getElementsByTagName);
@@ -623,16 +634,6 @@
 	layer.prototype.experimentalCss = function(a, b){
 		return this.each(function(){
 			return experimentalCss(this, a, b);
-		});
-	};
-	layer.prototype.grab = function(a, b){
-		return this.each(function(){
-			return Jin.grab(this, a, b);
-		});
-	};
-	layer.prototype.ungrab = function(a){
-		return this.each(function(){
-			return Jin.ungrab(this, a);
 		});
 	};
 	layer.prototype.getOffset = function(i){

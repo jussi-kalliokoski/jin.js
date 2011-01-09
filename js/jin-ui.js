@@ -203,17 +203,25 @@
 		Jin(control).appendChildren(pointer).addClass('control')
 		.grab({
 			onstart: function(e){ addClass(dom, 'moving'); },
-			onmove: function(e){ var off = Jin.getOffset(dom); setValue((e.position.x - off.left) / that.width); },
-			onfinish: function(e){ removeClass(dom, 'moving'); }
+			onmove: function(e){
+				try{
+				var off = Jin.getOffset(dom);
+				} catch(e) { console.log(off); throw 'baba'; };
+				setValue((e.position.x - off.left) / that.width);
+			}, onfinish: function(e){ removeClass(dom, 'moving'); }
 		});
-		label['for'] = this.id;
+		label.for = this.id;
 		addClass(caption, 'caption');
 		Jin.addClass(pointer, 'pointer')
 		Jin(pointer, control)
 		.grab({
 			onstart: function(e){ addClass(dom, 'moving'); },
-			onmove: function(e){ var off = Jin.getOffset(dom); setValue((e.position.x - off.left) / that.width); },
-			onfinish: function(e){ removeClass(dom, 'moving'); }
+			onmove: function(e){
+				try{
+				var off = Jin.getOffset(dom);
+				} catch(xe) { console.log(dom); throw 'bar'; }
+				setValue((e.position.x - off.left) / that.width);
+			}, onfinish: function(e){ removeClass(dom, 'moving'); }
 		});
 
 		this.value = function(val) {
@@ -327,7 +335,7 @@
 			},
 			onfinish: function(e){ removeClass(dom, 'moving'); }
 		});
-		label['for'] = this.id;
+		label.for = this.id;
 		addClass(caption, 'caption');
 		Jin(pointer).addClass('pointer');
 
