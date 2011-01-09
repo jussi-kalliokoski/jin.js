@@ -1,4 +1,4 @@
-(function(document, Jin, undefined){
+(function(document, Jin, undefined){ // This needs a total rewrite, it's gotten too messy.
 	function jinWindow(options)
 	{
 		var opts = 
@@ -14,21 +14,21 @@
 			minButton: true,
 			resizable: true,
 			visible: true,
-			onclose: undefined,
+			onclose: undefined
 		}
 		wnd = new function JindowWindow()
 		{
 			extend(this, opts, options);
 			var that = this,
-			window = createDiv(),
-			titlebar = createDiv(),
-			contentbox = createDiv(),
-			controlbox = createDiv(),
-			menubox = createDiv(),
-			titlebox = createDiv(),
-			btnClose = createElem('button'),
-			btnMaxRes = createElem('button'),
-			btnMinimize = createElem('button');
+			window = create(),
+			titlebar = create(),
+			contentbox = create(),
+			controlbox = create(),
+			menubox = create(),
+			titlebox = create(),
+			btnClose = create('button'),
+			btnMaxRes = create('button'),
+			btnMinimize = create('button');
 
 			appendChildren(window, titlebar, contentbox);
 			appendChildren(titlebar, titlebox, menubox, controlbox);
@@ -169,11 +169,11 @@
 		if (this.constructor !== vslider) // Prevents from being called as a function with unexpected results.
 			return new vslider(options);
 
-		var	dom = createElem('div'),
-			label = createElem('label'),
-			control = createElem('div'),
-			pointer = createElem('div'),
-			caption = createElem('div'),
+		var	dom = create('div'),
+			label = create('label'),
+			control = create('div'),
+			pointer = create('div'),
+			caption = create('div'),
 			value,
 			that = this;
 		extend(this, {
@@ -278,11 +278,11 @@
 		if (this.constructor !== knob) // Prevents from being called as a function with unexpected results.
 			return new knob(options);
 
-		var	dom = createElem('div'),
-			label = createElem('label'),
-			control = createElem('div'),
-			pointer = createElem('div'),
-			caption = createElem('div'),
+		var	dom = create('div'),
+			label = create('label'),
+			control = create('div'),
+			pointer = create('div'),
+			caption = create('div'),
 			value,
 			that = this,
 			PI = Math.PI;
@@ -412,16 +412,7 @@
 		getOffset = Jin.getOffset,
 		adapt = Jin.adapt,
 		extend = Jin.extend,
-		appendChildren = Jin.appendChildren
+		appendChildren = Jin.appendChildren,
+		create = Jin.create
 	;
-
-	function createDiv()
-	{
-		return createElem('div');
-	}
-
-	function createElem(type)
-	{
-		return document.createElement(type);
-	}
 })(document, Jin);
