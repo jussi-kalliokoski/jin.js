@@ -144,12 +144,207 @@
 		if (this.constructor !== UIWindow){
 			return new UISlider(options);
 		}
+
+		extend(this, UISliderDefaults, options);
+
+		function setValueProperty(val){ // Forces a value, whether or not it is in range.
+			var oldval = value;
+			value = Math.round(val / that.step) * that.step;
+			if (that.onchange && value !== oldval){
+				that.onchange;
+			}
+			refresh();
+		}
+
+		function getValueProperty(){
+			return value;
+		}
+
+		function setValue(val){ // Set's the value according to a range from 0 to 1, more efficient.
+			if (val > 1){
+				val = 1;
+			} else if (val < 0){
+				val = 0;
+			}
+			var	s	= that.maxValue - that.minValue,
+				sv	= s * val,
+				oldval	= value;
+			value		= that.minValue + Math.round(sv / that.step) * that.step;
+			if (that.onchange && value !== oldval){
+				that.onchange;
+			}
+			refresh();
+		}
+
+		var	that		= this,
+			dom		= create(),
+			label		= create('label'),
+			control		= create(),
+			pointer		= create(),
+			caption		= create(),
+			value,
+			refresh		= function(){
+				dom.style.width		= that.width + 'px';
+				dom.style.height	= that.height + 'px';
+				if (that.direction[0] === 'v'){
+					pointer.style.marginTop = ( getValue() * that.height - pointer.offsetHeight / 2) + 'px';
+				} else {
+					pointer.style.marginLeft = ( getValue() * that.width - pointer.offsetWidth / 2) + 'px';
+				}
+				label.innerHTML = that.title;
+				if (that.valueArray){
+					caption.innerHTML = that.valueArray[value];
+				} else {
+					caption.innerHTML = that.prefix + value + that.suffix;
+				}
+			}
+			;
+
+		this.dom = dom;
+
+		value = this.defValue;
+
+		Object.defineProperty(this, 'value', {
+			get: getValueProperty,
+			set: setValueProperty
+		});
+
+		Jin(dom)
+			.appendChildren(label, control, caption)
+			.addClass('slider ' + this.direction);
+
+		Jin(control)
+			.appendChildren(pointer)
+			.addClass('control')
+			.grab({
+				onstart: function(e){
+					if (typeof that.onmovestart === 'function'){
+						that.onmovefinish.call(this, e);
+					}
+				}, onmove: function(e){
+					var offset = Jin.getOffset(dom);
+					if (that.direction[0] = 'h'){
+						setValue( (e.position.x - offset.left) / that.width );
+					} else {
+						setValue( (e.position.y - offset.top) / that.height );
+					}
+				}, onfinish: function(e){
+					if (typeof that.onmovefinish === 'function'){
+						that.onmovefinish.call(this, e);
+					}
+				}
+			});
+
+		that.setValue	= setValue; // Die, extend, die, you slow socks!
+		that.getValue	= getValue;
+		that.refresh	= refresh;
+
+		refresh();
 	}
 
 	function UIDial(options){
 		if (this.constructor !== UIWindow){
 			return new UIDial(options);
 		}
+
+		extend(this, UIDialDefaults, options);
+
+		function setValueProperty(val){ // Forces a value, whether or not it is in range.
+			var oldval = value;
+			value = Math.round(val / that.step) * that.step;
+			if (that.onchange && value !== oldval){
+				that.onchange;
+			}
+			refresh();
+		}
+
+		function getValueProperty(){
+			return value;
+		}
+
+		function setValue(val){ // Set's the value according to a range from 0 to 1, more efficient.
+			if (val > 1){
+				val = 1;
+			} else if (val < 0){
+				val = 0;
+			}
+			var	s	= that.maxValue - that.minValue,
+				sv	= s * val,
+				oldval	= value;
+			value		= that.minValue + Math.round(sv / that.step) * that.step;
+			if (that.onchange && value !== oldval){
+				that.onchange;
+			}
+			refresh();
+		}
+
+		var	that		= this,
+			dom		= create(),
+			label		= create('label'),
+			control		= create(),
+			pointer		= create(),
+			caption		= create(),
+			value,
+			refresh		= function(){
+				dom.style.width		= that.width + 'px';
+				dom.style.height	= that.height + 'px';
+
+				var	angle		= -value * Math.PI * 2 - Math.PI * 1.5,
+					width		= control.offsetWidth,
+					height		= control.offsetHeight;
+
+				pointer.style.marginLeft = ( ((Math.sin(angle) + 1) * width - pointer.offsetWidth) / 2) + 'px';
+				pointer.style.marginTop = ( ((Math.cos(angle) + 1) * height - pointer.offsetHeight) / 2) + 'px';
+
+				label.innerHTML = that.title;
+				if (that.valueArray){
+					caption.innerHTML = that.valueArray[value];
+				} else {
+					caption.innerHTML = that.prefix + value + that.suffix;
+				}
+			};
+
+		this.dom = dom;
+
+		value = this.defValue;
+
+		Object.defineProperty(this, 'value', {
+			get: getValueProperty,
+			set: setValueProperty
+		});
+
+		Jin(dom)
+			.appendChildren(label, control, caption)
+			.addClass('slider ' + this.direction);
+
+		Jin(control)
+			.appendChildren(pointer)
+			.addClass('control')
+			.grab({
+				onstart: function(e){
+					if (typeof that.onmovestart === 'function'){
+						that.onmovefinish.call(this, e);
+					}
+				}, onmove: function(e){
+					var	offset		= Jin.getOffset(dom),
+						angle		= Math.atan(
+							off.top + control.offsetHeight / 2 - e.position.y,
+							off.left + control.offsetWidth / 2 - e.position.x),
+						anglediff	= - e.startAngle,
+						startAngle	= that.startAngle;
+					setValue( angle / PI / 2 );
+				}, onfinish: function(e){
+					if (typeof that.onmovefinish === 'function'){
+						that.onmovefinish.call(this, e);
+					}
+				}
+			});
+
+		that.setValue	= setValue; // Die, extend, die, you slow socks!
+		that.getValue	= getValue;
+		that.refresh	= refresh;
+
+		refresh();
 	}
 
 	var
@@ -169,7 +364,7 @@
 		create = Jin.create,
 		settings = Jin.settings,
 		UISettings = settings.UI = {},
-		UIWindowDefaults = settings.UI.window {
+		UIWindowDefaults = settings.UI.window = {
 			title: 'New Window',
 			buttonCaptions: ['X', '+', '-', '_'],
 			state: 0,
@@ -190,6 +385,40 @@
 			}, onresizefinish: function(){
 				removeClass(document.body, 'resizing');
 			}
+		},
+		UISliderDefaults = settings.UI.slider = {
+			name: 'Slider',
+			title: 'Parameter',
+			width: 300,
+			height: 20,
+			minValue: 0,
+			defValue: 0.5,
+			maxValue: 1,
+			step: 0.01,
+			prefix = '',
+			suffix = '',
+			direction = 'horizontal',
+			onmovestart: function(){
+				addClass(document.body, 'moving');
+			}, onmovefinish: function(){
+				removeClass(document.body, 'moving');
+		},
+		UIDialDefaults = settings.UI.dial = {
+			name: 'Dial',
+			title: 'Parameter',
+			width: 300,
+			height: 20,
+			minValue: 0,
+			defValue: 0.5,
+			maxValue: 1,
+			step: 0.01,
+			prefix = '',
+			suffix = '',
+			clockwise = true,
+			onmovestart: function(){
+				addClass(document.body, 'moving');
+			}, onmovefinish: function(){
+				removeClass(document.body, 'moving');
 		}
 	;
 
