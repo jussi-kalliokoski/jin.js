@@ -33,10 +33,6 @@ div.window
 	overflow: hidden;
 	min-width: 150px;
 	min-height: 25px;
-	box-shadow: 0px 0px 10px rgba(0,0,0,0.7) inset;
-	-webkit-box-shadow: 0px 0px 10px rgba(0,0,0,0.7) inset;
-	-moz-box-shadow: 0px 0px 10px rgba(0,0,0,0.7) inset;
-	-o-box-shadow: 0px 0px 10px rgba(0,0,0,0.7) inset;
 }
 
 div.window.selected
@@ -87,10 +83,6 @@ div.window div.titlebar div.controls button
 	background-image: -moz-linear-gradient(-90deg, rgba(0, 0, 0, 0.8), transparent);
 	color: white;
 	font-weight: bold;
-	box-shadow: 0px 0px 10px rgba(0,0,0,0.7) inset;
-	-webkit-box-shadow: 0px 0px 10px rgba(0,0,0,0.7) inset;
-	-moz-box-shadow: 0px 0px 10px rgba(0,0,0,0.7) inset;
-	-o-box-shadow: 0px 0px 10px rgba(0,0,0,0.7) inset;
 }
 
 div.window div.titlebar div.controls button.close
@@ -105,7 +97,7 @@ div.window div.titlebar div.controls button.minimize
 	border-radius: 0px 0px 0px 3px;
 }
 
-div.window div.content input, div.window div.content input[type=check], div.window div.content select, div.window div.content button, div.window div.content textarea
+input, input[type=check], select, button, textarea
 {
 	border-radius: 2px;
 	border-width: 1px;
@@ -114,10 +106,6 @@ div.window div.content input, div.window div.content input[type=check], div.wind
 	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, rgba(0, 0, 0, 0.8)), color-stop(1.0, transparent));
 	background-image: -moz-linear-gradient(-90deg, rgba(0, 0, 0, 0.8), transparent);
 	color: white;
-	box-shadow: 0px 0px 10px rgba(0,0,0,0.7) inset;
-	-webkit-box-shadow: 0px 0px 10px rgba(0,0,0,0.7) inset;
-	-moz-box-shadow: 0px 0px 10px rgba(0,0,0,0.7) inset;
-	-o-box-shadow: 0px 0px 10px rgba(0,0,0,0.7) inset;
 }
 
 @-webkit-keyframes glow
@@ -132,13 +120,13 @@ div.window div.content input, div.window div.content input[type=check], div.wind
 	}
 }
 
-div.window div.content input:focus, div.window div.content textarea:focus
+input:focus, textarea:focus
 {
 	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, rgba(150, 150, 150, 0.8)), color-stop(1.0, transparent));
 	background-image: -moz-linear-gradient(-90deg, rgba(150, 150, 150, 0.8), transparent);
 }
 
-div.window div.content button:hover, div.window div.content input:focus, div.window div.content textarea:focus
+button:hover, input:focus, textarea:focus
 {
 	-webkit-animation-name: glow;
 	-webkit-animation-duration: 3s;
@@ -146,41 +134,51 @@ div.window div.content button:hover, div.window div.content input:focus, div.win
 	-webkit-animation-direction: alternate;
 }
 
-div.vslider, div.knob
+/* 1s ease-in-out transition for bgcolor */
+div.pointer, div.control
+{
+	transition: background-color 1s ease-in-out;
+	-webkit-transition: background-color 1s ease-in-out;
+	-moz-transition: background-color 1s ease-in-out;
+	-o-transition: background-color 1s ease-in-out;
+}
+
+/* Inset box shadow */
+div.control, div.window, input, input[type=check], select, button, textarea
+{
+	box-shadow: 0px 0px 10px rgba(0,0,0,0.7) inset;
+	-webkit-box-shadow: 0px 0px 10px rgba(0,0,0,0.7) inset;
+	-moz-box-shadow: 0px 0px 10px rgba(0,0,0,0.7) inset;
+	-o-box-shadow: 0px 0px 10px rgba(0,0,0,0.7) inset;
+}
+
+div.slider, div.dial
 {
 	display: inline-block;
 	margin-top: 10px;
 }
 
-div.vslider label, div.vslider div.caption, div.knob label, div.knob div.caption
+div.slider label, div.slider div.caption, div.knob label, div.knob div.caption
 {
 	display: block;
 	text-align: center;
 }
 
-div.vslider, div.knob
+div.slider, div.dial
 {
 	margin-bottom: 10px;
 }
 
-div.vslider div.control
+div.slider div.control
 {
 	border-radius: 5px;
 	height: 4px;
 	border: 1px inset gray;
 	margin-top: 5px;
-	box-shadow: 0px 0px 10px rgba(0,0,0,0.7) inset;
-	-webkit-box-shadow: 0px 0px 10px rgba(0,0,0,0.7) inset;
-	-moz-box-shadow: 0px 0px 10px rgba(0,0,0,0.7) inset;
-	-o-box-shadow: 0px 0px 10px rgba(0,0,0,0.7) inset;
-	transition: background-color 1s ease-in-out;
-	-webkit-transition: background-color 1s ease-in-out;
-	-moz-transition: background-color 1s ease-in-out;
-	-o-transition: background-color 1s ease-in-out;
 	margin-bottom: 5px;
 }
 
-div.knob div.control
+div.dial div.control
 {
 	background-color: rgba(20, 20, 20, 0.6);
 	width: 50px;
@@ -191,24 +189,16 @@ div.knob div.control
 	margin-bottom: 5px;
 }
 
-div.vslider div.control div.pointer
+div.slider div.pointer
 {
 	background-color: rgba(50, 50, 200, 0.6);
 	width: 10px;
 	height: 15px;
 	margin-top: -6px;
 	border: 1px outset gray;
-	box-shadow: 0px 0px 10px rgba(0,0,0,0.7) inset;
-	-webkit-box-shadow: 0px 0px 10px rgba(0,0,0,0.7) inset;
-	-moz-box-shadow: 0px 0px 10px rgba(0,0,0,0.7) inset;
-	-o-box-shadow: 0px 0px 10px rgba(0,0,0,0.7) inset;
-	transition: background-color 1s ease-in-out;
-	-webkit-transition: background-color 1s ease-in-out;
-	-moz-transition: background-color 1s ease-in-out;
-	-o-transition: background-color 1s ease-in-out;
 }
 
-div.knob div.control div.pointer
+div.dial div.pointer
 {
 	background-color: rgba(50, 50, 200, 0.6);
 	width: 10px;
@@ -216,13 +206,9 @@ div.knob div.control div.pointer
 	border-radius: 5px;
 	margin-top: -6px;
 	border: 1px outset gray;
-	transition: background-color 1s ease-in-out;
-	-webkit-transition: background-color 1s ease-in-out;
-	-moz-transition: background-color 1s ease-in-out;
-	-o-transition: background-color 1s ease-in-out;
 }
 
-div.vslider div.control div.pointer:hover, div.knob div.control div.pointer:hover
+div.pointer:hover
 {
 	background-color: rgba(75, 75, 225, 0.8);
 }

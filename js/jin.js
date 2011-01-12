@@ -217,7 +217,7 @@
 			left += elem.offsetLeft || 0;
 			top += elem.offsetTop || 0;
 			elem = elem.offsetParent;
-		} while (elem !== parent);
+		} while (elem && elem !== parent);
 		return {left: left, top: top};
 	}
 

@@ -5,7 +5,7 @@
 		<link rel="stylesheet" href="../css/jin-ui.css" />
 		<script src="../js/jin.js"></script>
 		<script src="../js/jin-gestures.js"></script>
-		<script src="../js/jin-ui.js"></script>
+		<script src="../js/ui.js"></script>
 		<script>
 Jin(function(){
 	var layer,
@@ -43,13 +43,15 @@ Jin(function(){
 	welcome.body.innerHTML = 'Welcome to Jin.js!<br />';
 
 	// Create buttons for drag & drop demo and for opening other demos
+	console.log(Jin.dial());
 
-	var drag = document.createElement('button'),
-	drop = document.createElement('button'),
-	btnBox = document.createElement('button'),
-	btnBall = document.createElement('button'),
-	slide = Jin.vslider(),
-	knob = Jin.knob();
+	var	drag	= Jin.create('button'),
+		drop	= Jin.create('button'),
+		btnBox	= Jin.create('button'),
+		btnBall = Jin.create('button'),
+		slide	= Jin.slider(),
+		knob	= Jin.dial();
+
 	drag.innerHTML = 'Drag me!';
 	drop.innerHTML = 'Drop the button here!';
 	btnBox.innerHTML = 'Open Box demo';
@@ -67,6 +69,8 @@ Jin(function(){
 		if (data)
 			alert(data);
 	});
+
+	console.log('Orr');
 
 	// Bind the demo buttons to open their respective windows
 	Jin.bind(btnBox, 'click', function(){

@@ -13,11 +13,11 @@
 			contentbox	= create(),
 			menubox		= create(),
 			titlebox	= create(),
+			controlbox	= create(),
 
 			btnClose	= create('button'),
 			btnMaxRes	= create('button'),
-			btnMinimize	= create('button')
-		;
+			btnMinimize	= create('button');
 
 		function refresh(){
 			var style		= wnd.style,
@@ -74,7 +74,7 @@
 
 		appendChildren(wnd,		titlebar, contentbox			);
 		appendChildren(titlebar,	titlebox, menubox, controlbox		);
-		appendChildren(controlbox,	btnMinimize, btnMaxRes, btnMaxClose	);
+		appendChildren(controlbox,	btnMinimize, btnMaxRes, btnMinimize	);
 
 		addClass(wnd,		'window'	);
 		addClass(titlebar,	'titlebar'	);
@@ -89,7 +89,7 @@
 		btnClose.title = 'Close';
 		btnClose.title = 'Minimize';
 
-		bind(btnClose 'click', close);
+		bind(btnClose, 'click', close);
 		bind(titlebox, 'contextmenu', function(e){
 			if (e.preventDefault){
 				e.preventDefault();
@@ -114,8 +114,9 @@
 			onstart: function(e){
 				var rightSide = (e.position.x > that.left + that.width - 5),
 					bottomSide = (e.position.y > that.top + that.height - 5);
-				if (!rightSide || !bottomSide)
+				if (!rightSide || !bottomSide){
 					return true;
+				}
 				if (typeof that.onresizestart === 'function'){
 					that.onresizestart.call(this, e);
 				}
@@ -141,7 +142,7 @@
 	}
 
 	function UISlider(options){
-		if (this.constructor !== UIWindow){
+		if (this.constructor !== UISlider){
 			return new UISlider(options);
 		}
 
@@ -151,7 +152,7 @@
 			var oldval = value;
 			value = Math.round(val / that.step) * that.step;
 			if (that.onchange && value !== oldval){
-				that.onchange;
+				that.onchange.call(this, value);
 			}
 			refresh();
 		}
@@ -171,9 +172,13 @@
 				oldval	= value;
 			value		= that.minValue + Math.round(sv / that.step) * that.step;
 			if (that.onchange && value !== oldval){
-				that.onchange;
+				that.onchange.call(this, value);
 			}
 			refresh();
+		}
+
+		function getValue(){
+			return (value - that.minValue) / (that.maxValue - that.minValue);
 		}
 
 		var	that		= this,
@@ -183,13 +188,14 @@
 			pointer		= create(),
 			caption		= create(),
 			value,
+			horizontal	= that.direction === 'horizontal',
 			refresh		= function(){
 				dom.style.width		= that.width + 'px';
 				dom.style.height	= that.height + 'px';
-				if (that.direction[0] === 'v'){
-					pointer.style.marginTop = ( getValue() * that.height - pointer.offsetHeight / 2) + 'px';
-				} else {
+				if (horizontal){
 					pointer.style.marginLeft = ( getValue() * that.width - pointer.offsetWidth / 2) + 'px';
+				} else {
+					pointer.style.marginTop = ( getValue() * that.height - pointer.offsetHeight / 2) + 'px';
 				}
 				label.innerHTML = that.title;
 				if (that.valueArray){
@@ -197,8 +203,7 @@
 				} else {
 					caption.innerHTML = that.prefix + value + that.suffix;
 				}
-			}
-			;
+			};
 
 		this.dom = dom;
 
@@ -223,7 +228,7 @@
 					}
 				}, onmove: function(e){
 					var offset = Jin.getOffset(dom);
-					if (that.direction[0] = 'h'){
+					if (horizontal){
 						setValue( (e.position.x - offset.left) / that.width );
 					} else {
 						setValue( (e.position.y - offset.top) / that.height );
@@ -235,6 +240,8 @@
 				}
 			});
 
+		addClass(pointer, 'pointer');
+
 		that.setValue	= setValue; // Die, extend, die, you slow socks!
 		that.getValue	= getValue;
 		that.refresh	= refresh;
@@ -243,7 +250,7 @@
 	}
 
 	function UIDial(options){
-		if (this.constructor !== UIWindow){
+		if (this.constructor !== UIDial){
 			return new UIDial(options);
 		}
 
@@ -253,7 +260,7 @@
 			var oldval = value;
 			value = Math.round(val / that.step) * that.step;
 			if (that.onchange && value !== oldval){
-				that.onchange;
+				that.onchange.call(this, value);
 			}
 			refresh();
 		}
@@ -273,9 +280,13 @@
 				oldval	= value;
 			value		= that.minValue + Math.round(sv / that.step) * that.step;
 			if (that.onchange && value !== oldval){
-				that.onchange;
+				that.onchange.call(this, value);
 			}
 			refresh();
+		}
+
+		function getValue(){
+			return (value - that.minValue) / (that.maxValue - that.minValue);
 		}
 
 		var	that		= this,
@@ -315,7 +326,7 @@
 
 		Jin(dom)
 			.appendChildren(label, control, caption)
-			.addClass('slider ' + this.direction);
+			.addClass('dial');
 
 		Jin(control)
 			.appendChildren(pointer)
@@ -326,19 +337,21 @@
 						that.onmovefinish.call(this, e);
 					}
 				}, onmove: function(e){
-					var	offset		= Jin.getOffset(dom),
-						angle		= Math.atan(
-							off.top + control.offsetHeight / 2 - e.position.y,
-							off.left + control.offsetWidth / 2 - e.position.x),
-						anglediff	= - e.startAngle,
-						startAngle	= that.startAngle;
-					setValue( angle / PI / 2 );
+					var	pi		= Math.PI,
+						offset		= Jin.getOffset(control),
+						angle		= pi + Math.atan2(
+							offset.top + control.offsetHeight / 2 - e.position.y,
+							offset.left + control.offsetWidth / 2 - e.position.x),
+						val = angle / 2 / pi;
+					setValue( val );
 				}, onfinish: function(e){
 					if (typeof that.onmovefinish === 'function'){
 						that.onmovefinish.call(this, e);
 					}
 				}
 			});
+
+		addClass(pointer, 'pointer');
 
 		that.setValue	= setValue; // Die, extend, die, you slow socks!
 		that.getValue	= getValue;
@@ -395,13 +408,14 @@
 			defValue: 0.5,
 			maxValue: 1,
 			step: 0.01,
-			prefix = '',
-			suffix = '',
-			direction = 'horizontal',
+			prefix: '',
+			suffix: '',
+			direction: 'horizontal',
 			onmovestart: function(){
 				addClass(document.body, 'moving');
 			}, onmovefinish: function(){
 				removeClass(document.body, 'moving');
+			}
 		},
 		UIDialDefaults = settings.UI.dial = {
 			name: 'Dial',
@@ -412,15 +426,15 @@
 			defValue: 0.5,
 			maxValue: 1,
 			step: 0.01,
-			prefix = '',
-			suffix = '',
-			clockwise = true,
+			prefix: '',
+			suffix: '',
+			clockwise: true,
 			onmovestart: function(){
 				addClass(document.body, 'moving');
 			}, onmovefinish: function(){
 				removeClass(document.body, 'moving');
-		}
-	;
+			}
+		};
 
 	Jin('window', UIWindow);
 	Jin('slider', UISlider);
