@@ -9,8 +9,7 @@
 
 	function addClass(elem, cl){
 		var classes, i, n, hasClass, elems = (isArrayish(elem)) ? elem : [elem];
-		for (i=0; i < elems.length; i++)
-		{
+		for (i=0; i < elems.length; i++){
 			hasClass = false;
 			if (!elems[i].className.length){
 				classes = [];
@@ -18,8 +17,7 @@
 				classes = elems[i].className.split(' ');
 			}
 			for (n=0; n < classes.length; n++){
-				if (classes[n] === cl)
-				{
+				if (classes[n] === cl){
 					hasClass = true;
 					break;
 				}
@@ -96,8 +94,7 @@
 		this.id = function(id){
 			var i, l;
 			reload();
-			for (i=0, l=iddata.length; i<l; i++)
-			{
+			for (i=0, l=iddata.length; i<l; i++){
 				if (id === iddata[i].name){
 					return iddata[i].value;
 				}
@@ -127,21 +124,17 @@
 			iddata = [];
 			pathsplit = path.split('?');
 			getsplit = pathsplit[pathsplit.length-1].split('#');
-			if (pathsplit.length > 1)
-			{
+			if (pathsplit.length > 1){
 				get = getsplit[0].split('&');
-				for (i=0, l=get.length; i<l; i++)
-				{
+				for (i=0, l=get.length; i<l; i++){
 					splitbreak = get[i].split('=');
 					val = (splitbreak.length === 1) ? true : splitbreak[1];
 					getdata.push({name: splitbreak[0], value: val});
 				}
 			}
-			if (getsplit.length > 1)
-			{
+			if (getsplit.length > 1){
 				id = getsplit[1].split('&');
-				for (i=0, l=id.length; i<l; i++)
-				{
+				for (i=0, l=id.length; i<l; i++){
 					splitbreak = id[i].split('=');
 					val = (splitbreak.length === 1) ? true : splitbreak[1];
 					iddata.push({name: splitbreak[0], value: val});
@@ -155,8 +148,9 @@
 			type = 'div'; // The probabilities are...
 		}
 		var elem = document.createElement(type);
-		if (id)
+		if (id){
 			elem.id = id;
+		}
 		return elem;
 	}
 
@@ -346,10 +340,8 @@
 				this.splice(this.indexOf(elem), 1);
 			}, alignByDistance: function(fromelem, lefttoright, reorder){
 				var point = this.indexOf(fromelem), dist = Math.max(point, this.length - point - 1) + 1, maxDist = dist;
-				while (--dist)
-				{
-					if (lefttoright)
-					{
+				while (--dist){
+					if (lefttoright){
 						if (point - dist >= 0){
 							setAlign(this[point - dist], (maxDist - dist) * 2 - 1);
 						}
@@ -374,8 +366,7 @@
 				return this;
 			}, undouble: function(){
 				var i, d;
-				for (i=0; i<this.length; i++)
-				{
+				for (i=0; i<this.length; i++){
 					d = this.indexOf(this[i]);
 					if (d !== i){
 						this.splice(i--, 1);
@@ -467,8 +458,7 @@
 
 	function trigger(elem, type){
 		var i, event, propagate = true;
-		if (isArrayish(elem))
-		{
+		if (isArrayish(elem)){
 			for (i=0; i<elem.length; i++){
 				trigger(elem[i], type);
 			}
@@ -494,8 +484,7 @@
 
 	function unbind(elem, type, func){
 		var fnc, i;
-		if (isArrayish(elem))
-		{
+		if (isArrayish(elem)){
 			for (i=0; i<elem.length; i++){
 				unbind(elem[i], type, func, pass);
 			}
