@@ -88,6 +88,27 @@
 		bind._binds.push({elem: elem, type: type, func: func, fnc: fnc});
 	}
 
+	function byCl(cl, where){
+		if (!where){
+			where = document;
+		}
+		return where.getElementsByClassName(cl);
+	}
+
+	function byId(id, where){
+		if (!where){
+			where = document;
+		}
+		return where.getElementById(id);
+	}
+
+	function byTag(tag, where){
+		if (!where){
+			where = document;
+		}
+		return where.getElementsByTagName(tag);
+	}
+
 	function commandLine(){
 		var path, getdata, iddata;
 
@@ -529,7 +550,7 @@
 		NodeList = NodeList || ((document.getElementsByClassName) ? document.getElementsByClassName('').constructor : Undefined);
 
 	fn.settings = settings;
-	fn.version = '0.1 Beta';
+	fn.version = '0.2 Beta';
 	fn.fn = fn;
 	window.Jin = Jin;
 	bind._binds = [];
@@ -541,6 +562,9 @@
 	addModule('appendChildren', appendChildren);
 	addModule('bind', bind);
 	addModule('create', create);
+	addModule('byCl', byCl);
+	addModule('byId', byId);
+	addModule('byTag', byTag);
 	addModule('extend', extend);
 	addModule('experimentalCss', experimentalCss);
 	addModule('getElementsByTagName', getElementsByTagName);
