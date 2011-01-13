@@ -43,7 +43,6 @@ Jin(function(){
 	welcome.body.innerHTML = 'Welcome to Jin.js!<br />';
 
 	// Create buttons for drag & drop demo and for opening other demos
-	console.log(Jin.dial());
 
 	var	drag	= Jin.create('button'),
 		drop	= Jin.create('button'),
@@ -69,8 +68,6 @@ Jin(function(){
 		if (data)
 			alert(data);
 	});
-
-	console.log('Orr');
 
 	// Bind the demo buttons to open their respective windows
 	Jin.bind(btnBox, 'click', function(){

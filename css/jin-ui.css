@@ -135,7 +135,7 @@ button:hover, input:focus, textarea:focus
 }
 
 /* 1s ease-in-out transition for bgcolor */
-div.pointer, div.control
+div.pointer
 {
 	transition: background-color 1s ease-in-out;
 	-webkit-transition: background-color 1s ease-in-out;
@@ -144,7 +144,7 @@ div.pointer, div.control
 }
 
 /* Inset box shadow */
-div.control, div.window, input, input[type=check], select, button, textarea
+div.slider div.control, div.window, input, input[type=check], select, button, textarea
 {
 	box-shadow: 0px 0px 10px rgba(0,0,0,0.7) inset;
 	-webkit-box-shadow: 0px 0px 10px rgba(0,0,0,0.7) inset;
@@ -158,7 +158,7 @@ div.slider, div.dial
 	margin-top: 10px;
 }
 
-div.slider label, div.slider div.caption, div.knob label, div.knob div.caption
+div.slider label, div.slider div.caption, div.dial label, div.dial div.caption
 {
 	display: block;
 	text-align: center;

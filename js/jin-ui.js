@@ -74,7 +74,7 @@
 
 		appendChildren(wnd,		titlebar, contentbox			);
 		appendChildren(titlebar,	titlebox, menubox, controlbox		);
-		appendChildren(controlbox,	btnMinimize, btnMaxRes, btnMinimize	);
+		appendChildren(controlbox,	btnMinimize, btnMaxRes, btnClose	);
 
 		addClass(wnd,		'window'	);
 		addClass(titlebar,	'titlebar'	);
