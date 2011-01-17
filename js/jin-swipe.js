@@ -238,4 +238,4 @@
 			data: swipeObj
 		});
 	};
-})(Jin);
+}(Jin));

@@ -191,7 +191,9 @@
 		var i, n;
 		for (i=1; i<arguments.length; i++){
 			for (n in arguments[i]){
-				obj[n] = arguments[i][n];
+				if (true){
+					obj[n] = arguments[i][n];
+				}
 			}
 		}
 		return obj;
@@ -713,4 +715,4 @@
 	layer.prototype.ready = function(a, b){ // For jQuery migrators
 		return onReady(a, b);
 	};
-})(this);
+}(this));

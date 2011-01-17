@@ -439,4 +439,4 @@
 	Jin('window', UIWindow);
 	Jin('slider', UISlider);
 	Jin('dial', UIDial);
-})(Jin);
+}(Jin));

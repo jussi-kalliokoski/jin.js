@@ -311,4 +311,4 @@
 		Jin('drag', drag);
 		Jin('drop', drop);
 	})();
-})(Jin);
+}(Jin));
