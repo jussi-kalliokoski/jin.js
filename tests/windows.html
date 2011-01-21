@@ -49,14 +49,16 @@ Jin(function(){
 		btnBox	= Jin.create('button'),
 		btnBall = Jin.create('button'),
 		slide	= Jin.slider(),
-		knob	= Jin.dial();
+		knob	= Jin.dial(),
+		vslide	= Jin.slider({direction: 'vertical', height: 100, width: 4});
 
 	drag.innerHTML = 'Drag me!';
 	drop.innerHTML = 'Drop the button here!';
 	btnBox.innerHTML = 'Open Box demo';
 	btnBall.innerHTML = 'Open Ball demo';
 	Jin.appendChildren(welcome.body, drag, btnBox, btnBall);
-	Jin(wnd.body).appendChildren(drop, slide.dom, knob.dom);
+	Jin(wnd.body).appendChildren(drop, slide.dom, knob.dom, Jin.create(), vslide.dom);
+	vslide.dom.style.marginLeft = '50px';
 
 	// Bind the drag and drop functions to the buttons
 	Jin.drag(drag, function(e){

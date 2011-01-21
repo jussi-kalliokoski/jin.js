@@ -179,11 +179,20 @@ div.pointer
 	border: 1px outset gray;
 }
 
-div.slider div.pointer
+div.slider.horizontal div.pointer
 {
 	width: 10px;
 	height: 15px;
 	margin-top: -6px;
+}
+
+
+
+div.slider.vertical div.pointer
+{
+	width: 15px;
+	height: 10px;
+	margin-left: -6px;
 }
 
 div.dial div.pointer

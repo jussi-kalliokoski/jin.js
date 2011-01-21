@@ -284,7 +284,8 @@
 				dom.style.width		= that.width + 'px';
 				dom.style.height	= that.height + 'px';
 
-				var	angle		= -value * Math.PI * 2 - Math.PI * 1.5,
+				var	pi		= Math.PI,
+					angle		= (that.clockwise ? -value : value) * that.span - pi * 1.5 - that.startAngle,
 					width		= that.width,
 					height		= that.height;
 
@@ -311,11 +312,31 @@
 					}
 				}, onmove: function(e){
 					var	pi		= Math.PI,
+						span		= that.span,
 						offset		= Jin.getOffset(this),
 						angle		= pi + Math.atan2(
 							offset.top + this.offsetHeight / 2 - e.position.y,
 							offset.left + this.offsetWidth / 2 - e.position.x),
-						val = angle / 2 / pi;
+						val;
+
+					angle -= that.startAngle;
+					if (!that.clockwise){
+						angle = -angle;
+					}
+					while(angle < 0){
+						angle += 2*pi;
+					}
+					angle %= (2*pi);
+					if (angle > span){
+						if (angle - span > (pi*2 - span) / 2){
+							val = 0;
+						} else {
+							val = 1;
+						}
+					} else {
+						val = angle / (span);
+					}
+
 					setValue( val );
 				}, onfinish: function(e){
 					if (typeof that.onmovefinish === 'function'){
@@ -393,7 +414,9 @@
 			defValue: 0.5,
 			maxValue: 1,
 			step: 0.01,
+			span: Math.PI * 1.5,
 			clockwise: true,
+			startAngle: Math.PI * 0.75,
 			onmovestart: function(){
 				addClass(document.body, 'moving');
 			}, onmovefinish: function(){
