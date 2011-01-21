@@ -211,7 +211,7 @@
 			.grab({
 				onstart: function(e){
 					if (typeof that.onmovestart === 'function'){
-						that.onmovefinish.call(this, e);
+						that.onmovestart.call(this, e);
 					}
 				}, onmove: function(e){
 					var offset = Jin.getOffset(this);
@@ -307,7 +307,7 @@
 			.grab({
 				onstart: function(e){
 					if (typeof that.onmovestart === 'function'){
-						that.onmovefinish.call(this, e);
+						that.onmovestart.call(this, e);
 					}
 				}, onmove: function(e){
 					var	pi		= Math.PI,
