@@ -183,10 +183,7 @@
 
 		var	that		= this,
 			dom		= create(),
-			label		= create('label'),
-			control		= create(),
 			pointer		= create(),
-			caption		= create(),
 			value,
 			horizontal	= that.direction === 'horizontal',
 			refresh		= function(){
@@ -196,12 +193,6 @@
 					pointer.style.marginLeft = ( getValue() * that.width - pointer.offsetWidth / 2) + 'px';
 				} else {
 					pointer.style.marginTop = ( getValue() * that.height - pointer.offsetHeight / 2) + 'px';
-				}
-				label.innerHTML = that.title;
-				if (that.valueArray){
-					caption.innerHTML = that.valueArray[value];
-				} else {
-					caption.innerHTML = that.prefix + value + that.suffix;
 				}
 			};
 
@@ -215,19 +206,15 @@
 		});
 
 		Jin(dom)
-			.appendChildren(label, control, caption)
-			.addClass('slider ' + this.direction);
-
-		Jin(control)
+			.addClass('slider ' + this.direction)
 			.appendChildren(pointer)
-			.addClass('control')
 			.grab({
 				onstart: function(e){
 					if (typeof that.onmovestart === 'function'){
 						that.onmovefinish.call(this, e);
 					}
 				}, onmove: function(e){
-					var offset = Jin.getOffset(dom);
+					var offset = Jin.getOffset(this);
 					if (horizontal){
 						setValue( (e.position.x - offset.left) / that.width );
 					} else {
@@ -291,28 +278,18 @@
 
 		var	that		= this,
 			dom		= create(),
-			label		= create('label'),
-			control		= create(),
 			pointer		= create(),
-			caption		= create(),
 			value,
 			refresh		= function(){
 				dom.style.width		= that.width + 'px';
 				dom.style.height	= that.height + 'px';
 
 				var	angle		= -value * Math.PI * 2 - Math.PI * 1.5,
-					width		= control.offsetWidth,
-					height		= control.offsetHeight;
+					width		= that.width,
+					height		= that.height;
 
 				pointer.style.marginLeft = ( ((Math.sin(angle) + 1) * width - pointer.offsetWidth) / 2) + 'px';
 				pointer.style.marginTop = ( ((Math.cos(angle) + 1) * height - pointer.offsetHeight) / 2) + 'px';
-
-				label.innerHTML = that.title;
-				if (that.valueArray){
-					caption.innerHTML = that.valueArray[value];
-				} else {
-					caption.innerHTML = that.prefix + value + that.suffix;
-				}
 			};
 
 		this.dom = dom;
@@ -325,12 +302,8 @@
 		});
 
 		Jin(dom)
-			.appendChildren(label, control, caption)
-			.addClass('dial');
-
-		Jin(control)
 			.appendChildren(pointer)
-			.addClass('control')
+			.addClass('dial')
 			.grab({
 				onstart: function(e){
 					if (typeof that.onmovestart === 'function'){
@@ -338,10 +311,10 @@
 					}
 				}, onmove: function(e){
 					var	pi		= Math.PI,
-						offset		= Jin.getOffset(control),
+						offset		= Jin.getOffset(this),
 						angle		= pi + Math.atan2(
-							offset.top + control.offsetHeight / 2 - e.position.y,
-							offset.left + control.offsetWidth / 2 - e.position.x),
+							offset.top + this.offsetHeight / 2 - e.position.y,
+							offset.left + this.offsetWidth / 2 - e.position.x),
 						val = angle / 2 / pi;
 					setValue( val );
 				}, onfinish: function(e){
@@ -400,16 +373,12 @@
 			}
 		},
 		UISliderDefaults = settings.UI.slider = {
-			name: 'Slider',
-			title: 'Parameter',
 			width: 300,
-			height: 20,
+			height: 4,
 			minValue: 0,
 			defValue: 0.5,
 			maxValue: 1,
 			step: 0.01,
-			prefix: '',
-			suffix: '',
 			direction: 'horizontal',
 			onmovestart: function(){
 				addClass(document.body, 'moving');
@@ -418,16 +387,12 @@
 			}
 		},
 		UIDialDefaults = settings.UI.dial = {
-			name: 'Dial',
-			title: 'Parameter',
-			width: 300,
-			height: 20,
+			width: 50,
+			height: 50,
 			minValue: 0,
 			defValue: 0.5,
 			maxValue: 1,
 			step: 0.01,
-			prefix: '',
-			suffix: '',
 			clockwise: true,
 			onmovestart: function(){
 				addClass(document.body, 'moving');

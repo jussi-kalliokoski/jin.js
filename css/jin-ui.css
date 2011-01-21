@@ -155,57 +155,42 @@ div.slider div.control, div.window, input, input[type=check], select, button, te
 div.slider, div.dial
 {
 	display: inline-block;
-	margin-top: 10px;
+	background-color: rgba(20, 20, 20, 0.6);
+	border: 1px inset gray;
 }
 
-div.slider label, div.slider div.caption, div.dial label, div.dial div.caption
-{
-	display: block;
-	text-align: center;
-}
-
-div.slider, div.dial
-{
-	margin-bottom: 10px;
-}
-
-div.slider div.control
+div.slider
 {
 	border-radius: 5px;
 	height: 4px;
-	border: 1px inset gray;
 	margin-top: 5px;
 	margin-bottom: 5px;
 }
 
-div.dial div.control
+div.dial
 {
-	background-color: rgba(20, 20, 20, 0.6);
-	width: 50px;
-	height: 50px;
 	border-radius: 25px;
-	border: 1px inset gray;
-	margin-top: 5px;
-	margin-bottom: 5px;
+}
+
+div.pointer
+{
+	background-color: rgba(50, 50, 200, 0.6);
+	border: 1px outset gray;
 }
 
 div.slider div.pointer
 {
-	background-color: rgba(50, 50, 200, 0.6);
 	width: 10px;
 	height: 15px;
 	margin-top: -6px;
-	border: 1px outset gray;
 }
 
 div.dial div.pointer
 {
-	background-color: rgba(50, 50, 200, 0.6);
 	width: 10px;
 	height: 10px;
 	border-radius: 5px;
 	margin-top: -6px;
-	border: 1px outset gray;
 }
 
 div.pointer:hover
