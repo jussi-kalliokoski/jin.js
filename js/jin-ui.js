@@ -39,6 +39,9 @@
 		}
 
 		function close(force){
+			if (force || (typeof that.onclose === 'function' && !that.onclose)){
+				wnd.parentNode.removeChild(wnd);
+			}
 		}
 
 		function minimize(){ // Add content here
