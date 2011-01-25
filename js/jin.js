@@ -529,19 +529,7 @@
 	}
 
 	function Jin(arg1, arg2){
-		if (arg1.constructor === Function){
-			return onReady(arg1, arg2);
-		}
-		if (arg1.constructor === String && arg2.constructor === Function){
-			return addModule(arg1, arg2);
-		}
-		if (isArrayish(arg1)){
-			return layer(arg1);
-		}
-		if (arguments.length){
-			return layer.apply(this, arguments);
-		}
-		return Jin;
+		Jin.init(arg1, arg2);
 	}
 
 	var
@@ -586,6 +574,22 @@
 	addModule('toggleClasses', toggleClasses);
 	addModule('trigger', trigger);
 	addModule('unbind', unbind);
+
+	addModule('init', function (arg1, arg2){
+		if (arg1.constructor === Function){
+			return onReady(arg1, arg2);
+		}
+		if (arg1.constructor === String && arg2.constructor === Function){
+			return addModule(arg1, arg2);
+		}
+		if (isArrayish(arg1)){
+			return layer(arg1);
+		}
+		if (arguments.length){
+			return layer.apply(this, arguments);
+		}
+		return Jin;
+	});
 
 	fn.commandLine = new commandLine();
 
