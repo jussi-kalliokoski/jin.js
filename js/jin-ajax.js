@@ -24,4 +24,7 @@ Uses Dean Edward's CSSQuery for queries.
         if (window._$){
             Jin.$ = window._$;
         }
-       
+        window._$ = window.$;
+    }
+    window.$ = Jin;
+}(Jin, window));
