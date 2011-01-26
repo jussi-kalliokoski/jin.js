@@ -529,7 +529,7 @@
 	}
 
 	function Jin(arg1, arg2){
-		Jin.init(arg1, arg2);
+		return Jin.init(arg1, arg2);
 	}
 
 	var
