@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<script src="../js/jin.js"></script>
+		<script src="../js/jin-ajax.js"></script>
+		<script>
+$(function(){
+	var crazy = $('.crazy');
+	crazy.bind('click', function(){
+		alert('crazy!');
+	})
+	.css('$borderRadius', '3px')
+	.css({backgroundColor: 'red', '$boxShadow': '10px 10px 10px #fff inset'});
+});
+		</script>
+	</head>
+	<body>
+		<div class="crazy">ababa</div>
+	</body>
+</html>
