@@ -92,7 +92,7 @@
 		if (!where){
 			where = document;
 		}
-		return where.getElementsByClassName(cl);
+		return catchByClass(cl, where);
 	}
 
 	function byId(id, where){
@@ -253,7 +253,7 @@
 	}
 
 	function getElementsByClassName(elem, cl){
-		return elem.getElementsByClassName(cl);
+		return catchByClass(cl, elem);
 	}
 
 	function getElementsByTagName(elem, tg){
@@ -560,9 +560,47 @@
 		}
 	}
 
+	function collectByClass(class, element, tagName){
+		if (!tagName){
+			tagName = '*';
+		}
+		var	elems	= element.getElementsByTagName(tagName),
+			l	= elems.length,
+			result	= [],
+			elem, i;
+		for (i=0; i<l; i++){
+			elem = result[i];
+			if (element.className.indexOf(result) > -1){
+				result.push(element);
+			}
+		}
+	}
+
 	function Jin(arg1, arg2){
 		return Jin.init(arg1, arg2);
 	}
+
+	(function(){ // Check if we can collect classes with a faster method.
+		var testElement = document.createElement('div');
+		testElement.innerHTML = '<div class=t></div><div class="t e"></div>';
+		if (testElement.getElementsByClassName && testElement.getElementsByClassName('e').length){
+			testElement.lastChild.className = 'e';
+			if (testElement.getElementsByClassName('e') === 2){
+				collectByClass = function(class, element){
+					return element.getElementsByClassName(class);
+				};
+			}
+		} else if (testElement.querySelectorAll) {
+			testElement.innerHTML = '<div class=T></div>';
+			if (testElement.querySelectorAll('.T').length){
+				collectByClass = function(class, element){
+					return element.querySelectorAll('.' + class);
+				};
+			}
+		}
+
+		testElement = null;
+	})();
 
 	var
 		document = window.document,
