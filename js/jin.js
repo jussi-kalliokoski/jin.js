@@ -92,7 +92,7 @@
 		if (!where){
 			where = document;
 		}
-		return catchByClass(cl, where);
+		return collectByClass(cl, where);
 	}
 
 	function byId(id, where){
@@ -253,7 +253,7 @@
 	}
 
 	function getElementsByClassName(elem, cl){
-		return catchByClass(cl, elem);
+		return collectByClass(cl, elem);
 	}
 
 	function getElementsByTagName(elem, tg){
