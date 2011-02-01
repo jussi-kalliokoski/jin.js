@@ -560,7 +560,7 @@
 		}
 	}
 
-	function collectByClass(class, element, tagName){
+	function collectByClass(cl, element, tagName){
 		if (!tagName){
 			tagName = '*';
 		}
@@ -570,7 +570,7 @@
 			elem, i;
 		for (i=0; i<l; i++){
 			elem = elems[i];
-			if (elem.className.indexOf(result) > -1){
+			if (elem.className.indexOf(cl) > -1){
 				result.push(elem);
 			}
 		}
@@ -593,15 +593,15 @@
 		if (testElement.getElementsByClassName && testElement.getElementsByClassName('e').length){
 			testElement.lastChild.className = 'e';
 			if (testElement.getElementsByClassName('e').length === 2){
-				collectByClass = function(class, element){
-					return element.getElementsByClassName(class);
+				collectByClass = function(cl, element){
+					return element.getElementsByClassName(cl);
 				};
 			}
 		} else if (testElement.querySelectorAll) {
 			testElement.innerHTML = '<div class=T></div>';
 			if (testElement.querySelectorAll('.T').length){
-				collectByClass = function(class, element){
-					return element.querySelectorAll('.' + class);
+				collectByClass = function(cl, element){
+					return element.querySelectorAll('.' + cl);
 				};
 			}
 		}
