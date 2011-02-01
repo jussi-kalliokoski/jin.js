@@ -340,7 +340,7 @@
 		return !!(obj && (obj.constructor === Array || obj.constructor === NodeList || obj.constructor === layer));
 	}
 
-	function layer(){
+	function layer(itemSet){
 		function Layer(){}
 		function setAlign(elem, pos)
 		{
@@ -348,9 +348,9 @@
 		}
 
 		var lr = [], i;
-		if (isArrayish(arguments[0])){
-			for (i=0; i<arguments[0].length; i++){
-				lr.push(arguments[0][i]);
+		if (isArrayish(itemSet)){
+			for (i=0; i<itemSet[0].length; i++){
+				lr.push(itemSet[0][i]);
 			}
 		} else {
 			for (i=0; i<arguments.length; i++){
@@ -576,9 +576,16 @@
 		}
 	}
 
-	function Jin(arg1, arg2){
-		return Jin.init(arg1, arg2);
+	function Jin(){
+		return Jin.init.apply(this, arguments);
 	}
+
+	var
+		document = window.document,
+		settings = {},
+		modules = {},
+		fn = {},
+		NodeList = NodeList || ((document.getElementsByClassName) ? document.getElementsByClassName('').constructor : Undefined);
 
 	(function(){ // Check if we can collect classes with a faster method.
 		var testElement = document.createElement('div');
@@ -601,13 +608,6 @@
 
 		testElement = null;
 	})();
-
-	var
-		document = window.document,
-		settings = {},
-		modules = {},
-		fn = {},
-		NodeList = NodeList || ((document.getElementsByClassName) ? document.getElementsByClassName('').constructor : Undefined);
 
 	fn.settings = settings;
 	fn.version = '0.2 Beta';

@@ -208,6 +208,7 @@
 			set: setValueProperty
 		});
 
+		console.log(Jin(dom).length);
 		Jin(dom)
 			.addClass('slider ' + this.direction)
 			.appendChildren(pointer)
