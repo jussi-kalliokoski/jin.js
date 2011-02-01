@@ -591,7 +591,7 @@
 		modules = {},
 		fn = {},
 		NodeList = window.NodeList || ((document.getElementsByTagName) ? document.getElementsByTagName('').constructor : Undefined),
-		StaticNodeList = window.StaticNodeList || ((document.querySelectorAll) ? document.querySelectorAll('').constructor : Undefined);
+		StaticNodeList = window.StaticNodeList || ((document.querySelectorAll) ? document.querySelectorAll('X').constructor : Undefined);
 
 	(function(){ // Check if we can collect classes with a faster method.
 		var testElement = document.createElement('div');
