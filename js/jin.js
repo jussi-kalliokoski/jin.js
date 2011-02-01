@@ -349,8 +349,8 @@
 
 		var lr = [], i;
 		if (isArrayish(itemSet)){
-			for (i=0; i<itemSet[0].length; i++){
-				lr.push(itemSet[0][i]);
+			for (i=0; i<itemSet.length; i++){
+				lr.push(itemSet[i]);
 			}
 		} else {
 			for (i=0; i<arguments.length; i++){
@@ -589,10 +589,10 @@
 
 	(function(){ // Check if we can collect classes with a faster method.
 		var testElement = document.createElement('div');
-		testElement.innerHTML = '<div class=t></div><div class="t e"></div>';
+		testElement.innerHTML = '<div class="t e"></div><div class=t></div>';
 		if (testElement.getElementsByClassName && testElement.getElementsByClassName('e').length){
 			testElement.lastChild.className = 'e';
-			if (testElement.getElementsByClassName('e') === 2){
+			if (testElement.getElementsByClassName('e').length === 2){
 				collectByClass = function(class, element){
 					return element.getElementsByClassName(class);
 				};
