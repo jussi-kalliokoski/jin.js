@@ -337,7 +337,11 @@
 	}
 
 	function isArrayish(obj){ // Same as isArray, but also accepts NodeList
-		return !!(obj && (obj.constructor === Array || obj.constructor === NodeList || obj.constructor === layer));
+		if (!obj){
+			return false;
+		}
+		var constructor = obj.constructor;
+		return constructor === Array || constructor === NodeList || constructor === StaticNodeList || constructor === layer;
 	}
 
 	function layer(itemSet){
@@ -574,6 +578,7 @@
 				result.push(elem);
 			}
 		}
+		return result;
 	}
 
 	function Jin(){
@@ -585,7 +590,8 @@
 		settings = {},
 		modules = {},
 		fn = {},
-		NodeList = NodeList || ((document.getElementsByClassName) ? document.getElementsByClassName('').constructor : Undefined);
+		NodeList = window.NodeList || ((document.getElementsByTagName) ? document.getElementsByTagName('').constructor : Undefined),
+		StaticNodeList = window.StaticNodeList || ((document.querySelectorAll) ? document.querySelectorAll('').constructor : Undefined);
 
 	(function(){ // Check if we can collect classes with a faster method.
 		var testElement = document.createElement('div');
