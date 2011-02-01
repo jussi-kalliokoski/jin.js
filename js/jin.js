@@ -569,9 +569,9 @@
 			result	= [],
 			elem, i;
 		for (i=0; i<l; i++){
-			elem = result[i];
-			if (element.className.indexOf(result) > -1){
-				result.push(element);
+			elem = elems[i];
+			if (elem.className.indexOf(result) > -1){
+				result.push(elem);
 			}
 		}
 	}
