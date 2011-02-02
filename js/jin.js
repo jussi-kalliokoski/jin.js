@@ -566,6 +566,18 @@
 		}
 	}
 
+	function toArray(arr){
+		if (typeof arr === 'string'){
+			return [arr];
+		}
+		var	result	= [],
+			i, l	= arr.length;
+		for (i=0; i<l; i++){
+			result.push(arr[i]);
+		}
+		return result;
+	}
+
 	function toggleClass(elem, cls){ // Requires hasClass(), addClass() and removeClass()
 		if (hasClass(elem, cls)){
 			removeClass(elem, cls);
