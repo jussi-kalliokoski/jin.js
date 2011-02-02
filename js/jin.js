@@ -109,6 +109,11 @@
 		return where.getElementsByTagName(tag);
 	}
 
+	function clone(elem, deep){
+		deep = deep || false;
+		return elem.cloneNode(deep);
+	}
+
 	function commandLine(){
 		var path, getdata, iddata;
 
@@ -627,6 +632,7 @@
 	addModule('addModule', addModule);
 	addModule('appendChildren', appendChildren);
 	addModule('bind', bind);
+	addModule('clone', clone);
 	addModule('create', create);
 	addModule('css', css);
 	addModule('byCl', byCl);
@@ -687,6 +693,17 @@
 
 	extend(Jin, fn);
 
+	layer.prototype.appendChildren = function(){
+		for (i=0; i<arguments.length; i++){
+				appendChildren(this[0], arguments[i]);
+		}
+		return this;
+	};
+	layer.prototype.bind = function(a, b, c){
+		return this.each(function(){
+			return bind(this, a, b, c);
+		});
+	};
 	layer.prototype.byClass = function(cl) {
 		var lr = new layer();
 		this.each(function(){
@@ -707,16 +724,12 @@
 		});
 		return lr;
 	};
-	layer.prototype.appendChildren = function(){
-		for (i=0; i<arguments.length; i++){
-				appendChildren(this[0], arguments[i]);
-		}
-		return this;
-	};
-	layer.prototype.bind = function(a, b, c){
-		return this.each(function(){
-			return bind(this, a, b, c);
+	layer.prototype.clone = function(a){
+		var lr = new layer();
+		this.each(function(){
+			lr.push(clone(this, a);
 		});
+		return lr;
 	};
 	layer.prototype.css = function(a, b){
 		if (typeof a !== 'object' && !b){
