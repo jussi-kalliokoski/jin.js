@@ -58,6 +58,22 @@
 		}
 	}
 
+	function attr(elem, a, val){
+		if (typeof a === 'string'){
+			if (arguments.length < 3){
+				elem.setAttribute(a, val);
+			}
+			return elem.getAttribute(a);
+		} else if (typeof a === 'object') {
+			var i;
+			for (i in a){
+				if (true){
+					elem.setAttribute(i, a[i]);
+				}
+			}
+		}
+	}
+
 	function bind(elem, type, func, pass){
 		var fnc, i;
 		if (isArrayish(elem)){
@@ -338,7 +354,7 @@
 	}
 
 	function html(elem, str){
-		if (str){
+		if (arguments.length > 1){
 			elem.innerHTML = str;
 		}
 		return elem.innerHTML;
@@ -638,6 +654,7 @@
 	addModule('addClasses', addClasses);
 	addModule('addModule', addModule);
 	addModule('appendChildren', appendChildren);
+	addModule('attr', attr);
 	addModule('bind', bind);
 	addModule('clone', clone);
 	addModule('create', create);
@@ -701,11 +718,19 @@
 
 	extend(Jin, fn);
 
-	layer.prototype.appendChildren = function(){
+	layer.prototype.appendChildren = layer.prototype.append = function(){
 		for (i=0; i<arguments.length; i++){
 				appendChildren(this[0], arguments[i]);
 		}
 		return this;
+	};
+	layer.prototype.attr = function(a, b){
+		if (typeof a === 'string' && arguments.length < 2){
+			return attr(this[0], a);
+		}
+		return this.each(function(){
+			return attr(this, a, b);
+		});
 	};
 	layer.prototype.bind = function(a, b, c){
 		return this.each(function(){
@@ -793,7 +818,7 @@
 		return b;
 	};
 	layer.prototype.html = function(a){
-		if (!a){
+		if (!arguments.length){
 			return html(this[0]);
 		}
 		return this.each(function(){
