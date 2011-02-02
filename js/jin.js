@@ -483,6 +483,19 @@
 		ready.p.push(pd);
 	}
 
+	function prependChildren(parent){
+		var i, firstChild = parent.firstChild;
+		if (isArrayish(arguments[1])){
+			for (i=0; i<arguments[1].length; i++){
+				parent.insertBefore(arguments[1][i], firstChild);
+			}
+		} else {
+			for (i=1; i<arguments.length; i++){
+				parent.insertBefore(arguments[i], firstChild);
+			}
+		}
+	}
+
 	function ready(){
 		if (ready.triggered){
 			return;
@@ -676,6 +689,7 @@
 	addModule('isArrayish', isArrayish);
 	addModule('layer', layer);
 	addModule('onReady', onReady);
+	addModule('prependChildren', prependChildren);
 	addModule('removeClass', removeClass);
 	addModule('removeClasses', removeClasses);
 	addModule('toggleClass', toggleClass);
@@ -719,9 +733,21 @@
 	extend(Jin, fn);
 
 	layer.prototype.appendChildren = layer.prototype.append = function(){
-		for (i=0; i<arguments.length; i++){
-				appendChildren(this[0], arguments[i]);
+		var	args	= [this[0]],
+			i, l	= arguments.length;
+		for (i=0; i<l; i++){
+			args.push(arguments[i]);
 		}
+		appendChildren.apply(this[0], args);
+		return this;
+	};
+	layer.prototype.prependChildren = layer.prototype.prepend = function(){
+		var	args	= [this[0]],
+			i, l	= arguments.length;
+		for (i=0; i<l; i++){
+			args.push(arguments[i]);
+		}
+		prependChildren.apply(this[0], args);
 		return this;
 	};
 	layer.prototype.attr = function(a, b){
