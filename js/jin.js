@@ -337,6 +337,13 @@
 		return true;
 	}
 
+	function html(elem, str){
+		if (str){
+			elem.innerHTML = str;
+		}
+		return elem.innerHTML;
+	}
+
 	function isArray(obj){ // Are there faster / more reliable methods out there?
 		return !!(obj && obj.constructor === Array);
 	}
@@ -647,6 +654,7 @@
 	addModule('getWindowSize', getWindowSize);
 	addModule('hasClass', hasClass);
 	addModule('hasClasses', hasClasses);
+	addModule('html', html);
 	addModule('isArray', isArray);
 	addModule('isArrayish', isArrayish);
 	addModule('layer', layer);
@@ -783,6 +791,14 @@
 			}
 		});
 		return b;
+	};
+	layer.prototype.html = function(a){
+		if (!a){
+			return html(this[0]);
+		}
+		return this.each(function(){
+			html(this, a);
+		});
 	};
 	layer.prototype.addClass = function(a){
 		return this.each(function(){
