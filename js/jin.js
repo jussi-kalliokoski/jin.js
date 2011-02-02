@@ -49,11 +49,11 @@
 		var parent = elem.parentNode, i;
 		if (isArrayish(nodes)){
 			for (i=0; i<nodes.length; i++){
-				parent.insertBefore(nodes[i], elem.nextSibling);
+				parent.insertBefore(fixNode(nodes[i]), elem.nextSibling);
 			}
 		} else {
 			for (i=1; i<arguments.length; i++){
-				parent.insertBefore(arguments[i], elem.nextSibling);
+				parent.insertBefore(fixNode(arguments[i]), elem.nextSibling);
 			}
 		}
 	}
@@ -62,11 +62,11 @@
 		var parent = elem.parentNode, i;
 		if (isArrayish(nodes)){
 			for (i=0; i<nodes.length; i++){
-				parent.insertBefore(nodes[i], elem);
+				parent.insertBefore(fixNode(nodes[i]), elem);
 			}
 		} else {
 			for (i=1; i<arguments.length; i++){
-				parent.insertBefore(arguments[i], elem);
+				parent.insertBefore(fixNode(arguments[i]), elem);
 			}
 		}
 	}
@@ -75,11 +75,11 @@
 		var i;
 		if (isArrayish(nodes)){
 			for (i=0; i<nodes.length; i++){
-				parent.appendChild(nodes[i]);
+				parent.appendChild(fixNode(nodes[i]));
 			}
 		} else {
 			for (i=1; i<arguments.length; i++){
-				parent.appendChild(arguments[i]);
+				parent.appendChild(fixNode(arguments[i]));
 			}
 		}
 	}
@@ -254,6 +254,13 @@
 		} else {
 			style[property] = value;
 		}
+	}
+
+	function fixNode(node){
+		if (typeof node === 'string'){
+			node = document.createTextNode(node);
+		}
+		return node;
 	}
 
 	function DOMReady(){
@@ -515,11 +522,11 @@
 		var i, firstChild = parent.firstChild;
 		if (isArrayish(nodes)){
 			for (i=0; i<nodes.length; i++){
-				parent.insertBefore(nodes[i], firstChild);
+				parent.insertBefore(fixNode(nodes[i]), firstChild);
 			}
 		} else {
 			for (i=1; i<arguments.length; i++){
-				parent.insertBefore(arguments[i], firstChild);
+				parent.insertBefore(fixNode(arguments[i]), firstChild);
 			}
 		}
 	}
