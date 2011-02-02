@@ -45,11 +45,37 @@
 		//console.log('Added module '+name); // For debug
 	}
 
-	function appendChildren(parent){
+	function appendAfter(elem, nodes){
+		var parent = elem.parentNode, i;
+		if (isArrayish(nodes)){
+			for (i=0; i<nodes.length; i++){
+				parent.insertBefore(nodes[i], elem.nextSibling);
+			}
+		} else {
+			for (i=1; i<arguments.length; i++){
+				parent.insertBefore(arguments[i], elem.nextSibling);
+			}
+		}
+	}
+
+	function appendBefore(elem, nodes){
+		var parent = elem.parentNode, i;
+		if (isArrayish(nodes)){
+			for (i=0; i<nodes.length; i++){
+				parent.insertBefore(nodes[i], elem);
+			}
+		} else {
+			for (i=1; i<arguments.length; i++){
+				parent.insertBefore(arguments[i], elem);
+			}
+		}
+	}
+
+	function appendChildren(parent, nodes){
 		var i;
-		if (isArrayish(arguments[1])){
-			for (i=0; i<arguments[1].length; i++){
-				parent.appendChild(arguments[1][i]);
+		if (isArrayish(nodes)){
+			for (i=0; i<nodes.length; i++){
+				parent.appendChild(nodes[i]);
 			}
 		} else {
 			for (i=1; i<arguments.length; i++){
@@ -126,7 +152,9 @@
 	}
 
 	function clone(elem, deep){
-		deep = deep || false;
+		if (!deep){
+			deep = false;
+		}
 		return elem.cloneNode(deep);
 	}
 
@@ -483,11 +511,11 @@
 		ready.p.push(pd);
 	}
 
-	function prependChildren(parent){
+	function prependChildren(parent, nodes){
 		var i, firstChild = parent.firstChild;
-		if (isArrayish(arguments[1])){
-			for (i=0; i<arguments[1].length; i++){
-				parent.insertBefore(arguments[1][i], firstChild);
+		if (isArrayish(nodes)){
+			for (i=0; i<nodes.length; i++){
+				parent.insertBefore(nodes[i], firstChild);
 			}
 		} else {
 			for (i=1; i<arguments.length; i++){
@@ -666,6 +694,8 @@
 	addModule('addClass', addClass);
 	addModule('addClasses', addClasses);
 	addModule('addModule', addModule);
+	addModule('appendAfter', appendAfter);
+	addModule('appendBefore', appendBefore);
 	addModule('appendChildren', appendChildren);
 	addModule('attr', attr);
 	addModule('bind', bind);
@@ -732,6 +762,34 @@
 
 	extend(Jin, fn);
 
+	layer.prototype.appendAfter = layer.prototype.after = function(a){
+		if (typeof a === 'string'){
+			return this.each(function(){
+				appendAfter(this, a);
+			});
+		}
+		var	args	= [this[0]],
+			i, l	= arguments.length;
+		for (i=0; i<l; i++){
+			args.push(arguments[i]);
+		}
+		appendAfter.apply(this[0], args);
+		return this;
+	}
+	layer.prototype.appendBefore = layer.prototype.before = function(a){
+		if (typeof a === 'string'){
+			return this.each(function(){
+				appendBefore(this, a);
+			});
+		}
+		var	args	= [this[0]],
+			i, l	= arguments.length;
+		for (i=0; i<l; i++){
+			args.push(arguments[i]);
+		}
+		appendBefore.apply(this[0], args);
+		return this;
+	}
 	layer.prototype.appendChildren = layer.prototype.append = function(){
 		var	args	= [this[0]],
 			i, l	= arguments.length;
@@ -786,7 +844,7 @@
 	layer.prototype.clone = function(a){
 		var lr = new layer();
 		this.each(function(){
-			lr.push(clone(this, a);
+			lr.push(clone(this, a));
 		});
 		return lr;
 	};
