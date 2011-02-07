@@ -106,6 +106,10 @@
 						return swipe.kill();
 					}
 					swipe.onMotion.apply(swipe.area, [swipe.motionX, swipe.motionY, swipe.passData]);
+					if (!swipe.released){
+						swipe.motionX = swipe.motionY = 0;
+						return;
+					}
 					swipe.motionX /= swipe.friction;
 					swipe.motionY /= swipe.friction;
 					if (swipe.motionX < 0.1 && swipe.motionX > -0.1){
@@ -157,11 +161,12 @@
 						extend(swipeObj, arg4);
 				}
 			}
-		}
-		else
+		} else {
 			throw 'Invalid arguments.';
-		if (swipeObj.friction <= 1)
+		}
+		if (swipeObj.friction <= 1){
 			throw 'Invalid arguments: Friction must be over 1.';
+		}
 		extend(swipeObj, {
 			motionX: 0,
 			motionY: 0,
@@ -185,13 +190,10 @@
 				if (!e.data.multiple && e.data.motions.length)
 					e.data.motions[0].kill();
 				var swipe = startSwipe(e.data);
-				if (!swipe.centerX || !swipe.centerY)
-				{
+				if (!swipe.centerX || !swipe.centerY){
 					swipe.circulateX = e.pageX;
 					swipe.circulateY = e.pageY;
-				}
-				else
-				{
+				} else {
 					swipe.circulateX = swipe.centerX;
 					swipe.circulateY = swipe.centerY;
 				}
