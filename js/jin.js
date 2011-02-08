@@ -108,7 +108,7 @@
 			}
 			return;
 		}
-		elem = (elem === document && typeof elem['on'+type] === typeof Undefined) ? elem.documentElement : elem;
+		elem = (elem === document && typeof elem['on'+type] === 'undefined') ? elem.documentElement : elem;
 		if (bind[type]){
 			return bind[type].bind(elem, type, func, pass);
 		}
