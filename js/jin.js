@@ -216,13 +216,16 @@
 	function create(type, id){
 		if (!type){
 			type = 'div'; // The probabilities are...
+		} else if (typeof type === 'object' && !id) {
+			id = type;
+			type = 'div';
 		}
 		var elem = document.createElement(type), prop;
 		if (id){
 			if (typeof id === 'object'){
 				for (prop in id){
 					if (id !== 'css'){ // This is just crazy, remove this if you're not just doing things to pass JSLint.
-						elem.setAttribute(x, id[prop]);
+						elem.setAttribute(prop, id[prop]);
 					}
 				}
 				if (id.css){
