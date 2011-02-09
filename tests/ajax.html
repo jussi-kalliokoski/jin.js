@@ -5,8 +5,18 @@
 		<script src="../js/jin-ajax.js"></script>
 		<script>
 $(function(){
-	$('div').addClass('glue');
-	$.dynamicCss('body', { 'background-color': 'blue' });
+	var blueBg = $.dynamicCss('body', { 'background-color': 'blue' }),
+		isBlue = true;
+	$.dynamicCss('div.glue', { 'background-color': 'red' });
+	$('div').addClass('glue').bind('click', function(){
+		var head = $.byTag('head')[0];
+		if (isBlue){
+			head.removeChild(blueBg);
+		} else {
+			head.appendChild(blueBg);
+		}
+		isBlue = !isBlue;
+	});;
 });
 		</script>
 	</head>
