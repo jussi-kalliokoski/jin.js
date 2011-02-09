@@ -262,19 +262,20 @@
 	function dynamicCss(selector, properties){
 		var	elem	= create('style'),
 			css	= selector + '{',
-			prop;
+			prop, sprop;
 		function addProperty(propertyName, propertyValue){
 			css += propertyName + ':' + propertyValue + ';';
 		}
 		for (prop in properties){
 			if (properties.hasOwnProperty(prop)){
+				sprop = prop;
 				if (prop[0] === '$'){
-					prop = prop.substr(1);
-					addProperty('-webkit-' + prop, properties[prop]);
-					addProperty('-moz-' + prop, properties[prop]);
-					addProperty('-o-' + prop, properties[prop]);
+					sprop = prop.substr(1);
+					addProperty('-webkit-' + sprop, properties[prop]);
+					addProperty('-moz-' + sprop, properties[prop]);
+					addProperty('-o-' + sprop, properties[prop]);
 				}
-				addProperty(prop, properties[prop]);
+				addProperty(sprop, properties[prop]);
 			}
 		}
 		css += '}';

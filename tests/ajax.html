@@ -7,7 +7,7 @@
 $(function(){
 	var blueBg = $.dynamicCss('body', { 'background-color': 'blue' }),
 		isBlue = true;
-	$.dynamicCss('div.glue', { 'background-color': 'red' });
+	$.dynamicCss('div.glue', { 'background-color': 'red', '$border-radius': '5px' });
 	$('div').addClass('glue').bind('click', function(){
 		var head = $.byTag('head')[0];
 		if (isBlue){
