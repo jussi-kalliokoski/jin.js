@@ -1,0 +1,34 @@
+Jin is a javascript framework / library for those developers, who aren't afraid of a little dom and think that using selectors for simple queries is a waste of time. Jin is also for those who want the smallest library possible, and the possibility to take away what you don't need easily.
+
+Hence, Jin is built with minimal amount of internal dependencies, yet not at the cost of more code.
+
+Jin is ideal for HTML5 projects and demos that wouldn't work in older browsers anyway. That said, Jin has robust support for multiple browsers, but it's easy to peel off the fallbacks.
+
+Jin's aim is to abstract as little as possible, but to give you an opportunity to write very small and performance-wise code. This is due to the light interdependency system of Jin.
+Let's take an example app made in Jin, to see the power of Jin:
+
+(function(Jin, global){
+	var	byId	= Jin.byId,
+		byCl	= Jin.byCl,
+		bind	= Jin.bind,
+		extend	= Jin.extend,
+		create	= Jin.create,
+		append	= Jin.appendChildren,
+		myElem, elems;
+
+	Jin(function(){ // DOM ready event shorthand
+		myElem = byId('myIdElem');
+		bind(myElem, 'click', function(e){ alert('hello'); });
+		elems = Jin(byCl('myClass')); // Short hand for creating a Jin.layer
+		elems.each(function(){
+			var newElem = create('div' /* can be omitted */, {
+				class: 'myNewElem',
+				css: {
+					backgroundColor: 'red',
+					'$borderRadius': '5px' // Fills this in with all the vendor prefixes
+				}
+			});
+			append(this, newElem);
+		});
+	});
+}(Jin, this));
