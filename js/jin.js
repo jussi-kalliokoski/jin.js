@@ -108,7 +108,7 @@
 			}
 			return;
 		}
-		elem = (elem === document && typeof elem['on'+type] === 'undefined') ? elem.documentElement : elem;
+		elem = (elem === document && isUndefined(elem['on'+type])) ? elem.documentElement : elem;
 		if (bind[type]){
 			return bind[type].bind(elem, type, func, pass);
 		}
@@ -249,7 +249,7 @@
 					style[prop] = property[prop];
 				}
 			}
-		} else if (value === undefined) {
+		} else if (isUndefined(value)) {
 			return style[property];
 		}
 		if (property[0] === '$'){
@@ -424,7 +424,7 @@
 	}
 
 	function isArray(obj){ // Are there faster / more reliable methods out there?
-		return !!(obj && obj.constructor === Array);
+		return !!(obj && (obj.isArray || obj.constructor === Array));
 	}
 
 	function isArrayish(obj){ // Same as isArray, but also accepts NodeList
@@ -433,6 +433,10 @@
 		}
 		var constructor = obj.constructor;
 		return constructor === Array || constructor === NodeList || constructor === StaticNodeList || constructor === layer;
+	}
+
+	function isUndefined(obj){
+		return typeof obj === 'undefined';
 	}
 
 	function layer(itemSet){
@@ -765,6 +769,7 @@
 	addModule('html', html);
 	addModule('isArray', isArray);
 	addModule('isArrayish', isArrayish);
+	addModule('isUndefined', isUndefined);
 	addModule('layer', layer);
 	addModule('onReady', onReady);
 	addModule('prependChildren', prependChildren);
