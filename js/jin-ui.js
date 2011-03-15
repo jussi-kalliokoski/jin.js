@@ -1,4 +1,12 @@
-(function(Jin){ // This will overwrite jin-ui when it's ready.
+(function(Jin){
+
+	function adapt(original, modifier){
+		if (modifier.constructor === String){
+			return original + Number(modifier.substr(1));
+		}
+		return modifier;
+	}
+
 	function UIWindow(options){
 		if (this.constructor !== UIWindow){
 			return new UIWindow(options);
@@ -368,7 +376,6 @@
 		hasClasses = Jin.hasClasses,
 		hasClass = Jin.hasClass,
 		getOffset = Jin.getOffset,
-		adapt = Jin.adapt,
 		extend = Jin.extend,
 		appendChildren = Jin.appendChildren,
 		create = Jin.create,

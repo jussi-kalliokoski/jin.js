@@ -1,12 +1,5 @@
 (function (window, Undefined){
 
-	function adapt(original, modifier){
-		if (modifier.constructor === String){
-			return original + Number(modifier.substr(1));
-		}
-		return modifier;
-	}
-
 	function addClass(elem, cl){
 		var classes, i, n, hasClass, elems = (isArrayish(elem)) ? elem : [elem];
 		for (i=0; i < elems.length; i++){
@@ -747,7 +740,6 @@
 	window.Jin = Jin;
 	bind._binds = [];
 
-	addModule('adapt', adapt);
 	addModule('addClass', addClass);
 	addModule('addClasses', addClasses);
 	addModule('addModule', addModule);
