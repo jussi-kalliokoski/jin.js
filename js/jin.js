@@ -122,9 +122,9 @@
 			e.data = pass;
 			func.call(elem, e);
 		};
-		if (document.addEventListener){
+		if (elem.addEventListener){
 			elem.addEventListener(type, fnc, false);
-		} else {
+		} else if (elem.attachEvent) {
 			elem.attachEvent('on' + type, fnc);
 		}
 		bind._binds.push({elem: elem, type: type, func: func, fnc: fnc});
@@ -680,9 +680,9 @@
 		}
 		for (i=0; i<bind._binds.length; i++){
 			if (bind._binds[i].elem === elem && bind._binds[i].type === type && bind._binds[i].func === func){
-				if (document.addEventListener){
+				if (elem.removeEventListener){
 					elem.removeEventListener(type, bind._binds[i].fnc, false);
-				} else {
+				} else if (elem.detachEvent) {
 					elem.detachEvent('on'+type, bind._binds[i].fnc);
 				}
 				bind._binds.splice(i--, 1);
