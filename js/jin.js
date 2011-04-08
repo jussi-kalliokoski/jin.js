@@ -431,7 +431,7 @@
 			return false;
 		}
 		var constructor = obj.constructor;
-		return constructor === Array || constructor === NodeList || constructor === StaticNodeList || constructor === layer;
+		return constructor === Array || constructor === NodeList || constructor === StaticNodeList || constructor === layer || constructor === HTMLCollection;
 	}
 
 	function isUndefined(obj){
@@ -710,7 +710,8 @@
 		modules = {},
 		fn = {},
 		NodeList = window.NodeList || ((document.getElementsByTagName) ? document.getElementsByTagName('').constructor : Undefined),
-		StaticNodeList = window.StaticNodeList || ((document.querySelectorAll) ? document.querySelectorAll('X').constructor : Undefined);
+		StaticNodeList = window.StaticNodeList || ((document.querySelectorAll) ? document.querySelectorAll('X').constructor : Undefined),
+		HTMLCollection = window.HTMLCollection;
 
 	(function(){ // Check if we can collect classes with a faster method.
 		var testElement = document.createElement('div');
